@@ -43,8 +43,7 @@ setup(
     name='introrl',
     version = __version__,  # METADATA_RESET:    version = '<<version>>',
 
-    description = '''IntroRL provides a framework for exploring Reinforcement Learning.
-It uses the text book "Reinforcement Learning" by Sutton & Barto as a reference.''',
+    description = '''IntroRL provides a framework for exploring Reinforcement Learning. It uses the text book "Reinforcement Learning" by Sutton & Barto as a reference.''',
     long_description = long_description,
 
     # The project's main homepage.
