@@ -1,0 +1,356 @@
+<html><head><title>plot_fig_8_4_blocking_maze.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>plot_fig_8_4_blocking_maze.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: ascii -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">future</span> <span class="kn">import</span> <span class="n">standard_library</span>
+<span class="n">standard_library</span><span class="o">.</span><span class="n">install_aliases</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">introrl.black_box_sims.blocking_maze</span> <span class="kn">import</span> <span class="n">BlockingMaze</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.learning_tracker</span> <span class="kn">import</span> <span class="n">LearnTracker</span>
+<span class="kn">from</span> <span class="nn">introrl.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">introrl.utils.running_ave</span> <span class="kn">import</span> <span class="n">RunningAve</span>
+<span class="kn">from</span> <span class="nn">introrl.agents.dyna_q_agent</span> <span class="kn">import</span> <span class="n">DynaQAgent</span>
+<span class="kn">from</span> <span class="nn">introrl.agents.dyna_qplus_agent</span> <span class="kn">import</span> <span class="n">DynaQPlusAgent</span>
+
+<span class="n">ALPHA</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">GAMMA</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">EPSILON</span><span class="o">=</span><span class="mf">0.1</span>
+<span class="n">PLAN_LOOPS</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">QPLUS_FACTOR</span><span class="o">=</span><span class="mf">1.0E-4</span>
+
+<span class="n">NUM_RUNS</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">q_raveL</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">qp_raveL</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">maze_q</span> <span class="o">=</span> <span class="n">BlockingMaze</span><span class="p">()</span>
+
+
+<span class="k">for</span> <span class="n">main_loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_RUNS</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1"> of </span><span class="si">%i</span><span class="s1"> Runs&#39;</span><span class="o">%</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">main_loop</span><span class="p">,</span> <span class="n">NUM_RUNS</span><span class="p">))</span>
+
+
+    <span class="n">learn_tracker_q</span> <span class="o">=</span> <span class="n">LearnTracker</span><span class="p">()</span>
+    <span class="n">learn_tracker_qp</span> <span class="o">=</span> <span class="n">LearnTracker</span><span class="p">()</span>
+
+    <span class="n">agent_q</span> <span class="o">=</span> <span class="n">DynaQAgent</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">maze_q</span><span class="p">,</span> 
+                     <span class="n">learn_tracker</span><span class="o">=</span><span class="n">learn_tracker_q</span><span class="p">,</span>
+                     <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
+                     <span class="n">show_banner</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">do_summ_print</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_last_change</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
+                     <span class="n">epsilon</span><span class="o">=</span><span class="n">EPSILON</span><span class="p">,</span>
+                     <span class="n">gamma</span><span class="o">=</span><span class="n">GAMMA</span><span class="p">,</span>
+                     <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">)</span>
+
+    <span class="n">agent_qp</span> <span class="o">=</span> <span class="n">DynaQPlusAgent</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">maze_q</span><span class="p">,</span> 
+                     <span class="n">learn_tracker</span><span class="o">=</span><span class="n">learn_tracker_qp</span><span class="p">,</span>
+                     <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
+                     <span class="n">show_banner</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">do_summ_print</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_last_change</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
+                     <span class="n">epsilon</span><span class="o">=</span><span class="n">EPSILON</span><span class="p">,</span>
+                     <span class="n">gamma</span><span class="o">=</span><span class="n">GAMMA</span><span class="p">,</span>
+                     <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">,</span> <span class="n">qplus_factor</span><span class="o">=</span><span class="n">QPLUS_FACTOR</span><span class="p">)</span>
+
+    <span class="c1"># set gates at time = 0</span>
+    <span class="n">maze_q</span><span class="o">.</span><span class="n">open_gate_R</span><span class="p">()</span>    
+    <span class="n">maze_q</span><span class="o">.</span><span class="n">close_gate_L</span><span class="p">()</span>
+
+    <span class="c1"># DynaQ episodes </span>
+    <span class="k">while</span> <span class="n">agent_q</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">total_action_calls</span> <span class="o">&lt;</span> <span class="mi">3000</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">agent_q</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">total_action_calls</span> <span class="o">&gt;=</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="n">maze_q</span><span class="o">.</span><span class="n">open_gate_L</span><span class="p">()</span>
+            <span class="n">maze_q</span><span class="o">.</span><span class="n">close_gate_R</span><span class="p">()</span>
+                
+        <span class="n">agent_q</span><span class="o">.</span><span class="n">run_episode</span><span class="p">(</span> <span class="s1">&#39;Start&#39;</span><span class="p">,</span> <span class="n">Nplanning_loops</span><span class="o">=</span><span class="n">PLAN_LOOPS</span><span class="p">)</span>
+
+    <span class="c1"># set gates at time = 0</span>
+    <span class="n">maze_q</span><span class="o">.</span><span class="n">open_gate_R</span><span class="p">()</span>    
+    <span class="n">maze_q</span><span class="o">.</span><span class="n">close_gate_L</span><span class="p">()</span>
+
+    <span class="c1"># DynaQ+ episodes </span>
+    <span class="k">while</span> <span class="n">agent_qp</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">total_action_calls</span> <span class="o">&lt;</span> <span class="mi">3000</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">agent_qp</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">total_action_calls</span> <span class="o">&gt;=</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="n">maze_q</span><span class="o">.</span><span class="n">open_gate_L</span><span class="p">()</span>
+            <span class="n">maze_q</span><span class="o">.</span><span class="n">close_gate_R</span><span class="p">()</span>
+                
+        <span class="n">agent_qp</span><span class="o">.</span><span class="n">run_episode</span><span class="p">(</span> <span class="s1">&#39;Start&#39;</span><span class="p">,</span> <span class="n">Nplanning_loops</span><span class="o">=</span><span class="n">PLAN_LOOPS</span><span class="p">)</span>
+
+    <span class="n">cum_rew_qL</span> <span class="o">=</span> <span class="n">learn_tracker_q</span><span class="o">.</span><span class="n">cum_reward_per_step</span><span class="p">()</span>
+    <span class="n">cum_rew_qpL</span> <span class="o">=</span> <span class="n">learn_tracker_qp</span><span class="o">.</span><span class="n">cum_reward_per_step</span><span class="p">()</span>
+    
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_raveL</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cum_rew_qL</span><span class="p">)):</span>
+        <span class="n">q_raveL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">RunningAve</span><span class="p">()</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cum_rew_qL</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3000</span><span class="p">:</span>
+            <span class="n">q_raveL</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">add_val</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">qp_raveL</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cum_rew_qpL</span><span class="p">)):</span>
+        <span class="n">qp_raveL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">RunningAve</span><span class="p">()</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cum_rew_qpL</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3000</span><span class="p">:</span>
+            <span class="n">qp_raveL</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">add_val</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            
+<span class="c1">#agent_q.model.summ_print(long=True)</span>
+<span class="c1">#sys.exit()</span>
+<span class="n">agent_q</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">summ_print</span><span class="p">(</span> <span class="n">fmt_Q</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">none_str</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">show_states</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> 
+                                      <span class="n">show_last_change</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">show_policy</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+
+<span class="n">cum_rew_qL</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="o">.</span><span class="n">get_ave</span><span class="p">()</span> <span class="k">for</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">q_raveL</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cum_rew_qL</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q, IntroRL&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span> <span class="p">)</span>
+
+<span class="n">cum_rew_qpL</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="o">.</span><span class="n">get_ave</span><span class="p">()</span> <span class="k">for</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">qp_raveL</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cum_rew_qpL</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q+, IntroRL&#39;</span> <span class="p">)</span>
+
+<span class="c1"># Digitized Sutton &amp; Barto values</span>
+<span class="n">q_stepL</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.03178</span><span class="p">,</span><span class="mf">134.491</span><span class="p">,</span><span class="mf">157.745</span><span class="p">,</span><span class="mf">230.09</span><span class="p">,</span><span class="mf">325.689</span><span class="p">,</span><span class="mf">478.131</span><span class="p">,</span><span class="mf">658.994</span><span class="p">,</span><span class="mf">826.938</span><span class="p">,</span><span class="mf">1002.63</span><span class="p">,</span><span class="mf">1470.29</span><span class="p">,</span><span class="mf">1483.21</span><span class="p">,</span><span class="mf">1617.57</span><span class="p">,</span><span class="mf">1718.33</span><span class="p">,</span><span class="mf">1989.63</span><span class="p">,</span><span class="mf">2356.52</span><span class="p">,</span><span class="mf">2676.91</span><span class="p">,</span><span class="mf">2981.79</span><span class="p">]</span>
+<span class="n">q_cumrL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.394256</span><span class="p">,</span><span class="mf">0.191373</span><span class="p">,</span><span class="mf">1.81443</span><span class="p">,</span><span class="mf">1.81443</span><span class="p">,</span><span class="mf">5.06055</span><span class="p">,</span><span class="mf">11.5528</span><span class="p">,</span><span class="mf">21.2911</span><span class="p">,</span><span class="mf">32.0439</span><span class="p">,</span><span class="mf">45.0284</span><span class="p">,</span><span class="mf">44.8255</span><span class="p">,</span><span class="mf">46.2457</span><span class="p">,</span><span class="mf">46.4486</span><span class="p">,</span><span class="mf">48.2745</span><span class="p">,</span><span class="mf">54.7668</span><span class="p">,</span><span class="mf">68.3599</span><span class="p">,</span><span class="mf">82.3588</span><span class="p">,</span><span class="mf">97.1692</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q_stepL</span><span class="p">,</span> <span class="n">q_cumrL</span><span class="p">,</span> <span class="s1">&#39;c:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q, Sutton&#39;</span> <span class="p">)</span>
+
+<span class="n">qp_stepL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.30325</span><span class="p">,</span><span class="mf">54.3946</span><span class="p">,</span><span class="mf">67.3134</span><span class="p">,</span><span class="mf">134.491</span><span class="p">,</span><span class="mf">250.76</span><span class="p">,</span><span class="mf">426.456</span><span class="p">,</span><span class="mf">591.816</span><span class="p">,</span><span class="mf">783.014</span><span class="p">,</span><span class="mf">922.537</span><span class="p">,</span><span class="mf">989.715</span><span class="p">,</span><span class="mf">1447.04</span><span class="p">,</span><span class="mf">1459.96</span><span class="p">,</span><span class="mf">1568.48</span><span class="p">,</span><span class="mf">1821.68</span><span class="p">,</span><span class="mf">2067.14</span><span class="p">,</span><span class="mf">2310.01</span><span class="p">,</span><span class="mf">2565.81</span><span class="p">,</span><span class="mf">2751.84</span><span class="p">,</span><span class="mf">2979.21</span><span class="p">]</span>
+<span class="n">qp_cumrL</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.214391</span><span class="p">,</span><span class="mf">0.800021</span><span class="p">,</span><span class="mf">2.01732</span><span class="p">,</span><span class="mf">2.01732</span><span class="p">,</span><span class="mf">8.50955</span><span class="p">,</span><span class="mf">23.9286</span><span class="p">,</span><span class="mf">39.5506</span><span class="p">,</span><span class="mf">57.2013</span><span class="p">,</span><span class="mf">69.7801</span><span class="p">,</span><span class="mf">76.6781</span><span class="p">,</span><span class="mf">76.4752</span><span class="p">,</span><span class="mf">77.8954</span><span class="p">,</span><span class="mf">78.3011</span><span class="p">,</span><span class="mf">86.4164</span><span class="p">,</span><span class="mf">100.415</span><span class="p">,</span><span class="mf">114.211</span><span class="p">,</span><span class="mf">128.413</span><span class="p">,</span><span class="mf">139.369</span><span class="p">,</span><span class="mf">150.527</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">qp_stepL</span><span class="p">,</span> <span class="n">qp_cumrL</span><span class="p">,</span> <span class="s1">&#39;r:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q+, Sutton&#39;</span> <span class="p">)</span>
+
+<span class="c1"># Zhang DynaQ curve</span>
+<span class="n">q_stepZhangL</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.1572</span><span class="p">,</span><span class="mf">155.382</span><span class="p">,</span><span class="mf">282.476</span><span class="p">,</span><span class="mf">469.772</span><span class="p">,</span><span class="mf">657.069</span><span class="p">,</span><span class="mf">830.986</span><span class="p">,</span><span class="mf">1004.9</span><span class="p">,</span><span class="mf">1252.4</span><span class="p">,</span><span class="mf">1489.87</span><span class="p">,</span><span class="mf">1891.22</span><span class="p">,</span><span class="mf">2356.11</span><span class="p">,</span><span class="mf">2700.6</span><span class="p">,</span><span class="mf">2991.58</span><span class="p">]</span>
+<span class="n">q_cumrZhangL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.270857</span><span class="p">,</span><span class="mf">0.681621</span><span class="p">,</span><span class="mf">2.53006</span><span class="p">,</span><span class="mf">10.3346</span><span class="p">,</span><span class="mf">21.4252</span><span class="p">,</span><span class="mf">32.7212</span><span class="p">,</span><span class="mf">44.6333</span><span class="p">,</span><span class="mf">45.0441</span><span class="p">,</span><span class="mf">46.6871</span><span class="p">,</span><span class="mf">52.6432</span><span class="p">,</span><span class="mf">61.2692</span><span class="p">,</span><span class="mf">68.6629</span><span class="p">,</span><span class="mf">75.4405</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q_stepZhangL</span><span class="p">,</span> <span class="n">q_cumrZhangL</span><span class="p">,</span> <span class="s1">&#39;c--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q, Zhang&#39;</span> <span class="p">)</span>
+
+<span class="c1"># Zhang DynaQ+ curve</span>
+<span class="n">qp_stepZhangL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.53195</span><span class="p">,</span><span class="mf">115.247</span><span class="p">,</span><span class="mf">249.03</span><span class="p">,</span><span class="mf">369.435</span><span class="p">,</span><span class="mf">556.731</span><span class="p">,</span><span class="mf">764.095</span><span class="p">,</span><span class="mf">998.215</span><span class="p">,</span><span class="mf">1195.54</span><span class="p">,</span><span class="mf">1376.15</span><span class="p">,</span><span class="mf">1603.58</span><span class="p">,</span><span class="mf">1907.94</span><span class="p">,</span><span class="mf">2252.43</span><span class="p">,</span><span class="mf">2556.79</span><span class="p">,</span><span class="mf">2978.2</span><span class="p">]</span>
+<span class="n">qp_cumrZhangL</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.550669</span><span class="p">,</span><span class="mf">1.09238</span><span class="p">,</span><span class="mf">3.55696</span><span class="p">,</span><span class="mf">10.7453</span><span class="p">,</span><span class="mf">26.1489</span><span class="p">,</span><span class="mf">43.401</span><span class="p">,</span><span class="mf">63.7338</span><span class="p">,</span><span class="mf">63.9392</span><span class="p">,</span><span class="mf">64.9661</span><span class="p">,</span><span class="mf">69.6899</span><span class="p">,</span><span class="mf">80.5751</span><span class="p">,</span><span class="mf">98.0325</span><span class="p">,</span><span class="mf">113.436</span><span class="p">,</span><span class="mf">136.028</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">qp_stepZhangL</span><span class="p">,</span> <span class="n">qp_cumrZhangL</span><span class="p">,</span> <span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q+, Zhang&#39;</span> <span class="p">)</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Figure 8.4 Blocking Maze</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span>\
+             <span class="s1">&#39;(Epsilon=</span><span class="si">%g</span><span class="s1">, Kappa=</span><span class="si">%g</span><span class="s1">, #Runs=</span><span class="si">%i</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">EPSILON</span><span class="p">,</span> <span class="n">QPLUS_FACTOR</span><span class="p">,</span> <span class="n">NUM_RUNS</span><span class="p">)</span> <span class="o">+</span>\
+             <span class="s1">&#39;(</span><span class="si">%i</span><span class="s1"> planning steps, alpha=</span><span class="si">%g</span><span class="s1">, gamma=</span><span class="si">%g</span><span class="s1">)&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">PLAN_LOOPS</span><span class="p">,</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">GAMMA</span><span class="p">))</span>
+<span class="c1">#ax.axhline(y=0, color=&#39;k&#39;)</span>
+<span class="c1">#ax.axvline(x=0, color=&#39;k&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Cumulative Reward&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time Steps&#39;</span><span class="p">)</span>
+<span class="c1">#plt.ylim(0, 800)</span>
+<span class="c1">#plt.xlim(0, 3000)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;fig_8_4_blocking_maze.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></body></html>

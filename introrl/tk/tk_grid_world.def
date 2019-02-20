@@ -1,0 +1,365 @@
+[app_attr]
+hideokbutton = no
+hasstddialmess = no
+add_menu_ctrl_keys = yes
+name = tk_grid_world
+guitype = main
+hasstdalarm = no
+menu = Model\n  Simple Grid World\n  Cliff Walking\n  Blocking Maze\n\n  Exit
+resizable = yes
+hasmenu = yes
+height = 228
+width = 778
+hasstddialcolor = no
+col_weights = 7:1
+row_weights = 2:1
+hasstddialfile = no
+y = 760
+x = 1068
+hasstatusbar = no
+
+[Button_1]
+widget_type = Button
+tab_label = Main
+row = 1
+col = 1
+rowspan = 
+text = Run
+docstring = 
+width = 15
+columnspan = 
+
+[Button_2]
+widget_type = Button
+tab_label = Main
+row = 1
+col = 3
+rowspan = 
+text = Step
+docstring = 
+width = 15
+columnspan = 
+
+[Button_3]
+widget_type = Button
+tab_label = Main
+row = 1
+col = 4
+rowspan = 
+text = Build Model
+docstring = 
+width = 15
+columnspan = 
+
+[Button_4]
+widget_type = Button
+tab_label = Main
+row = 1
+col = 2
+rowspan = 
+text = 1 Episode
+docstring = 
+width = 15
+columnspan = 
+
+[Canvas_1]
+widget_type = Canvas
+tab_label = Frame_1
+row = 0
+col = 0
+rowspan = 
+docstring = 
+scrollx = no
+scrolly = no
+height = 100
+width = 100
+columnspan = 
+
+[Combobox_1]
+widget_type = Combobox
+tab_label = Main
+row = 1
+col = 6
+rowspan = 
+text = Combobox_1
+docstring = 
+width = 15
+values = Q-Learn SARSA DynaQ DynaQ+
+columnspan = 
+
+[Combobox_2]
+widget_type = Combobox
+tab_label = Main
+row = 1
+col = 5
+rowspan = 
+text = Display Size
+docstring = 
+width = 15
+values = 1400x800 1200x700 1000x700 800x600
+columnspan = 
+
+[Entry_1]
+widget_type = Entry
+tab_label = Main
+row = 3
+col = 1
+rowspan = 
+text = 0.0
+docstring = Step Cost
+scrollx = no
+width = 15
+columnspan = 
+
+[Entry_2]
+widget_type = Entry
+tab_label = Main
+row = 3
+col = 2
+rowspan = 
+text = 0.1
+docstring = Alpha
+scrollx = no
+width = 15
+columnspan = 
+
+[Entry_3]
+widget_type = Entry
+tab_label = Main
+row = 3
+col = 4
+rowspan = 
+text = 0.9
+docstring = Gamma
+scrollx = no
+width = 15
+columnspan = 
+
+[Entry_4]
+widget_type = Entry
+tab_label = Main
+row = 3
+col = 5
+rowspan = 
+text = 0.5
+docstring = Epsilon
+scrollx = no
+width = 15
+columnspan = 
+
+[Entry_5]
+widget_type = Entry
+tab_label = Main
+row = 3
+col = 6
+rowspan = 
+text = 0.0001
+docstring = DynaQ+ Factor
+scrollx = no
+width = 15
+columnspan = 
+
+[Entry_6]
+widget_type = Entry
+tab_label = Main
+row = 3
+col = 3
+rowspan = 
+text = 0
+docstring = Initial Q(s,a) Factor
+scrollx = no
+width = 15
+columnspan = 
+
+[Frame_1]
+widget_type = Frame
+tab_label = Main
+row = 4
+col = 1
+rowspan = 
+docstring = 
+row_weights = 
+sticky = nsew
+width = 400
+col_weights = 
+columnspan = 7
+height = 300
+
+[Label_1]
+widget_type = Label
+tab_label = Main
+row = 2
+col = 1
+rowspan = 
+text = Step Cost
+docstring = 
+width = 15
+columnspan = 
+
+[Label_10]
+widget_type = Label
+tab_label = Main
+row = 5
+col = 5
+rowspan = 
+text = 
+docstring = 
+font = Helvetica 10 bold roman
+width = 15
+columnspan = 
+background = #c4c4ff
+height = 3
+
+[Label_11]
+widget_type = Label
+tab_label = Main
+row = 2
+col = 3
+rowspan = 
+text = Q(s,a) Initial
+docstring = 
+width = 15
+columnspan = 
+
+[Label_12]
+widget_type = Label
+tab_label = Main
+row = 5
+col = 6
+rowspan = 
+text = 
+docstring = 
+sticky = ew
+height = 3
+width = 15
+columnspan = 
+background = #c4c4ff
+font = Helvetica 10 bold roman
+
+[Label_13]
+widget_type = Label
+tab_label = Main
+row = 1
+col = 7
+rowspan = 
+text =  
+docstring = 
+sticky = ew
+width = 2
+columnspan = 
+
+[Label_14]
+widget_type = Label
+tab_label = Main
+row = 5
+col = 7
+rowspan = 
+text = 
+docstring = 
+sticky = ew
+font = Helvetica 10 bold roman
+width = 2
+columnspan = 
+background = #c4c4ff
+height = 3
+
+[Label_2]
+widget_type = Label
+tab_label = Main
+row = 2
+col = 2
+rowspan = 
+text = Alpha
+docstring = 
+width = 15
+columnspan = 
+
+[Label_3]
+widget_type = Label
+tab_label = Main
+row = 2
+col = 4
+rowspan = 
+text = Gamma
+docstring = 
+width = 15
+columnspan = 
+
+[Label_4]
+widget_type = Label
+tab_label = Main
+row = 2
+col = 5
+rowspan = 
+text = Epsilon
+docstring = 
+width = 15
+columnspan = 
+
+[Label_5]
+widget_type = Label
+tab_label = Main
+row = 2
+col = 6
+rowspan = 
+text = DynaQ+ Factor
+docstring = 
+width = 15
+columnspan = 
+
+[Label_6]
+widget_type = Label
+tab_label = Main
+row = 5
+col = 1
+rowspan = 
+text = 
+docstring = 
+font = Helvetica 10 bold roman
+width = 15
+columnspan = 
+background = #c4c4ff
+height = 3
+
+[Label_7]
+widget_type = Label
+tab_label = Main
+row = 5
+col = 2
+rowspan = 
+text = 
+docstring = 
+font = Helvetica 10 bold roman
+width = 15
+columnspan = 
+background = #c4c4ff
+height = 3
+
+[Label_8]
+widget_type = Label
+tab_label = Main
+row = 5
+col = 3
+rowspan = 
+text = 
+docstring = 
+font = Helvetica 10 bold roman
+width = 15
+columnspan = 
+background = #c4c4ff
+height = 3
+
+[Label_9]
+widget_type = Label
+tab_label = Main
+row = 5
+col = 4
+rowspan = 
+text = 
+docstring = 
+font = Helvetica 10 bold roman
+width = 15
+columnspan = 
+background = #c4c4ff
+height = 3
+

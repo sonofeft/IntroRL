@@ -1,0 +1,412 @@
+<html><head><title>car_rental.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>car_rental.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">factorial</span>
+
+<span class="kn">from</span> <span class="nn">introrl.layouts.generic_layout</span> <span class="kn">import</span> <span class="n">GenericLayout</span>
+<span class="kn">from</span> <span class="nn">introrl.environments.env_baseline</span> <span class="kn">import</span> <span class="n">EnvBaseline</span>
+<span class="kn">from</span> <span class="nn">introrl.reward</span> <span class="kn">import</span> <span class="n">Reward</span>
+<span class="kn">from</span> <span class="nn">introrl.utils.functions</span> <span class="kn">import</span> <span class="n">select_weighted_random</span> <span class="c1"># from list of (n, w) pairs</span>
+
+<span class="n">POISSON_UPPER_BOUND</span> <span class="o">=</span> <span class="mi">11</span> <span class="c1"># taken from numpy implementation on web site.</span>
+<span class="n">MAX_CARS</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">N1_LAMBDA</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">N2_LAMBDA</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">N1_RTNS</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">N2_RTNS</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">RENTAL_CREDIT</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">MOVE_CAR_COST</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1"># make a quick look-up for poisson number</span>
+<span class="k">def</span> <span class="nf">poisson</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+    <span class="n">pnum</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">lam</span><span class="p">)</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pnum</span>
+
+
+<span class="c1"># make weighted lists of (n, prob) pairs for lam 2,3 and 4</span>
+<span class="c1"># --------- lookup time is about 20x faster --------------</span>
+<span class="n">prob_lookupD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=(n,lam), value=prob</span>
+
+<span class="k">def</span> <span class="nf">fill_prob_lookupD</span><span class="p">(</span><span class="n">lam</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">POISSON_UPPER_BOUND</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">):</span>
+        <span class="n">prob_lookupD</span><span class="p">[(</span><span class="n">n</span><span class="p">,</span><span class="n">lam</span><span class="p">)]</span> <span class="o">=</span> <span class="n">poisson</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>    
+
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]:</span>
+    <span class="n">fill_prob_lookupD</span><span class="p">(</span> <span class="n">lam</span> <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_prob_reward</span><span class="p">(</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call add_results to save prob and rewards</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">n1_rent_request</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">POISSON_UPPER_BOUND</span> <span class="p">):</span>
+        <span class="k">for</span> <span class="n">n2_rent_request</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">POISSON_UPPER_BOUND</span> <span class="p">):</span>
+            
+            <span class="n">n1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">s1</span> <span class="o">-</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">MAX_CARS</span><span class="p">))</span>
+            <span class="n">n2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">s2</span> <span class="o">+</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">MAX_CARS</span><span class="p">))</span>
+            
+            <span class="n">actual_n1_rented</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n1_rent_request</span><span class="p">)</span>
+            <span class="n">actual_n2_rented</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">n2_rent_request</span><span class="p">)</span>
+            
+            <span class="n">reward</span> <span class="o">=</span> <span class="p">(</span><span class="n">actual_n1_rented</span> <span class="o">+</span> <span class="n">actual_n2_rented</span><span class="p">)</span> <span class="o">*</span> <span class="n">RENTAL_CREDIT</span> \
+                   <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a_desc</span><span class="p">)</span> <span class="o">*</span> <span class="n">MOVE_CAR_COST</span>
+                     
+            <span class="n">prob_rented</span> <span class="o">=</span> <span class="n">prob_lookupD</span><span class="p">[</span> <span class="p">(</span><span class="n">n1_rent_request</span><span class="p">,</span> <span class="n">N1_LAMBDA</span><span class="p">)</span> <span class="p">]</span> \
+                        <span class="o">*</span> <span class="n">prob_lookupD</span><span class="p">[</span> <span class="p">(</span><span class="n">n2_rent_request</span><span class="p">,</span> <span class="n">N2_LAMBDA</span><span class="p">)</span> <span class="p">]</span>
+            
+            <span class="c1"># need to consider variable returns at each site changing next state</span>
+            <span class="k">for</span> <span class="n">n1_rtns_poi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">POISSON_UPPER_BOUND</span> <span class="p">):</span>
+                <span class="k">for</span> <span class="n">n2_rtns_poi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">POISSON_UPPER_BOUND</span> <span class="p">):</span>
+                    
+                    <span class="n">prob_rtnd</span> <span class="o">=</span> <span class="n">prob_lookupD</span><span class="p">[</span> <span class="p">(</span><span class="n">n1_rtns_poi</span><span class="p">,</span> <span class="n">N1_RTNS</span><span class="p">)</span> <span class="p">]</span> \
+                                <span class="o">*</span> <span class="n">prob_lookupD</span><span class="p">[</span> <span class="p">(</span><span class="n">n2_rtns_poi</span><span class="p">,</span> <span class="n">N2_RTNS</span><span class="p">)</span> <span class="p">]</span>
+                    
+                    <span class="c1"># next state</span>
+                    <span class="n">sn1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">n1</span> <span class="o">-</span> <span class="n">actual_n1_rented</span> <span class="o">+</span> <span class="n">n1_rtns_poi</span><span class="p">,</span> <span class="n">MAX_CARS</span><span class="p">))</span>
+                    <span class="n">sn2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">n2</span> <span class="o">-</span> <span class="n">actual_n2_rented</span> <span class="o">+</span> <span class="n">n2_rtns_poi</span><span class="p">,</span> <span class="n">MAX_CARS</span><span class="p">))</span>
+                    
+                    <span class="n">add_results</span><span class="p">(</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">prob_rented</span><span class="o">*</span><span class="n">prob_rtnd</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">sn1</span><span class="p">,</span> <span class="n">sn2</span> <span class="p">)</span>
+
+<span class="c1"># define all possible transitions.</span>
+<span class="n">total_probD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=(s1, s2, a_desc, sn_hash): value=t_prob total </span>
+<span class="n">sum_prob_x_rewardD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=(s1, s2, a_desc, sn_hash): value=sum of t_prob * reward</span>
+
+<span class="k">def</span> <span class="nf">add_results</span><span class="p">(</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">prob_rented</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">sn1</span><span class="p">,</span> <span class="n">sn2</span> <span class="p">):</span>
+    <span class="c1">#print(&#39;s1=%2i, s2=%2i, a_desc=%2i, prob_rented%8.6f, reward%5.1f, sn1=%2i, sn2=%2i&#39;%\</span>
+    <span class="c1">#     (s1, s2, a_desc, prob_rented, reward, sn1, sn2))</span>
+         
+    <span class="n">sn_hash</span> <span class="o">=</span> <span class="p">(</span><span class="n">sn1</span><span class="p">,</span> <span class="n">sn2</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">total_probD</span><span class="p">:</span>
+        <span class="n">total_probD</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_prob_x_rewardD</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        
+    <span class="n">total_probD</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prob_rented</span> <span class="c1"># index=(s1, s2, a_desc, sn_hash): value=t_prob total </span>
+    <span class="n">sum_prob_x_rewardD</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prob_rented</span> <span class="o">*</span> <span class="n">reward</span> <span class="c1"># index=(s1, s2, a_desc, sn_hash): value=sum of t_prob * reward</span>
+    
+
+<span class="k">def</span> <span class="nf">get_env</span><span class="p">():</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">EnvBaseline</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Jacks Car Rental (var rtn)&quot;</span> <span class="p">)</span> <span class="c1"># GenericLayout set below</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">set_info</span><span class="p">(</span> <span class="s1">&#39;Example 4.2 from Sutton &amp; Barto 2nd Edition page 81.&#39;</span> <span class="p">)</span>
+
+    
+    <span class="c1"># define all possible actions.</span>
+    <span class="n">saL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># a list of (s1, s2, adesc)</span>
+    <span class="n">s_hash_rowL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># layout rows for makeing 2D output</span>
+
+    
+    <span class="k">for</span> <span class="n">s1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">MAX_CARS</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">):</span> <span class="c1"># 20 cars max</span>
+        <span class="n">rowL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># row of s_hash_rowL</span>
+        
+        <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">MAX_CARS</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">):</span> <span class="c1"># 20 cars max</span>
+            <span class="n">s_hash</span> <span class="o">=</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
+            <span class="n">rowL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">s_hash</span> <span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">a_desc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="c1"># -5 moves 5 cars from 2nd to 1st. +5 from 1st to 2nd.</span>
+                
+                <span class="k">if</span> <span class="n">a_desc</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># can only move cars if they are present</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">a_desc</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">s2</span><span class="p">):</span>
+                        <span class="n">env</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">a_prob</span><span class="o">=</span><span class="mf">1.0</span> <span class="p">)</span>
+                        <span class="n">saL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">)</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">a_desc</span> <span class="o">&lt;=</span> <span class="n">s1</span><span class="p">):</span> <span class="c1"># can only move cars if they are present</span>
+                        <span class="n">env</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">a_prob</span><span class="o">=</span><span class="mf">1.0</span> <span class="p">)</span>
+                        <span class="n">saL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">)</span> <span class="p">)</span>
+        
+        <span class="c1"># use insert to put (0,0) at lower left</span>
+        <span class="n">s_hash_rowL</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rowL</span> <span class="p">)</span><span class="c1"># layout rows for makeing 2D output</span>
+    
+    <span class="c1"># ------------------------------</span>
+    <span class="c1"># figure out transition probabilities and rewards</span>
+    <span class="k">for</span> <span class="n">s1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">MAX_CARS</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">):</span>
+        <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">MAX_CARS</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">):</span>
+            <span class="k">for</span> <span class="n">a_desc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span> <span class="p">):</span>
+                <span class="n">get_prob_reward</span><span class="p">(</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------                                                </span>
+        
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Starting to define car rental transitions&#39;</span><span class="p">)</span>
+    <span class="c1"># with all the probability figured out, define all transitions</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">),</span> <span class="n">t_prob</span> <span class="ow">in</span> <span class="n">total_probD</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">txr</span> <span class="o">=</span> <span class="n">sum_prob_x_rewardD</span><span class="p">[</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">rval</span> <span class="o">=</span> <span class="n">txr</span> <span class="o">/</span> <span class="n">t_prob</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">add_transition</span><span class="p">(</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">),</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">,</span> <span class="n">t_prob</span><span class="o">=</span><span class="n">t_prob</span><span class="p">,</span> <span class="n">reward_obj</span><span class="o">=</span><span class="n">rval</span><span class="p">)</span>
+    
+        <span class="c1">#if s1==10 and s2==10:</span>
+        <span class="c1">#    print(&#39;for (10,10) a_desc=&#39;,a_desc,&#39; sn_hash=&#39;,sn_hash,&#39;  t_prob=&#39;,t_prob,&#39;  rval=&#39;,rval)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Calling: env.define_env_states_actions&#39;</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">define_env_states_actions</span><span class="p">()</span>  <span class="c1"># send all states and actions to environment</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Environment Ready.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># If there is a start state, define it here.</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">start_state_hash</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="c1"># define default policy (if any)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">default_policyD</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+    <span class="c1"># --------------------</span>
+    <span class="c1"># define layout for output</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">GenericLayout</span><span class="p">(</span> <span class="n">env</span><span class="p">,</span> <span class="n">s_hash_rowL</span><span class="o">=</span><span class="n">s_hash_rowL</span><span class="p">,</span> 
+                                <span class="n">x_axis_label</span><span class="o">=</span><span class="s1">&#39;#Cars at Second Location&#39;</span><span class="p">,</span>
+                                <span class="n">y_axis_label</span><span class="o">=</span><span class="s1">&#39;#Cars at First Location&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">env</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> <span class="c1"># pragma: no cover</span>
+    
+    <span class="kn">from</span> <span class="nn">introrl.dp_funcs.dp_value_iter</span> <span class="kn">import</span> <span class="n">dp_value_iteration</span>
+    
+    <span class="n">env</span> <span class="o">=</span> <span class="n">get_env</span><span class="p">()</span>
+    <span class="c1">#env.summ_print()</span>
+    
+    <span class="n">policy</span><span class="p">,</span> <span class="n">state_value</span> <span class="o">=</span> <span class="n">dp_value_iteration</span><span class="p">(</span> <span class="n">env</span><span class="p">,</span> <span class="n">do_summ_print</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fmt_V</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.1f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fmt_R</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.1f</span><span class="s1">&#39;</span><span class="p">,</span>
+                                              <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">err_delta</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> 
+                                              <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">iteration_prints</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                                              
+    <span class="n">env</span><span class="o">.</span><span class="n">save_to_pickle_file</span><span class="p">(</span> <span class="n">fname</span><span class="o">=</span><span class="bp">None</span> <span class="p">)</span>
+
+    
+</pre></div>
+</td></tr></table></body></html>

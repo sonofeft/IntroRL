@@ -1,0 +1,262 @@
+<html><head><title>change_tracker.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>change_tracker.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: ascii -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">future</span> <span class="kn">import</span> <span class="n">standard_library</span>
+<span class="n">standard_library</span><span class="o">.</span><span class="n">install_aliases</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Tue Jan 15 21:08:15 2019</span>
+
+<span class="sd">@author: charlie</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">introrl.utils.sorteddict</span> <span class="kn">import</span> <span class="n">SortedDict</span>
+
+<span class="k">class</span> <span class="nc">ChangeTracker</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SD</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">()</span> <span class="c1"># index=value, value=count (number of times submitted)</span>
+        
+    <span class="k">def</span> <span class="nf">get_biggest_change</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the biggest change recorded.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="o">.</span><span class="n">peekitem</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">get_average_change</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the average of all the changes&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">:</span>
+            <span class="n">Ntot</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">[</span><span class="n">N</span> <span class="k">for</span> <span class="n">val</span><span class="p">,</span><span class="n">N</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span> <span class="p">)</span>
+            <span class="n">NxV</span>  <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">[</span><span class="n">N</span><span class="o">*</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span><span class="p">,</span><span class="n">N</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">NxV</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">Ntot</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">get_number_of_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the total number of changes recorded&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">:</span>
+            <span class="n">Ntot</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">[</span><span class="n">N</span> <span class="k">for</span> <span class="n">val</span><span class="p">,</span><span class="n">N</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">Ntot</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+    
+    <span class="k">def</span> <span class="nf">inc_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If value is in SD, increment the count, otherwise add it&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            
+    <span class="k">def</span> <span class="nf">dec_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If value is in SD, decrement the count.  If results in 0, remove it.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+                
+    <span class="k">def</span> <span class="nf">summ_print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  KEY    COUNT&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SD</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="n">count</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    
+    <span class="n">CT</span> <span class="o">=</span> <span class="n">ChangeTracker</span><span class="p">()</span>
+    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.011</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">inc_change</span><span class="p">(</span><span class="mf">1.21</span><span class="p">)</span>    
+
+    <span class="n">CT</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>    
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;get_biggest_change=&#39;</span><span class="p">,</span> <span class="n">CT</span><span class="o">.</span><span class="n">get_biggest_change</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">55</span><span class="p">)</span>
+    <span class="n">CT</span><span class="o">.</span><span class="n">dec_change</span><span class="p">(</span><span class="mf">1.1</span><span class="p">)</span>
+    <span class="n">CT</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>    
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;get_average_change=&#39;</span><span class="p">,</span> <span class="n">CT</span><span class="o">.</span><span class="n">get_average_change</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;get_number_of_changes=&#39;</span><span class="p">,</span> <span class="n">CT</span><span class="o">.</span><span class="n">get_number_of_changes</span><span class="p">())</span>
+    <span class="n">CT</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>    
+    <span class="n">CT</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>    
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">55</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;get_biggest_change=&#39;</span><span class="p">,</span> <span class="n">CT</span><span class="o">.</span><span class="n">get_biggest_change</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;get_average_change=&#39;</span><span class="p">,</span> <span class="n">CT</span><span class="o">.</span><span class="n">get_average_change</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;get_number_of_changes=&#39;</span><span class="p">,</span> <span class="n">CT</span><span class="o">.</span><span class="n">get_number_of_changes</span><span class="p">())</span>
+    
+</pre></div>
+</td></tr></table></body></html>

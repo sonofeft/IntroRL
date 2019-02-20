@@ -1,0 +1,202 @@
+<html><head><title>random_walk_generic_mrp.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>random_walk_generic_mrp.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">from</span> <span class="nn">introrl.layouts.generic_layout</span> <span class="kn">import</span> <span class="n">GenericLayout</span>
+<span class="kn">from</span> <span class="nn">introrl.environments.env_baseline</span> <span class="kn">import</span> <span class="n">EnvBaseline</span>
+<span class="kn">from</span> <span class="nn">introrl.reward</span> <span class="kn">import</span> <span class="n">Reward</span>
+
+<span class="c1">#  example 7.1 uses a 19 state random walk MRP</span>
+<span class="k">def</span> <span class="nf">get_random_walk</span><span class="p">(</span> <span class="n">Nside_states</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">win_reward</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lose_reward</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">step_reward</span><span class="o">=</span><span class="mf">0.0</span> <span class="p">):</span> 
+
+    <span class="n">Nstates</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">Nside_states</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;(L</span><span class="si">%i</span><span class="s1">, R</span><span class="si">%i</span><span class="s1">)&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">Nside_states</span><span class="p">,</span> <span class="n">Nside_states</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">EnvBaseline</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1"> State Random Walk MRP&#39;</span><span class="o">%</span><span class="n">Nstates</span> <span class="o">+</span> <span class="n">s</span> <span class="p">)</span> <span class="c1"># GenericLayout set below</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">set_info</span><span class="p">(</span> <span class="s1">&#39;</span><span class="si">%i</span><span class="s1"> State Random Walk MRP&#39;</span><span class="o">%</span><span class="n">Nstates</span> <span class="o">+</span> <span class="n">s</span> <span class="p">)</span>
+    
+    <span class="n">RstateL</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;R+</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Nside_states</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">LstateL</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;R+&#39;</span><span class="p">,</span><span class="s1">&#39;L-&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RstateL</span><span class="p">]))</span>
+    
+    <span class="n">actionD</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">LstateL</span><span class="p">:</span>
+        <span class="n">actionD</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+    <span class="n">actionD</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RstateL</span><span class="p">:</span>
+        <span class="n">actionD</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+    
+    <span class="n">rewardD</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Win&#39;</span><span class="p">:</span> <span class="n">win_reward</span><span class="p">,</span> <span class="s1">&#39;Lose&#39;</span><span class="p">:</span><span class="n">lose_reward</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">s_hash</span><span class="p">,</span> <span class="n">moveL</span><span class="p">)</span> <span class="ow">in</span> <span class="n">actionD</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">a_desc</span> <span class="ow">in</span> <span class="n">moveL</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">a_prob</span><span class="o">=</span><span class="mf">1.0</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_event</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span> <span class="p">):</span>
+        <span class="c1">#print(&#39;s_hash, a_desc, sn_hash&#39;,s_hash, a_desc, sn_hash)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rewardD</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">sn_hash</span><span class="p">,</span> <span class="n">step_reward</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">add_transition</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">,</span> <span class="n">t_prob</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">reward_obj</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="n">mrpL</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Lose&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">LstateL</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">RstateL</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;Win&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">ci</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">mrpL</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">):</span>
+        <span class="n">add_event</span><span class="p">(</span> <span class="n">ci</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="n">mrpL</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
+        <span class="n">add_event</span><span class="p">(</span> <span class="n">ci</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="n">mrpL</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="p">)</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">define_env_states_actions</span><span class="p">()</span>  <span class="c1"># send all states and actions to environment</span>
+
+    <span class="c1"># -------------------- make layout for printing ------------------</span>
+        
+    <span class="n">s_hash_rowL</span><span class="o">=</span><span class="p">[</span> <span class="n">mrpL</span> <span class="p">]</span>
+        
+    <span class="n">env</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">GenericLayout</span><span class="p">(</span> <span class="n">env</span><span class="p">,</span> <span class="n">s_hash_rowL</span><span class="o">=</span><span class="n">s_hash_rowL</span> <span class="p">)</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">start_state_hash</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span>
+
+    <span class="c1"># define default_policyD</span>
+    <span class="n">policyD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=state_hash, value=action_desc</span>
+
+    <span class="n">policyD</span><span class="p">[</span> <span class="s1">&#39;C&#39;</span> <span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">LstateL</span><span class="p">:</span>
+        <span class="n">policyD</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RstateL</span><span class="p">:</span>
+        <span class="n">policyD</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">default_policyD</span> <span class="o">=</span> <span class="n">policyD</span>
+    
+    <span class="k">return</span> <span class="n">env</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> <span class="c1"># pragma: no cover</span>
+    
+    <span class="n">env</span> <span class="o">=</span> <span class="n">get_random_walk</span><span class="p">()</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+    <span class="c1">#env.layout_print(vname=&#39;reward&#39;, fmt=&#39;&#39;, show_env_states=True, none_str=&#39;*&#39;)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">save_to_pickle_file</span><span class="p">(</span> <span class="n">fname</span><span class="o">=</span><span class="bp">None</span> <span class="p">)</span>
+</pre></div>
+</td></tr></table></body></html>

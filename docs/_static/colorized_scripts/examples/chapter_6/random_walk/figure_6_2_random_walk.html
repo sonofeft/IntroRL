@@ -1,0 +1,378 @@
+<html><head><title>figure_6_2_random_walk.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>figure_6_2_random_walk.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">introrl.mc_funcs.mc_ev_prediction</span> <span class="kn">import</span> <span class="n">mc_every_visit_prediction</span>
+<span class="kn">from</span> <span class="nn">introrl.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.state_value_coll</span> <span class="kn">import</span> <span class="n">StateValueColl</span>
+<span class="kn">from</span> <span class="nn">introrl.mdp_data.random_walk_mrp</span> <span class="kn">import</span> <span class="n">get_random_walk</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.episode_maker</span> <span class="kn">import</span> <span class="n">make_episode</span>
+<span class="kn">from</span> <span class="nn">introrl.utils.running_ave</span> <span class="kn">import</span> <span class="n">RunningAve</span>
+
+<span class="n">rw_mrp</span> <span class="o">=</span> <span class="n">get_random_walk</span><span class="p">()</span>
+<span class="n">policy</span> <span class="o">=</span> <span class="n">Policy</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">rw_mrp</span> <span class="p">)</span>
+
+<span class="n">NumEpisodes</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">mc_rms_raveL</span> <span class="o">=</span> <span class="p">[</span><span class="n">RunningAve</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NumEpisodes</span><span class="p">)]</span>
+<span class="n">td_rms_raveL</span> <span class="o">=</span> <span class="p">[</span><span class="n">RunningAve</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NumEpisodes</span><span class="p">)]</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="n">true_valueD</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mf">3.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span><span class="mf">4.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mf">5.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="n">o_loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">101</span><span class="p">):</span>
+    <span class="n">episodeL</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%2i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">o_loop</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">o_loop</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">()</span>
+            
+    <span class="c1"># make 2 state value objects.</span>
+    <span class="n">sv_td</span> <span class="o">=</span> <span class="n">StateValueColl</span><span class="p">(</span> <span class="n">rw_mrp</span><span class="p">,</span> <span class="n">init_val</span><span class="o">=</span><span class="mf">0.5</span> <span class="p">)</span>
+    <span class="n">sv_mc</span> <span class="o">=</span> <span class="n">StateValueColl</span><span class="p">(</span> <span class="n">rw_mrp</span><span class="p">,</span> <span class="n">init_val</span><span class="o">=</span><span class="mf">0.5</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i_loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NumEpisodes</span><span class="p">):</span>
+                    
+        <span class="n">episode</span> <span class="o">=</span> <span class="n">make_episode</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">rw_mrp</span><span class="p">,</span> <span class="n">rw_mrp</span><span class="o">.</span><span class="n">terminal_set</span><span class="p">)</span>
+        <span class="n">episodeL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">episode</span> <span class="p">)</span>
+        
+        <span class="n">LOOP_LIMIT</span> <span class="o">=</span> <span class="mi">2000</span>
+        <span class="n">inner_loop</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">while</span> <span class="bp">True</span> <span class="ow">and</span> <span class="n">inner_loop</span><span class="o">&lt;</span><span class="n">LOOP_LIMIT</span><span class="p">:</span>
+            <span class="n">inner_loop</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="n">mc_updateD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=s_hash, value=total G update for s_hash</span>
+            <span class="n">td_updateD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=s_hash, value=total TD update for s_hash</span>
+            
+            <span class="k">for</span> <span class="n">episode</span> <span class="ow">in</span> <span class="n">episodeL</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">episode</span><span class="o">.</span><span class="n">get_rev_discounted_returns</span><span class="p">(</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span> <span class="p">):</span>
+                    <span class="p">(</span><span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span> <span class="o">=</span> <span class="n">dr</span>
+                    
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">s_hash</span> <span class="ow">in</span> <span class="n">mc_updateD</span><span class="p">:</span>
+                        <span class="n">mc_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="n">td_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    
+                    <span class="n">mc_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="o">+=</span> <span class="n">G</span> <span class="o">-</span> <span class="n">sv_mc</span><span class="o">.</span><span class="n">get_Vs</span><span class="p">(</span><span class="n">s_hash</span><span class="p">)</span>
+                    
+                    <span class="n">td_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="o">+=</span> <span class="n">reward</span> <span class="o">+</span> <span class="n">gamma</span><span class="o">*</span><span class="n">sv_td</span><span class="o">.</span><span class="n">get_Vs</span><span class="p">(</span><span class="n">sn_hash</span><span class="p">)</span> <span class="o">-</span> <span class="n">sv_td</span><span class="o">.</span><span class="n">get_Vs</span><span class="p">(</span><span class="n">s_hash</span><span class="p">)</span>
+                    
+                    <span class="c1">#sum_diffs += sv_mc.mc_update( s_hash, alpha, G)</span>
+                
+                    <span class="c1">#sum_diffs += sv_td.td0_update( s_hash=s_hash, alpha=alpha, </span>
+                    <span class="c1">#                                     gamma=gamma, sn_hash=sn_hash, </span>
+                    <span class="c1">#                                     reward=reward)</span>
+            <span class="k">for</span> <span class="n">s_hash</span> <span class="ow">in</span> <span class="n">mc_updateD</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">mc_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="o">*=</span> <span class="n">alpha</span>
+                <span class="n">td_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="o">*=</span> <span class="n">alpha</span>
+                
+            <span class="n">sum_diffs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mc_updateD</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span> <span class="o">+</span> \
+                             <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">td_updateD</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span> <span class="p">)</span>
+            
+            <span class="c1"># update state values</span>
+            <span class="k">for</span> <span class="n">s_hash</span> <span class="ow">in</span> <span class="n">mc_updateD</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">sv_mc</span><span class="o">.</span><span class="n">delta_update</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">mc_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="p">)</span>
+                <span class="n">sv_td</span><span class="o">.</span><span class="n">delta_update</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">td_updateD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span> <span class="p">)</span>
+                
+            <span class="k">if</span> <span class="n">sum_diffs</span>  <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+                <span class="k">break</span>
+                
+        <span class="k">if</span> <span class="n">inner_loop</span> <span class="o">&gt;=</span> <span class="n">LOOP_LIMIT</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;LOOP EXIT&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># add this loops state values to running_ave</span>
+        <span class="n">mc_rms_raveL</span><span class="p">[</span><span class="n">i_loop</span><span class="p">]</span><span class="o">.</span><span class="n">add_val</span><span class="p">(</span> <span class="n">sv_mc</span><span class="o">.</span><span class="n">calc_rms_error</span><span class="p">(</span> <span class="n">true_valueD</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">td_rms_raveL</span><span class="p">[</span><span class="n">i_loop</span><span class="p">]</span><span class="o">.</span><span class="n">add_val</span><span class="p">(</span> <span class="n">sv_td</span><span class="o">.</span><span class="n">calc_rms_error</span><span class="p">(</span> <span class="n">true_valueD</span> <span class="p">)</span> <span class="p">)</span>
+
+<span class="n">mc_rmsL</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="o">.</span><span class="n">get_ave</span><span class="p">()</span> <span class="k">for</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">mc_rms_raveL</span><span class="p">]</span>
+<span class="n">td_rmsL</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="o">.</span><span class="n">get_ave</span><span class="p">()</span> <span class="k">for</span> <span class="n">R</span> <span class="ow">in</span> <span class="n">td_rms_raveL</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mc_rmsL</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MC&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">td_rmsL</span><span class="p">,</span> <span class="s1">&#39;c-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;TD(0)&#39;</span><span class="p">)</span>
+<span class="n">td_erros</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.23570226</span><span class="p">,</span> <span class="mf">0.23500565</span><span class="p">,</span> <span class="mf">0.14095847</span><span class="p">,</span> <span class="mf">0.13294523</span><span class="p">,</span> <span class="mf">0.12816648</span><span class="p">,</span>
+       <span class="mf">0.12551351</span><span class="p">,</span> <span class="mf">0.12472649</span><span class="p">,</span> <span class="mf">0.12393498</span><span class="p">,</span> <span class="mf">0.1234716</span> <span class="p">,</span> <span class="mf">0.12199879</span><span class="p">,</span>
+       <span class="mf">0.11964723</span><span class="p">,</span> <span class="mf">0.11581404</span><span class="p">,</span> <span class="mf">0.11171416</span><span class="p">,</span> <span class="mf">0.1092907</span> <span class="p">,</span> <span class="mf">0.10681323</span><span class="p">,</span>
+       <span class="mf">0.10458747</span><span class="p">,</span> <span class="mf">0.10274803</span><span class="p">,</span> <span class="mf">0.10058374</span><span class="p">,</span> <span class="mf">0.09793287</span><span class="p">,</span> <span class="mf">0.09578209</span><span class="p">,</span>
+       <span class="mf">0.09267628</span><span class="p">,</span> <span class="mf">0.08953371</span><span class="p">,</span> <span class="mf">0.08651356</span><span class="p">,</span> <span class="mf">0.08432881</span><span class="p">,</span> <span class="mf">0.08120382</span><span class="p">,</span>
+       <span class="mf">0.07957588</span><span class="p">,</span> <span class="mf">0.0777723</span> <span class="p">,</span> <span class="mf">0.07588626</span><span class="p">,</span> <span class="mf">0.0742679</span> <span class="p">,</span> <span class="mf">0.07291501</span><span class="p">,</span>
+       <span class="mf">0.07222157</span><span class="p">,</span> <span class="mf">0.07067874</span><span class="p">,</span> <span class="mf">0.06891229</span><span class="p">,</span> <span class="mf">0.06738446</span><span class="p">,</span> <span class="mf">0.06615357</span><span class="p">,</span>
+       <span class="mf">0.06443629</span><span class="p">,</span> <span class="mf">0.06282793</span><span class="p">,</span> <span class="mf">0.06144512</span><span class="p">,</span> <span class="mf">0.06040959</span><span class="p">,</span> <span class="mf">0.05944116</span><span class="p">,</span>
+       <span class="mf">0.05866245</span><span class="p">,</span> <span class="mf">0.05772758</span><span class="p">,</span> <span class="mf">0.0571357</span> <span class="p">,</span> <span class="mf">0.05695923</span><span class="p">,</span> <span class="mf">0.05680691</span><span class="p">,</span>
+       <span class="mf">0.05608458</span><span class="p">,</span> <span class="mf">0.05548595</span><span class="p">,</span> <span class="mf">0.05491622</span><span class="p">,</span> <span class="mf">0.05399334</span><span class="p">,</span> <span class="mf">0.05334945</span><span class="p">,</span>
+       <span class="mf">0.05303594</span><span class="p">,</span> <span class="mf">0.05210484</span><span class="p">,</span> <span class="mf">0.05104764</span><span class="p">,</span> <span class="mf">0.05049412</span><span class="p">,</span> <span class="mf">0.04994111</span><span class="p">,</span>
+       <span class="mf">0.04943265</span><span class="p">,</span> <span class="mf">0.04914664</span><span class="p">,</span> <span class="mf">0.04871571</span><span class="p">,</span> <span class="mf">0.04823379</span><span class="p">,</span> <span class="mf">0.04774282</span><span class="p">,</span>
+       <span class="mf">0.04715639</span><span class="p">,</span> <span class="mf">0.04649857</span><span class="p">,</span> <span class="mf">0.0458638</span> <span class="p">,</span> <span class="mf">0.04556575</span><span class="p">,</span> <span class="mf">0.0451605</span> <span class="p">,</span>
+       <span class="mf">0.04509456</span><span class="p">,</span> <span class="mf">0.04498466</span><span class="p">,</span> <span class="mf">0.04484148</span><span class="p">,</span> <span class="mf">0.04441262</span><span class="p">,</span> <span class="mf">0.04399574</span><span class="p">,</span>
+       <span class="mf">0.04355542</span><span class="p">,</span> <span class="mf">0.04303882</span><span class="p">,</span> <span class="mf">0.04261556</span><span class="p">,</span> <span class="mf">0.04247609</span><span class="p">,</span> <span class="mf">0.04230481</span><span class="p">,</span>
+       <span class="mf">0.0421103</span> <span class="p">,</span> <span class="mf">0.0419708</span> <span class="p">,</span> <span class="mf">0.04179976</span><span class="p">,</span> <span class="mf">0.04166109</span><span class="p">,</span> <span class="mf">0.04146754</span><span class="p">,</span>
+       <span class="mf">0.04110138</span><span class="p">,</span> <span class="mf">0.04079011</span><span class="p">,</span> <span class="mf">0.04039504</span><span class="p">,</span> <span class="mf">0.0399459</span> <span class="p">,</span> <span class="mf">0.03945678</span><span class="p">,</span>
+       <span class="mf">0.03922889</span><span class="p">,</span> <span class="mf">0.03905436</span><span class="p">,</span> <span class="mf">0.03873144</span><span class="p">,</span> <span class="mf">0.03847842</span><span class="p">,</span> <span class="mf">0.03854734</span><span class="p">,</span>
+       <span class="mf">0.0383448</span> <span class="p">,</span> <span class="mf">0.03821861</span><span class="p">,</span> <span class="mf">0.03824804</span><span class="p">,</span> <span class="mf">0.03821737</span><span class="p">,</span> <span class="mf">0.03814241</span><span class="p">,</span>
+       <span class="mf">0.03794948</span><span class="p">,</span> <span class="mf">0.0376604</span> <span class="p">,</span> <span class="mf">0.03719871</span><span class="p">,</span> <span class="mf">0.03700129</span><span class="p">,</span> <span class="mf">0.0367717</span> <span class="p">,</span>
+       <span class="mf">0.03646475</span><span class="p">]</span>
+
+<span class="n">mc_erros</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.32090206</span><span class="p">,</span> <span class="mf">0.3073737</span> <span class="p">,</span> <span class="mf">0.28464613</span><span class="p">,</span> <span class="mf">0.24484697</span><span class="p">,</span> <span class="mf">0.20757003</span><span class="p">,</span>
+       <span class="mf">0.19248474</span><span class="p">,</span> <span class="mf">0.17944204</span><span class="p">,</span> <span class="mf">0.16946804</span><span class="p">,</span> <span class="mf">0.16277973</span><span class="p">,</span> <span class="mf">0.16181715</span><span class="p">,</span>
+       <span class="mf">0.15962668</span><span class="p">,</span> <span class="mf">0.14989034</span><span class="p">,</span> <span class="mf">0.14870127</span><span class="p">,</span> <span class="mf">0.14569844</span><span class="p">,</span> <span class="mf">0.14070048</span><span class="p">,</span>
+       <span class="mf">0.13875578</span><span class="p">,</span> <span class="mf">0.1351169</span> <span class="p">,</span> <span class="mf">0.13082869</span><span class="p">,</span> <span class="mf">0.12741113</span><span class="p">,</span> <span class="mf">0.12455362</span><span class="p">,</span>
+       <span class="mf">0.11893822</span><span class="p">,</span> <span class="mf">0.11750701</span><span class="p">,</span> <span class="mf">0.11616459</span><span class="p">,</span> <span class="mf">0.11504002</span><span class="p">,</span> <span class="mf">0.11015156</span><span class="p">,</span>
+       <span class="mf">0.10608762</span><span class="p">,</span> <span class="mf">0.10345609</span><span class="p">,</span> <span class="mf">0.10131899</span><span class="p">,</span> <span class="mf">0.09932179</span><span class="p">,</span> <span class="mf">0.09686175</span><span class="p">,</span>
+       <span class="mf">0.09588385</span><span class="p">,</span> <span class="mf">0.09396435</span><span class="p">,</span> <span class="mf">0.09039547</span><span class="p">,</span> <span class="mf">0.08835641</span><span class="p">,</span> <span class="mf">0.08783245</span><span class="p">,</span>
+       <span class="mf">0.08641919</span><span class="p">,</span> <span class="mf">0.08487034</span><span class="p">,</span> <span class="mf">0.08484189</span><span class="p">,</span> <span class="mf">0.08392574</span><span class="p">,</span> <span class="mf">0.0839213</span> <span class="p">,</span>
+       <span class="mf">0.08265648</span><span class="p">,</span> <span class="mf">0.08223952</span><span class="p">,</span> <span class="mf">0.08126605</span><span class="p">,</span> <span class="mf">0.08106522</span><span class="p">,</span> <span class="mf">0.08053886</span><span class="p">,</span>
+       <span class="mf">0.07924668</span><span class="p">,</span> <span class="mf">0.07798944</span><span class="p">,</span> <span class="mf">0.07686527</span><span class="p">,</span> <span class="mf">0.07544847</span><span class="p">,</span> <span class="mf">0.07444613</span><span class="p">,</span>
+       <span class="mf">0.07438756</span><span class="p">,</span> <span class="mf">0.07416803</span><span class="p">,</span> <span class="mf">0.07437839</span><span class="p">,</span> <span class="mf">0.07410547</span><span class="p">,</span> <span class="mf">0.07356762</span><span class="p">,</span>
+       <span class="mf">0.07399262</span><span class="p">,</span> <span class="mf">0.07407239</span><span class="p">,</span> <span class="mf">0.07450469</span><span class="p">,</span> <span class="mf">0.07414103</span><span class="p">,</span> <span class="mf">0.07357016</span><span class="p">,</span>
+       <span class="mf">0.07302586</span><span class="p">,</span> <span class="mf">0.07206293</span><span class="p">,</span> <span class="mf">0.07243964</span><span class="p">,</span> <span class="mf">0.07169077</span><span class="p">,</span> <span class="mf">0.07059434</span><span class="p">,</span>
+       <span class="mf">0.07073674</span><span class="p">,</span> <span class="mf">0.07040841</span><span class="p">,</span> <span class="mf">0.06928873</span><span class="p">,</span> <span class="mf">0.06854812</span><span class="p">,</span> <span class="mf">0.06866516</span><span class="p">,</span>
+       <span class="mf">0.06755258</span><span class="p">,</span> <span class="mf">0.06750844</span><span class="p">,</span> <span class="mf">0.06747084</span><span class="p">,</span> <span class="mf">0.06636694</span><span class="p">,</span> <span class="mf">0.06624459</span><span class="p">,</span>
+       <span class="mf">0.06606405</span><span class="p">,</span> <span class="mf">0.06570818</span><span class="p">,</span> <span class="mf">0.06557933</span><span class="p">,</span> <span class="mf">0.06498521</span><span class="p">,</span> <span class="mf">0.06439692</span><span class="p">,</span>
+       <span class="mf">0.06320915</span><span class="p">,</span> <span class="mf">0.063198</span>  <span class="p">,</span> <span class="mf">0.06269102</span><span class="p">,</span> <span class="mf">0.06248714</span><span class="p">,</span> <span class="mf">0.06260347</span><span class="p">,</span>
+       <span class="mf">0.06224086</span><span class="p">,</span> <span class="mf">0.0621441</span> <span class="p">,</span> <span class="mf">0.06165326</span><span class="p">,</span> <span class="mf">0.06171364</span><span class="p">,</span> <span class="mf">0.06169938</span><span class="p">,</span>
+       <span class="mf">0.06165702</span><span class="p">,</span> <span class="mf">0.06103074</span><span class="p">,</span> <span class="mf">0.06068596</span><span class="p">,</span> <span class="mf">0.06105469</span><span class="p">,</span> <span class="mf">0.06090248</span><span class="p">,</span>
+       <span class="mf">0.06063371</span><span class="p">,</span> <span class="mf">0.06069861</span><span class="p">,</span> <span class="mf">0.06014864</span><span class="p">,</span> <span class="mf">0.0596927</span> <span class="p">,</span> <span class="mf">0.05976133</span><span class="p">,</span>
+       <span class="mf">0.05960022</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mc_erros</span><span class="p">,</span> <span class="s1">&#39;r:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MC, Zhang&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">td_erros</span><span class="p">,</span> <span class="s1">&#39;c:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;TD(0), Zhang&#39;</span><span class="p">)</span>
+
+<span class="c1"># Digitized Sutton &amp; Barto Data</span>
+<span class="n">mc_walkL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.37061</span><span class="p">,</span><span class="mf">5.77585</span><span class="p">,</span><span class="mf">7.88371</span><span class="p">,</span><span class="mf">11.3968</span><span class="p">,</span><span class="mf">14.9099</span><span class="p">,</span><span class="mf">15.9136</span><span class="p">,</span><span class="mf">23.7428</span><span class="p">,</span><span class="mf">31.9735</span><span class="p">,</span><span class="mf">42.1113</span><span class="p">,</span><span class="mf">51.6469</span><span class="p">,</span><span class="mf">62.9892</span><span class="p">,</span><span class="mf">77.4431</span><span class="p">,</span><span class="mf">90.1906</span><span class="p">,</span><span class="mf">99.9269</span><span class="p">]</span>
+<span class="n">mc_rmsL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.250086</span><span class="p">,</span><span class="mf">0.221263</span><span class="p">,</span><span class="mf">0.189556</span><span class="p">,</span><span class="mf">0.163935</span><span class="p">,</span><span class="mf">0.137353</span><span class="p">,</span><span class="mf">0.136072</span><span class="p">,</span><span class="mf">0.115895</span><span class="p">,</span><span class="mf">0.0976404</span><span class="p">,</span><span class="mf">0.0861108</span><span class="p">,</span><span class="mf">0.0774637</span><span class="p">,</span><span class="mf">0.0697773</span><span class="p">,</span><span class="mf">0.0608099</span><span class="p">,</span><span class="mf">0.0553654</span><span class="p">,</span><span class="mf">0.0537641</span><span class="p">]</span>
+
+<span class="n">td_walkL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.16238</span><span class="p">,</span><span class="mf">3.56762</span><span class="p">,</span><span class="mf">5.37435</span><span class="p">,</span><span class="mf">7.58259</span><span class="p">,</span><span class="mf">10.6942</span><span class="p">,</span><span class="mf">17.62</span><span class="p">,</span><span class="mf">25.2485</span><span class="p">,</span><span class="mf">34.0814</span><span class="p">,</span><span class="mf">43.7173</span><span class="p">,</span><span class="mf">57.0671</span><span class="p">,</span><span class="mf">68.6101</span><span class="p">,</span><span class="mf">80.7554</span><span class="p">,</span><span class="mf">93.2018</span><span class="p">,</span><span class="mf">99.8265</span><span class="p">]</span>
+<span class="n">td_rmsL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.249766</span><span class="p">,</span><span class="mf">0.198524</span><span class="p">,</span><span class="mf">0.164255</span><span class="p">,</span><span class="mf">0.136392</span><span class="p">,</span><span class="mf">0.111091</span><span class="p">,</span><span class="mf">0.0925161</span><span class="p">,</span><span class="mf">0.0755421</span><span class="p">,</span><span class="mf">0.0604897</span><span class="p">,</span><span class="mf">0.052483</span><span class="p">,</span><span class="mf">0.0467183</span><span class="p">,</span><span class="mf">0.0425548</span><span class="p">,</span><span class="mf">0.0412738</span><span class="p">,</span><span class="mf">0.0387117</span><span class="p">,</span><span class="mf">0.0361495</span><span class="p">]</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mc_walkL</span><span class="p">,</span>  <span class="n">mc_rmsL</span><span class="p">,</span> <span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MC, Sutton Pub.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">td_walkL</span><span class="p">,</span>  <span class="n">td_rmsL</span><span class="p">,</span> <span class="s1">&#39;c--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;TD(0), Sutton Pub.&#39;</span><span class="p">)</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Figure 6.2 Batch MC &amp; TD(0) Random Walk&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Ave. RMS Error (100 experiments)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Walks / Episodes&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;fig_6_2_mc_td_random_walk.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></body></html>

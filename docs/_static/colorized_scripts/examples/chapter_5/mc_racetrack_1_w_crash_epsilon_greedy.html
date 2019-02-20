@@ -1,0 +1,120 @@
+<html><head><title>mc_racetrack_1_w_crash_epsilon_greedy.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>mc_racetrack_1_w_crash_epsilon_greedy.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">from</span> <span class="nn">introrl.mc_funcs.mc_fv_epsilon_greedy</span> <span class="kn">import</span> <span class="n">mc_epsilon_greedy</span>
+<span class="kn">from</span> <span class="nn">introrl.black_box_sims.racetrack_1_w_crash_sim</span> <span class="kn">import</span> <span class="n">RaceTrack_1_w_Crash</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="kn">as</span> <span class="nn">mpatches</span>
+
+
+<span class="n">RT</span> <span class="o">=</span> <span class="n">RaceTrack_1_w_Crash</span><span class="p">()</span>
+
+<span class="n">pi</span><span class="p">,</span> <span class="n">av</span> <span class="o">=</span> <span class="n">mc_epsilon_greedy</span><span class="p">(</span> <span class="n">RT</span><span class="p">,</span> <span class="n">initial_policy</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
+                         <span class="n">read_pickle_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="c1">#&#39;racetrack_1_w_crash_sim&#39;, </span>
+                         <span class="n">save_pickle_file</span><span class="o">=</span><span class="s1">&#39;racetrack_1_w_crash_sim&#39;</span><span class="p">,</span>
+                         <span class="n">use_list_of_start_states</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># use list OR single start state of environment.</span>
+                         <span class="n">iter_all_start_actions</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># pick random or iterate all starting actions</span>
+                         <span class="n">first_visit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> 
+                         <span class="n">do_summ_print</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">showRunningAve</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">fmt_Q</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fmt_R</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">&#39;</span><span class="p">,</span>
+                         <span class="n">show_initial_policy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                         <span class="n">max_num_episodes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">min_num_episodes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_abserr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+                         <span class="n">iteration_prints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                         <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                         <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">const_epsilon</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">half_life</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                         <span class="n">N_episodes_wo_decay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                          
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">RT</span><span class="o">.</span><span class="n">plot_policy</span><span class="p">(</span> <span class="n">ax</span><span class="p">,</span> <span class="n">pi</span> <span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;racetrack_1_w_crash_sim.png&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></body></html>

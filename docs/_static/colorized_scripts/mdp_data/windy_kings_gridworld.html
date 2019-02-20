@@ -1,0 +1,276 @@
+<html><head><title>windy_kings_gridworld.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>windy_kings_gridworld.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">from</span> <span class="nn">introrl.layouts.generic_layout</span> <span class="kn">import</span> <span class="n">GenericLayout</span>
+
+<span class="kn">from</span> <span class="nn">introrl.environments.env_baseline</span> <span class="kn">import</span> <span class="n">EnvBaseline</span>
+<span class="kn">from</span> <span class="nn">introrl.reward</span> <span class="kn">import</span> <span class="n">Reward</span>
+
+<span class="k">def</span> <span class="nf">get_gridworld</span><span class="p">(</span><span class="n">step_reward</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">goal</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span>
+            <span class="n">windT</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Windy Gridworld with (0,0) at lower left</span>
+<span class="sd">    width is defined by length of windT tuple.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">gridworld</span> <span class="o">=</span> <span class="n">EnvBaseline</span><span class="p">(</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Windy Kings Gridworld&#39;</span> <span class="p">)</span> <span class="c1"># GenericLayout set below</span>
+    <span class="n">gridworld</span><span class="o">.</span><span class="n">set_info</span><span class="p">(</span> <span class="s2">&quot;&quot;&quot;&quot;&quot;&quot;</span> <span class="p">)</span>
+
+    <span class="n">width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">windT</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_action_snext</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns state_next_hash&quot;&quot;&quot;</span>
+
+        <span class="n">di</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dj</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="s1">&#39;N&#39;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="n">di</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="s1">&#39;S&#39;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="n">di</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            
+        <span class="k">if</span> <span class="s1">&#39;E&#39;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="n">dj</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="s1">&#39;W&#39;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+            <span class="n">dj</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">s_hash</span>
+        <span class="n">wind_di</span> <span class="o">=</span> <span class="n">windT</span><span class="p">[</span> <span class="n">j</span> <span class="p">]</span>
+
+        <span class="n">i_next</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">di</span>
+        <span class="c1"># constrain basic move to be inside the grid</span>
+        <span class="n">i_next</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">height</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i_next</span><span class="p">))</span>
+
+        <span class="n">i_next</span> <span class="o">+=</span> <span class="n">wind_di</span> <span class="c1"># add wind to constrained move.</span>
+        <span class="n">j_next</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="n">dj</span>
+
+        <span class="c1"># constrain next position to be inside the grid</span>
+        <span class="n">i_next</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">height</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i_next</span><span class="p">))</span>
+        <span class="n">j_next</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j_next</span><span class="p">))</span>
+
+        <span class="n">state_next_hash</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_next</span><span class="p">,</span> <span class="n">j_next</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state_next_hash</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+            <span class="n">state_next_hash</span> <span class="o">=</span> <span class="s1">&#39;Goal&#39;</span>
+        <span class="k">return</span> <span class="n">state_next_hash</span>
+
+
+    <span class="c1"># define default policy</span>
+    <span class="n">gridworld</span><span class="o">.</span><span class="n">default_policyD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#index=s_hash, value=list of equiprobable actions</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+            <span class="n">s_hash</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">s_hash</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># s_hash == &#39;Goal&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">gridworld</span><span class="o">.</span><span class="n">default_policyD</span><span class="p">[</span> <span class="n">s_hash</span> <span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">,</span><span class="s1">&#39;S&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">,</span><span class="s1">&#39;SE&#39;</span><span class="p">,</span><span class="s1">&#39;SW&#39;</span><span class="p">,</span><span class="s1">&#39;NW&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">a_desc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">,</span><span class="s1">&#39;S&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">,</span><span class="s1">&#39;SE&#39;</span><span class="p">,</span><span class="s1">&#39;SW&#39;</span><span class="p">,</span><span class="s1">&#39;NW&#39;</span><span class="p">]:</span>
+                    <span class="n">gridworld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">a_prob</span><span class="o">=</span><span class="mf">1.0</span> <span class="p">)</span> <span class="c1"># a_prob will be normalized</span>
+
+                    <span class="n">sn_hash</span> <span class="o">=</span> <span class="n">get_action_snext</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span> <span class="p">)</span>
+                    <span class="c1"># add each event to transitions object</span>
+                    <span class="n">gridworld</span><span class="o">.</span><span class="n">add_transition</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">,</span> <span class="n">t_prob</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">reward_obj</span><span class="o">=</span><span class="n">step_reward</span><span class="p">)</span>
+
+    <span class="n">gridworld</span><span class="o">.</span><span class="n">define_env_states_actions</span><span class="p">()</span>  <span class="c1"># send all states and actions to environment</span>
+
+    <span class="c1"># --------------------</span>
+
+    <span class="n">s_hash_rowL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># layout rows for makeing 2D output</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">):</span> <span class="c1"># put (0,0) at upper left</span>
+        <span class="n">rowL</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+            <span class="n">s_hash</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">s_hash</span> <span class="o">==</span> <span class="n">goal</span><span class="p">:</span>
+                <span class="n">s_hash</span> <span class="o">=</span> <span class="s1">&#39;Goal&#39;</span>
+
+            <span class="n">rowL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">s_hash</span> <span class="p">)</span>
+
+        <span class="c1"># use insert to put (0,0) at lower left, append for upper left</span>
+        <span class="n">s_hash_rowL</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rowL</span> <span class="p">)</span><span class="c1"># layout rows for makeing 2D output</span>
+
+    <span class="n">gridworld</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">GenericLayout</span><span class="p">(</span> <span class="n">gridworld</span><span class="p">,</span> <span class="n">s_hash_rowL</span><span class="o">=</span><span class="n">s_hash_rowL</span><span class="p">,</span>
+                                      <span class="n">col_tickL</span><span class="o">=</span><span class="n">windT</span><span class="p">,</span>
+                                      <span class="n">x_axis_label</span><span class="o">=</span><span class="s1">&#39;Upward Wind Speed&#39;</span>  <span class="p">)</span>
+
+
+    <span class="n">gridworld</span><span class="o">.</span><span class="n">start_state_hash</span> <span class="o">=</span>  <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gridworld</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> <span class="c1"># pragma: no cover</span>
+
+    <span class="n">gridworld</span> <span class="o">=</span> <span class="n">get_gridworld</span><span class="p">()</span>
+    <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">gridworld</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gridworld</span><span class="o">.</span><span class="n">layout_print</span><span class="p">(</span><span class="n">vname</span><span class="o">=</span><span class="s1">&#39;reward&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">show_env_states</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">none_str</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+    <span class="n">gridworld</span><span class="o">.</span><span class="n">save_to_pickle_file</span><span class="p">(</span> <span class="n">fname</span><span class="o">=</span><span class="bp">None</span> <span class="p">)</span>
+</pre></div>
+</td></tr></table></body></html>

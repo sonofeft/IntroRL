@@ -1,0 +1,65 @@
+_______tk_nosy UNITTEST RUN# 702________
+
+{Item #1} test_check_tuple_of_values, 
+<Action "(1, 'Z')">
+
+{Item #2} test_misfit_layout_s_hash, 
+rogueenv= <ignorantrl.tests.test_env.RogueEnv object at 0x0397A250>
+
+{Item #3} test_summ_print, 
+___ "Tiny Env" Environment Summary ___
+___ StateColl Summary ___
+    Nstates=4
+  state_hash
+        0  TERMINAL
+        1
+        2
+        3  TERMINAL
+___ ActionColl Summary ___
+    Nactions=2
+    Description
+          -1
+           1
+=== Tiny Env TransitionColl TransitionColl Summary ===
+    Nstate-actions=4
+    Ntransitions=4
+
+___ 0 StateActions Summary ___
+    Nactions=0 --> TERMINAL
+___ 1 StateActions Summary ___
+    Nactions=2
+         Action Probability                 (Next, Reward, prob)
+              1  0.500000   Next State(s) = (2 1_R 1)
+             -1  0.500000   Next State(s) = (0 1_R 1)
+___ 2 StateActions Summary ___
+    Nactions=2
+         Action Probability                 (Next, Reward, prob)
+              1  0.500000   Next State(s) = (3 1_R 1)
+             -1  0.500000   Next State(s) = (1 0_R 1)
+___ 3 StateActions Summary ___
+    Nactions=0 --> TERMINAL
+ ==== Tiny Env ====
+      1 0 2 3  ||
+ === State-Hash ===
+     _______________________________ Tiny Env Reward Summary _______________________________
+    0.5200000000000002est               0.41est               0.46est 0.4799999999999999est  ||
+...ERROR... "Tiny Env" tried to layout_print w/o a defined layout
+
+{Item #4} test_check_tuple_of_values, 
+<State "(1, 'Z')">
+
+{Item #5} test_all_zero_normalize, 
+[0.25, 0.25, 0.25, 0.25]
+
+{Item #6} test_remove_action, 
+WARNING... tried to remove non-existing object from StateActions
+
+{Item #7} test_normalize_all_zero_probs, 
+Got  (0, 0)  p=  0.25
+Got  (3, 2)  p=  0.25
+Got  (1, 2)  p=  0.25
+Got  (2, 3)  p=  0.25
+
+{Item #8} test_remove_next_state, 
+WARNING... tried to remove non-existing object from Transition
+

@@ -1,0 +1,362 @@
+<html><head><title>epsilon_calc.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>epsilon_calc.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: ascii -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">future</span> <span class="kn">import</span> <span class="n">standard_library</span>
+<span class="n">standard_library</span><span class="o">.</span><span class="n">install_aliases</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="k">class</span> <span class="nc">EpsilonGreedy</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make Epsilon-Greedy choices from list of possible actions.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">const_epsilon</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">half_life</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                 <span class="n">N_episodes_wo_decay</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">greedy_mode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When epsilon is small, more greedy choices are made.</span>
+<span class="sd">        When epsilon is large, more random choices are made.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">const_epsilon</span> <span class="o">=</span> <span class="n">const_epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">half_life</span> <span class="o">=</span> <span class="n">half_life</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decay_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span> <span class="n">half_life</span> <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">greedy_mode</span> <span class="o">=</span> <span class="n">greedy_mode</span> <span class="c1"># when True, make only greedy choices and do NOT inc. N_eg_choices</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes_wo_decay</span> <span class="o">=</span> <span class="n">N_episodes_wo_decay</span> <span class="c1"># may wait # of steps before changing eps.</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># number of episodes (increment with call to inc_N_episodes)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_eg_choices</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># may count actions and change epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_greedy</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># track number of greedy and random choices made.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_random</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">def</span> <span class="nf">set_const_epsilon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsilon_inp</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon_inp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">const_epsilon</span> <span class="o">=</span> <span class="bp">True</span>
+        
+    <span class="k">def</span> <span class="nf">inc_N_episodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># normally called by Environment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="k">def</span> <span class="nf">set_greedy_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">greedy_mode</span> <span class="o">=</span> <span class="n">mode</span>
+    
+    <span class="k">def</span> <span class="nf">greedy_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">greedy_action</span><span class="p">,</span> <span class="n">legal_actionL</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make greedy choice, but do not affect epsilon decay.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">greedy_action</span>
+    
+    <span class="k">def</span> <span class="nf">current_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If constant, simply return the constant.  If not, calc the current value.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">const_epsilon</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes_wo_decay</span><span class="p">):</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">decay_factor</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">N_episodes_wo_decay</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">eps</span>        
+    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">greedy_action</span><span class="p">,</span> <span class="n">legal_actionL</span><span class="p">,</span> <span class="n">epsilon_inp</span><span class="o">=</span><span class="bp">None</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return eps-greedy action. </span>
+<span class="sd">        Either greedy_action or random pick from legal_actionL.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># If in greedy_mode, always return greedy choice w/o incrementing any counters.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">greedy_mode</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">greedy_action</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_eg_choices</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="c1"># see if caller wants to dictate epsilon</span>
+        <span class="k">if</span> <span class="n">epsilon_inp</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_eps</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="n">epsilon_inp</span>
+
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">eps</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">greedy_action</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">N_greedy</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1">#print(&#39;    Made Greedy Choice #%i&#39;%self.N_greedy)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span> <span class="n">legal_actionL</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">N_random</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1">#print(&#39;    Made Epsilon Exploration Choice #%i&#39;%self.N_random)</span>
+        
+        <span class="c1">#print(&#39;eps-greedy action =&#39;,action)</span>
+        <span class="k">return</span> <span class="n">action</span>
+
+    <span class="k">def</span> <span class="nf">summ_print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># pragma: no cover</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;___ Epsilon Greedy Summary ___&#39;</span><span class="p">)</span>        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">greedy_mode</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;    Currently in Greedy Mode... Always Returns Best Action.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">const_epsilon</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;    Constant Epsilon =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;       Starting Epsilon =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;     Episodes w/o Decay =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes_wo_decay</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;       Epsilon Halflife =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">half_life</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">const_epsilon</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes_wo_decay</span><span class="p">):</span>
+                <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">decay_factor</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">N_episodes_wo_decay</span><span class="p">)</span>  <span class="p">)</span>
+            
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;        Current Epsilon =&#39;</span><span class="p">,</span> <span class="n">eps</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;     # Episodes =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;     -----------------------&#39;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;     # EpsGreedy Choices =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_eg_choices</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;     #    Greedy Choices =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_greedy</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;     #    Random Choices =&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_random</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> <span class="c1"># pragma: no cover</span>
+    
+    <span class="n">eg</span> <span class="o">=</span> <span class="n">EpsilonGreedy</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">const_epsilon</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">half_life</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                       <span class="n">N_episodes_wo_decay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span> <span class="n">eg</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">]),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="p">)</span>
+        <span class="n">eg</span><span class="o">.</span><span class="n">inc_N_episodes</span><span class="p">()</span> <span class="c1"># normally called by Environment</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="n">eg</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">55</span><span class="p">)</span>
+    <span class="n">eg</span> <span class="o">=</span> <span class="n">EpsilonGreedy</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">const_epsilon</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">half_life</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                       <span class="n">N_episodes_wo_decay</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span> <span class="n">eg</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">]),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="p">)</span>
+        <span class="n">eg</span><span class="o">.</span><span class="n">inc_N_episodes</span><span class="p">()</span> <span class="c1"># normally called by Environment</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="n">eg</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Greedy Choice =&#39;</span><span class="p">,</span> <span class="n">eg</span><span class="o">.</span><span class="n">greedy_choice</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">])</span> <span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">55</span><span class="p">)</span>
+    <span class="n">eg</span> <span class="o">=</span> <span class="n">EpsilonGreedy</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">const_epsilon</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">half_life</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                       <span class="n">N_episodes_wo_decay</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">eg</span><span class="o">.</span><span class="n">set_greedy_mode</span><span class="p">(</span> <span class="n">mode</span><span class="o">=</span><span class="bp">True</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span> <span class="n">eg</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">]),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="n">eg</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Greedy Choice =&#39;</span><span class="p">,</span> <span class="n">eg</span><span class="o">.</span><span class="n">greedy_choice</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">])</span> <span class="p">)</span>
+
+        
+</pre></div>
+</td></tr></table></body></html>

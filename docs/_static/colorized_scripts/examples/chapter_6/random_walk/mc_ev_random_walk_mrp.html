@@ -1,0 +1,170 @@
+<html><head><title>mc_ev_random_walk_mrp.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>mc_ev_random_walk_mrp.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">introrl.mc_funcs.mc_ev_prediction</span> <span class="kn">import</span> <span class="n">mc_every_visit_prediction</span>
+<span class="kn">from</span> <span class="nn">introrl.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.state_value_coll</span> <span class="kn">import</span> <span class="n">StateValueColl</span>
+<span class="kn">from</span> <span class="nn">introrl.mdp_data.random_walk_mrp</span> <span class="kn">import</span> <span class="n">get_random_walk</span>
+
+<span class="n">rw_mrp</span> <span class="o">=</span> <span class="n">get_random_walk</span><span class="p">()</span>
+
+<span class="n">policy</span> <span class="o">=</span> <span class="n">Policy</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">rw_mrp</span> <span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">true_valueD</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mf">3.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span><span class="mf">4.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mf">5.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">]:</span>
+
+    <span class="n">resultLL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># a list of result lists</span>
+    <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span> <span class="c1"># average rms curves over 100 runs</span>
+        <span class="n">sv</span> <span class="o">=</span> <span class="n">StateValueColl</span><span class="p">(</span> <span class="n">rw_mrp</span><span class="p">,</span> <span class="n">init_val</span><span class="o">=</span><span class="mf">0.5</span> <span class="p">)</span>
+        
+        <span class="n">resultL</span><span class="p">,</span> <span class="n">value_snapD</span> <span class="o">=</span> <span class="n">mc_every_visit_prediction</span><span class="p">(</span> <span class="n">policy</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span>  <span class="n">all_start_states</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                   <span class="n">do_summ_print</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_last_change</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                   <span class="n">show_banner</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                   <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                   <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">const_alpha</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha_half_life</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                                   <span class="n">max_num_episodes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_num_episodes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_abserr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                                   <span class="n">result_list</span><span class="o">=</span><span class="s1">&#39;rms&#39;</span><span class="p">,</span> <span class="n">true_valueD</span><span class="o">=</span><span class="n">true_valueD</span><span class="p">)</span>
+        <span class="n">resultLL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">resultL</span> <span class="p">)</span>
+    <span class="c1">#print( &#39;sv.calc_rms_error(true_valueD) =&#39;, sv.calc_rms_error(true_valueD) )</span>
+    <span class="c1">#print( resultL )</span>
+
+    <span class="n">n_runs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">run_numL</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ave_rmsL</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultL</span><span class="p">)</span> <span class="p">):</span>
+        <span class="n">n_runs</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">rL</span> <span class="ow">in</span> <span class="n">resultLL</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">+=</span> <span class="n">rL</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">run_numL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">n_runs</span> <span class="p">)</span>
+        <span class="n">ave_rmsL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">val</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultLL</span><span class="p">)</span> <span class="p">)</span>
+        
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">run_numL</span><span class="p">,</span> <span class="n">ave_rmsL</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;alpha=</span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Monte Carlo Random Walk&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;mc_ev_random_walk.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></body></html>

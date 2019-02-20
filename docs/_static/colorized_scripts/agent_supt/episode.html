@@ -1,0 +1,456 @@
+<html><head><title>episode.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>episode.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: ascii -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">future</span> <span class="kn">import</span> <span class="n">standard_library</span>
+<span class="n">standard_library</span><span class="o">.</span><span class="n">install_aliases</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">Episode</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episode_name</span><span class="o">=</span><span class="s1">&#39;Generic Episode&#39;</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">episode_name</span> <span class="o">=</span> <span class="n">episode_name</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_done_flag</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of (state, action, reward, state_next) tuples</span>
+            
+    <span class="k">def</span> <span class="nf">terminal_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># only considered terminal_state if done flag was set</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_done_flag</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="p">:</span>
+            <span class="c1"># get last </span>
+            <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state_next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">state_next</span> <span class="c1"># state_next of last entry</span>
+            <span class="k">elif</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">state</span>      <span class="c1"># state of last entry where state_next is None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+    
+    <span class="k">def</span> <span class="nf">get_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_step</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i_step</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="p">[</span> <span class="n">i_step</span> <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">):</span>
+        <span class="c1">#print(&#39;Episode Added:&#39;, (state, action, reward, state_next))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span> <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span> <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_done_flag</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># list of (state, action, reward, state_next) tuples</span>
+    
+    <span class="k">def</span> <span class="nf">set_done_flag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#print(&#39;Episode Ended at step #&#39;, len(self.episodeL))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_done_flag</span> <span class="o">=</span> <span class="bp">True</span>
+    
+    <span class="k">def</span> <span class="nf">get_rev_discounted_returns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">first_visit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">visit_type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;NOTE: </span>
+<span class="sd">        discounted returns (gamma*G) are calculated in reverse order of visits.</span>
+<span class="sd">        AND, returned in REVERSED visit order.</span>
+<span class="sd">        </span>
+<span class="sd">        First_visit skips over states OR state-actions that have occurred previously in episode.</span>
+<span class="sd">        </span>
+<span class="sd">        IF first_visit==True THEN MUST INPUT visit_type = &#39;S&#39; or &#39;SA&#39; (for State OR State-Action)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Pester the user to avoid invisible errors in getting discounted returns</span>
+        <span class="k">if</span> <span class="n">first_visit</span> <span class="ow">and</span> <span class="p">(</span><span class="n">visit_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span><span class="s1">&#39;SA&#39;</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s1">&#39;For First-Visit Discounted Returns, &quot;visit_type&quot; MUST be &quot;S&quot; or &quot;SA&quot;&#39;</span> <span class="p">)</span>
+        
+        <span class="n">temp_returnsL</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># make a temporary list of returns in case of first_visit==True</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">rev_iter_all_sars</span><span class="p">()</span> <span class="p">):</span>
+            <span class="n">G</span> <span class="o">=</span> <span class="n">reward</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">G</span>
+            <span class="n">temp_returnsL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span> <span class="p">)</span>
+        
+        <span class="c1"># at this point temp_returnsL is in REVERSED visit order</span>
+        
+        <span class="c1"># if first_visit==True, remove state visits after first visit.</span>
+        <span class="k">if</span> <span class="n">first_visit</span><span class="p">:</span>
+            
+            <span class="n">visited_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">discounted_returnsL</span> <span class="o">=</span> <span class="p">[]</span>
+            
+            <span class="c1"># use reversed iterator to iterate the list in VISIT order (i.e. reverse the reverse)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span> <span class="n">temp_returnsL</span> <span class="p">):</span>
+                <span class="c1"># depending on the type of first_visit (State or State-Action) create a key</span>
+                <span class="k">if</span> <span class="n">visit_type</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="n">state</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+                
+                <span class="c1"># if First Visit, save visit to episodes discounted returns.</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited_set</span><span class="p">:</span>
+                    <span class="n">discounted_returnsL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="n">visited_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">key</span> <span class="p">)</span>
+                    
+            <span class="n">discounted_returnsL</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span> <span class="c1"># return in REVERSED visit order</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">discounted_returnsL</span> <span class="o">=</span> <span class="n">temp_returnsL</span>
+            
+        <span class="k">return</span> <span class="n">discounted_returnsL</span>
+
+    <span class="k">def</span> <span class="nf">is_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_done_flag</span>
+    
+    <span class="k">def</span> <span class="nf">iter_first_visit_sars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visit_type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate from start to finish over episode.</span>
+<span class="sd">        Return (state, action, reward, state_next) tuples</span>
+<span class="sd">        ENFORCE First_visit... i.e. return ONLY 1st VISIT occurrences of (state, action, reward, state_next)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Pester the user to avoid invisible errors in getting discounted returns</span>
+        <span class="k">if</span> <span class="n">visit_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span><span class="s1">&#39;SA&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s1">&#39;For First-Visit Discounted Returns, &quot;visit_type&quot; MUST be &quot;S&quot; or &quot;SA&quot;&#39;</span> <span class="p">)</span>
+            
+        <span class="n">visited_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">visit_type</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">state</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited_set</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span>
+                <span class="n">visited_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">key</span> <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">iter_all_sars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate from start to finish over episode.</span>
+<span class="sd">        Return (state, action, reward, state_next) tuples</span>
+<span class="sd">        IGNORE First_visit... i.e. return all occurrences of (state, action, reward, state_next)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">rev_iter_all_sars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reverse-Iterate from finish to start over episode.</span>
+<span class="sd">        Return (state, action, reward, state_next) tuples</span>
+<span class="sd">        IGNORE First_visit... i.e. return all occurrences of (state, action, reward, state_next)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">state_next</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">summ_print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">print</span><span class="p">(</span> <span class="s1">&#39;Episode:&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_name</span><span class="p">,</span> <span class="s1">&#39; Length:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">episodeL</span> <span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span> <span class="s1">&#39;</span><span class="si">%3i</span><span class="s1">) </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_done_flag</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Episode Terminal, Terminal State = &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">terminal_state</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Episode Continuing.&#39;</span><span class="p">)</span>
+            
+    
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Episode</span><span class="p">(</span> <span class="n">episode_name</span><span class="o">=</span><span class="s1">&#39;Silly Episode&#39;</span> <span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span> <span class="s1">&#39;s1&#39;</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;s2&#39;</span> <span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span> <span class="s1">&#39;s2&#39;</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;s3&#39;</span> <span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;s2&#39;</span> <span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span> <span class="s1">&#39;s2&#39;</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;s3&#39;</span> <span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;s4&#39;</span> <span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">set_done_flag</span><span class="p">()</span>
+    
+    <span class="n">s</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span> <span class="n">s</span><span class="o">.</span><span class="n">episode_name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">s</span><span class="o">.</span><span class="n">is_done</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span> <span class="n">s</span><span class="o">.</span><span class="n">episodeL</span> <span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;NOT-First-Visit &quot;S&quot; G&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get_rev_discounted_returns</span><span class="p">(</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">first_visit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">visit_type</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;First-Visit &quot;S&quot; G&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get_rev_discounted_returns</span><span class="p">(</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">first_visit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">visit_type</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;NOT-First-Visit &quot;SA&quot; G&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get_rev_discounted_returns</span><span class="p">(</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">first_visit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">visit_type</span><span class="o">=</span><span class="s1">&#39;SA&#39;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;First-Visit &quot;SA&quot; G&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">get_rev_discounted_returns</span><span class="p">(</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">first_visit</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">visit_type</span><span class="o">=</span><span class="s1">&#39;SA&#39;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;FORWARD iter_first_visit_sars( visit_type=&quot;SA&quot;)&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">iter_first_visit_sars</span><span class="p">(</span> <span class="n">visit_type</span><span class="o">=</span><span class="s2">&quot;SA&quot;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span> <span class="n">tup</span> <span class="p">)</span>
+    
+    
+</pre></div>
+</td></tr></table></body></html>

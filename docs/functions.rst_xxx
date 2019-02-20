@@ -1,0 +1,9 @@
+
+.. functions
+
+IntroRL Code Functions
+======================
+
+.. automodule:: introrl.environments.env_baseline
+   :members:
+
