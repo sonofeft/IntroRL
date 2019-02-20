@@ -85,8 +85,11 @@ It uses the text book "Reinforcement Learning" by Sutton & Barto as a reference.
     # What does your project relate to?
     keywords = 'introrl setuptools development',
 
-    packages = find_packages(exclude=['.tox', '.hg', 'docs']),
-    package_data = {'introrl':['examples/*.*']},
+    packages = find_packages(exclude=['.tox', '.hg', 'docs','.mdp_pickle',
+                                      '.pi_pickle', '.bbt_pickle', '.vv_pickle',
+                                      '.esp_pickle', '.vs_pickle', '.vave_pickle',
+                                      'svra._pickle', '.pickle']),
+    #package_data = {'introrl':['examples/*.*']},
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed.
