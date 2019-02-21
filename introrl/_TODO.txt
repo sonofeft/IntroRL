@@ -11,6 +11,12 @@ show commit messages for all commits.
 hg log -T compact
 -------------------------------------
 
+*) from __future__ import unicode_literals
+   BOMBS IN python 2.7 for things like:
+   sout = s.rjust(lmaxL[j], ' ')
+
+*) need all examples subdirectories to be in PyPi install
+
 *) need script to run all __name__=="__main__" scripts.
 
 *) write routine "solve_sim_w_dp"... i.e. make model with transition probs

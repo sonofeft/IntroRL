@@ -27,13 +27,16 @@ class GenericLayout( object ):
     def __init__(self, environment, s_hash_rowL=None, 
                  row_tickL=None, col_tickL=None,
                  x_axis_label='', y_axis_label='',
-                 colorD=None, basic_color=''):
+                 colorD=None, basic_color='', named_s_hashD=None):
         """
         Given an environment, a GenericLayout will help create 2D output.
     
         IF INPUT: s_hash_rowL is used to locate s_hash in output rows
             use None in s_hash_rowL to indicate empty grid locations.
             (e.g. s_hash_rowL=[['UL','UM','UR'],['LL',None,'LR']])
+            
+        If named_s_hashD is input, it is a dictionary with special names of s_hash
+        values called out.
         """
         self.environment = environment
         self.s_hash_rowL = s_hash_rowL
@@ -46,6 +49,10 @@ class GenericLayout( object ):
         self.y_axis_label = y_axis_label
         self.colorD = colorD
         self.basic_color = basic_color
+        
+        if named_s_hashD is None:
+            named_s_hashD = {}
+        self.named_s_hashD = named_s_hashD
         
         # (x,y) are translated to the origin for any output plots
         self.xy_s_hashD = {} # index=s_hash: value=x,y location (with (0,0) at Lower Left)
@@ -139,7 +146,10 @@ class GenericLayout( object ):
                     else:
                         outL.append( none_str )
                 else:
-                    outL.append( str(s_hash)  )
+                    if s_hash in self.named_s_hashD:
+                        outL.append( self.named_s_hashD[s_hash]  )
+                    else:
+                        outL.append( str(s_hash)  )
             rows_outL.append( outL )
         
         if rows_outL:
@@ -170,9 +180,10 @@ class GenericLayout( object ):
                 if (s_hash in paramD) and self.environment.is_legal_state( s_hash ):
                     outL.append( str( paramD[s_hash] )  )
                 else:
-                    s_str = str(s_hash)
                     if is_literal_str( s_hash ):
                         outL.append( s_hash[1:-1] )
+                    elif s_hash in self.named_s_hashD:
+                        outL.append( self.named_s_hashD[s_hash] )
                     else:
                         outL.append( none_str )
                     
@@ -262,7 +273,10 @@ class GenericLayout( object ):
                     c = basic_color
                 
                 if self.environment.is_legal_state( s_hash ):
-                    s = str( s_hash )
+                    if s_hash in self.named_s_hashD:
+                        s = self.named_s_hashD[s_hash]
+                    else:
+                        s = str( s_hash )
                     t = plt.text(jcol+d2, x+d2, s, fontproperties=font,**alignment)
                         
                     #      Rectangle(  (x,y),    width,   height)
