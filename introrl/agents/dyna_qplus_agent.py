@@ -155,9 +155,6 @@ class DynaQPlusAgent( object ):
                       ' s_hash=%s'%str(s_hash),' a_desc=%s'%str(a_desc))
                 break
             
-            #if s_hash in [(2,0),(4,0),'Gate_L']:
-            #    print('%4i)'%n_steps_in_episode ,'  Now in',s_hash,'  Action=',a_desc,'  sn_hash=',sn_hash)
-            
             # do RL update of Q(s,a) value
             self.action_value_coll.qlearning_update( s_hash=s_hash, a_desc=a_desc, sn_hash=sn_hash,
                                                      alpha=self.alpha_obj(), gamma=self.gamma, 

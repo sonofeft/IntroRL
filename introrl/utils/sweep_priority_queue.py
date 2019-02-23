@@ -13,14 +13,15 @@ class SweepPriorityQueue:
         self.queue_entryD = {}
         self.nth_addition = 0
 
-    def add_sa_pair(self, sa_pair, neg_delta=0):
+    def add_sa_pair(self, sa_pair, neg_priority=0):
         if sa_pair in self.queue_entryD:
-            old_neg_delta = self.queue_entryD[ sa_pair ][0]
-            if old_neg_delta < neg_delta:
+            old_neg_priority = self.queue_entryD[ sa_pair ][0]
+            if old_neg_priority < neg_priority:
                 return # old entry is higher priority, so leave it.
+                
             # new value is higher priority, so mark old one for deletion
             self.mark_sa_pair_for_deletion(sa_pair)
-        entry = [neg_delta, self.nth_addition, sa_pair]
+        entry = [neg_priority, self.nth_addition, sa_pair]
         self.nth_addition += 1
         self.queue_entryD[sa_pair] = entry
         heapq.heappush(self.qlist, entry)
@@ -31,16 +32,21 @@ class SweepPriorityQueue:
 
     def pop_sa_pair(self):
         while self.qlist:
-            neg_delta, _, sa_pair = heapq.heappop(self.qlist)
+            neg_priority, _, sa_pair = heapq.heappop(self.qlist)
             if sa_pair is not None:
                 del self.queue_entryD[sa_pair]
-                return sa_pair, neg_delta
-        raise KeyError('pop from an empty SweepPriorityQueue')
+                return sa_pair, neg_priority
+        return (None,None), None
 
     def empty(self):
         return not self.queue_entryD
+        
+    def summ_print(self):
+        print('========= Current Priority Queue Contents ===========')
+        for v in self.qlist:
+            print( v )
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     
     PQ = SweepPriorityQueue()
     

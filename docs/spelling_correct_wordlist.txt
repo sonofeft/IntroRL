@@ -1,3 +1,11 @@
+Peng
+nsteps
+nstep
+funcs
+num
+mdp
+Zhang
+td
 DynaQ
 Qlearning
 Sarsa

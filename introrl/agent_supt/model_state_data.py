@@ -67,7 +67,24 @@ class ModelStateData( object ):
                 t_prob = float(rwd_ave_obj.num_val) / float(a_count)
                 r_ave += t_prob * rwd_ave_obj.get_ave()
         return r_ave
+
     
+    def get_ave_reward_to_snext(self, a_desc, sn_hash_inp):
+        """If stochastic sn_hash, this will only look at sn_hash_inp"""
+        r_ave = 0.0
+        if a_desc in self.action_sn_rD:
+            snD = self.action_sn_rD[ a_desc ] # snD...  index=sn_hash: value=rwd_ave_obj
+            num_tot = 0.0
+            
+            for sn_hash, rwd_ave_obj in snD.items():
+                if sn_hash == sn_hash_inp:
+                    r_ave += rwd_ave_obj.num_val * rwd_ave_obj.get_ave()
+                    num_tot += rwd_ave_obj.num_val
+            if num_tot > 0.0:
+                r_ave = r_ave / num_tot
+        return r_ave
+
+
     def get_action_list(self):
         return [a_desc for a_desc in self.action_countD.keys()]
         

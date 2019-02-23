@@ -1,0 +1,412 @@
+<html><head><title>plot_example_8_4_pqueue.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>plot_example_8_4_pqueue.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: ascii -*-</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">future</span> <span class="kn">import</span> <span class="n">standard_library</span>
+<span class="n">standard_library</span><span class="o">.</span><span class="n">install_aliases</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">introrl.mdp_data.sutton_dyna_grid_xN</span> <span class="kn">import</span> <span class="n">get_gridworld</span>
+
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.learning_tracker</span> <span class="kn">import</span> <span class="n">LearnTracker</span>
+<span class="kn">from</span> <span class="nn">introrl.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">introrl.utils.running_ave</span> <span class="kn">import</span> <span class="n">RunningAve</span>
+<span class="kn">from</span> <span class="nn">introrl.agents.dyna_q_agent</span> <span class="kn">import</span> <span class="n">DynaQAgent</span>
+<span class="kn">from</span> <span class="nn">introrl.agents.priority_sweep_agent</span> <span class="kn">import</span> <span class="n">PrioritySweepAgent</span>
+
+<span class="n">ALPHA</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">GAMMA</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">EPSILON</span><span class="o">=</span><span class="mf">0.1</span>
+<span class="n">PLANNING_LOOPS</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">PRIORITY_THRESHOLD</span><span class="o">=</span><span class="mf">0.0001</span>
+
+<span class="n">NUM_RUNS</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">q_raveL</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">qp_raveL</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">NUM_SIZES</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">sum_dynaL</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">NUM_SIZES</span>
+<span class="n">sum_psweepL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">NUM_SIZES</span>
+
+<span class="n">numup_dynaL</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">NUM_SIZES</span>
+<span class="n">numup_psweepL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">NUM_SIZES</span>
+
+<span class="n">grid_sizeL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">NUM_SIZES</span>
+
+<span class="k">def</span> <span class="nf">get_greedy_path_length</span><span class="p">(</span> <span class="n">agent</span><span class="p">,</span> <span class="n">gridworld</span><span class="p">,</span> <span class="n">show_path</span><span class="o">=</span><span class="bp">False</span> <span class="p">):</span>
+    <span class="n">state_pathL</span> <span class="o">=</span> <span class="p">[</span> <span class="n">gridworld</span><span class="o">.</span><span class="n">start_state_hash</span> <span class="p">]</span>
+    <span class="n">Nstates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridworld</span><span class="o">.</span><span class="n">SC</span><span class="p">)</span>
+    
+    <span class="n">s</span> <span class="o">=</span> <span class="n">state_pathL</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">state_pathL</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Nstates</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">get_best_greedy_action</span><span class="p">(</span> <span class="n">s</span> <span class="p">)</span>
+        <span class="n">s</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gridworld</span><span class="o">.</span><span class="n">get_action_snext_reward</span><span class="p">(</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span> <span class="p">)</span>
+        <span class="n">state_pathL</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">s</span> <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">gridworld</span><span class="o">.</span><span class="n">terminal_set</span><span class="p">:</span>
+            <span class="k">break</span>
+    
+    <span class="k">if</span> <span class="n">show_path</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span> <span class="n">state_pathL</span> <span class="p">)</span>
+    
+    
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span> <span class="n">state_pathL</span> <span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i_sizes</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">NUM_SIZES</span> <span class="p">):</span>
+    
+    <span class="n">N_mult</span> <span class="o">=</span> <span class="n">i_sizes</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">gridworld</span> <span class="o">=</span> <span class="n">get_gridworld</span><span class="p">(</span> <span class="n">N_mult</span><span class="o">=</span><span class="n">N_mult</span><span class="p">)</span> <span class="c1">#, step_reward=-PRIORITY_THRESHOLD )</span>
+    <span class="n">Nstates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridworld</span><span class="o">.</span><span class="n">SC</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Nstates =&#39;</span><span class="p">,</span><span class="n">Nstates</span><span class="p">,</span> <span class="s1">&#39;  N_mult = &#39;</span><span class="p">,</span> <span class="n">N_mult</span><span class="p">)</span>
+    <span class="n">grid_sizeL</span><span class="p">[</span><span class="n">i_sizes</span><span class="p">]</span> <span class="o">=</span> <span class="n">N_mult</span>
+
+    <span class="k">for</span> <span class="n">main_loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_RUNS</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%i</span><span class="s1"> of </span><span class="si">%i</span><span class="s1"> Runs&#39;</span><span class="o">%</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">main_loop</span><span class="p">,</span> <span class="n">NUM_RUNS</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+
+        <span class="n">learn_tracker_q</span> <span class="o">=</span> <span class="n">LearnTracker</span><span class="p">()</span>
+        <span class="n">learn_tracker_sw</span> <span class="o">=</span> <span class="n">LearnTracker</span><span class="p">()</span>
+
+        <span class="n">agent_q</span> <span class="o">=</span> <span class="n">DynaQAgent</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">gridworld</span><span class="p">,</span> 
+                         <span class="n">learn_tracker</span><span class="o">=</span><span class="n">learn_tracker_q</span><span class="p">,</span>
+                         <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">60000</span><span class="p">,</span>
+                         <span class="n">show_banner</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">do_summ_print</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_last_change</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
+                         <span class="n">epsilon</span><span class="o">=</span><span class="n">EPSILON</span><span class="p">,</span>
+                         <span class="n">gamma</span><span class="o">=</span><span class="n">GAMMA</span><span class="p">,</span>
+                         <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">)</span>
+
+        <span class="n">agent_sw</span> <span class="o">=</span> <span class="n">PrioritySweepAgent</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">gridworld</span><span class="p">,</span> 
+                         <span class="n">learn_tracker</span><span class="o">=</span><span class="n">learn_tracker_sw</span><span class="p">,</span>
+                         <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">60000</span><span class="p">,</span>
+                         <span class="n">show_banner</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">do_summ_print</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_last_change</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
+                         <span class="n">epsilon</span><span class="o">=</span><span class="n">EPSILON</span><span class="p">,</span>
+                         <span class="n">gamma</span><span class="o">=</span><span class="n">GAMMA</span><span class="p">,</span>
+                         <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">,</span> <span class="n">priority_threshold</span><span class="o">=</span><span class="n">PRIORITY_THRESHOLD</span><span class="p">)</span>
+
+        <span class="c1"># DynaQ episodes </span>
+        <span class="n">len_path</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">len_path</span> <span class="o">&gt;</span> <span class="n">gridworld</span><span class="o">.</span><span class="n">optimal_path_len</span><span class="p">:</span>
+            <span class="n">agent_q</span><span class="o">.</span><span class="n">run_episode</span><span class="p">(</span> <span class="n">gridworld</span><span class="o">.</span><span class="n">start_state_hash</span><span class="p">,</span> <span class="n">Nplanning_loops</span><span class="o">=</span><span class="n">PLANNING_LOOPS</span><span class="p">)</span>
+            <span class="n">len_path</span> <span class="o">=</span> <span class="n">get_greedy_path_length</span><span class="p">(</span> <span class="n">agent_q</span><span class="p">,</span> <span class="n">gridworld</span> <span class="p">)</span>
+            
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39; dyna_q_agent&#39;</span><span class="p">,</span> <span class="n">agent_q</span><span class="o">.</span><span class="n">num_updates</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        
+        <span class="c1"># PrioritySweepAgent episodes </span>
+        <span class="n">len_path</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">len_path</span> <span class="o">&gt;</span> <span class="n">gridworld</span><span class="o">.</span><span class="n">optimal_path_len</span><span class="p">:</span>                
+            <span class="n">agent_sw</span><span class="o">.</span><span class="n">run_episode</span><span class="p">(</span> <span class="n">gridworld</span><span class="o">.</span><span class="n">start_state_hash</span><span class="p">,</span> <span class="n">Nplanning_loops</span><span class="o">=</span><span class="n">PLANNING_LOOPS</span><span class="p">)</span>
+            <span class="n">len_path</span> <span class="o">=</span> <span class="n">get_greedy_path_length</span><span class="p">(</span> <span class="n">agent_sw</span><span class="p">,</span> <span class="n">gridworld</span> <span class="p">)</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;vs.&#39;</span><span class="p">,</span> <span class="n">agent_sw</span><span class="o">.</span><span class="n">num_updates</span><span class="p">,</span> <span class="s1">&#39; priority sweep agent&#39;</span><span class="p">)</span>
+
+        <span class="n">sum_dynaL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span>   <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">agent_q</span><span class="o">.</span><span class="n">learn_tracker</span><span class="o">.</span><span class="n">steps_per_episode</span><span class="p">())</span>
+        <span class="n">sum_psweepL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">agent_sw</span><span class="o">.</span><span class="n">learn_tracker</span><span class="o">.</span><span class="n">steps_per_episode</span><span class="p">())</span>
+        
+        <span class="n">numup_dynaL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span>   <span class="o">+=</span> <span class="n">agent_q</span><span class="o">.</span><span class="n">num_updates</span>
+        <span class="n">numup_psweepL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span>   <span class="o">+=</span> <span class="n">agent_sw</span><span class="o">.</span><span class="n">num_updates</span>
+        
+    <span class="n">sum_dynaL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span>   <span class="o">/=</span> <span class="n">NUM_RUNS</span>
+    <span class="n">sum_psweepL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span> <span class="o">/=</span> <span class="n">NUM_RUNS</span>
+    
+    <span class="n">numup_dynaL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span>   <span class="o">/=</span> <span class="n">NUM_RUNS</span>
+    <span class="n">numup_psweepL</span><span class="p">[</span> <span class="n">i_sizes</span> <span class="p">]</span> <span class="o">/=</span> <span class="n">NUM_RUNS</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;grid_sizeL =&#39;</span><span class="p">,</span> <span class="n">grid_sizeL</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid_sizeL</span><span class="p">,</span> <span class="n">numup_dynaL</span><span class="p">,</span> <span class="s1">&#39;c-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q, IntroRL&#39;</span> <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid_sizeL</span><span class="p">,</span> <span class="n">numup_psweepL</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PSweep, IntroRL&#39;</span> <span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;numup_dynaL =&#39;</span><span class="p">,</span> <span class="n">numup_dynaL</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;numup_psweepL =&#39;</span><span class="p">,</span> <span class="n">numup_psweepL</span><span class="p">)</span>
+
+<span class="c1">#ax.plot(grid_sizeL, sum_dynaL, &#39;c-.&#39;, label=&#39;Dyna-Q, EpiSteps&#39; )</span>
+<span class="c1">#ax.plot(grid_sizeL, sum_psweepL, &#39;r-.&#39;, label=&#39;PSweep, EpiSteps&#39; )</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;sum_dynaL =&#39;</span><span class="p">,</span> <span class="n">sum_dynaL</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;sum_psweepL =&#39;</span><span class="p">,</span> <span class="n">sum_psweepL</span><span class="p">)</span>
+
+<span class="n">gridsz_dq_suttonL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">numup_dq_suttonL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">19252</span><span class="p">,</span><span class="mf">38055.8</span><span class="p">,</span><span class="mf">65859.8</span><span class="p">,</span><span class="mi">148700</span><span class="p">,</span><span class="mi">403090</span><span class="p">,</span><span class="mf">1.11099e+06</span><span class="p">,</span><span class="mf">2.42642e+06</span><span class="p">,</span><span class="mf">5.75852e+06</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gridsz_dq_suttonL</span><span class="p">,</span> <span class="n">numup_dq_suttonL</span><span class="p">,</span> <span class="s1">&#39;c:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q, Sutton&#39;</span> <span class="p">)</span>
+
+<span class="n">gridsz_ps_suttonL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">numup_ps_suttonL</span> <span class="o">=</span> <span class="p">[</span><span class="mf">150.234</span><span class="p">,</span><span class="mf">596.865</span><span class="p">,</span><span class="mf">999.17</span><span class="p">,</span><span class="mf">47234.3</span><span class="p">,</span><span class="mf">91829.9</span><span class="p">,</span><span class="mi">169847</span><span class="p">,</span><span class="mi">257342</span><span class="p">,</span><span class="mi">508694</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gridsz_ps_suttonL</span><span class="p">,</span> <span class="n">numup_ps_suttonL</span><span class="p">,</span> <span class="s1">&#39;r:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PSweep, Sutton&#39;</span> <span class="p">)</span>
+
+
+<span class="c1"># Zhang Results over 10 runs.</span>
+<span class="n">xL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span>
+<span class="n">ypsL</span> <span class="o">=</span> <span class="p">[</span>  <span class="mf">1838.5</span><span class="p">,</span>  <span class="mf">15129.9</span><span class="p">,</span>  <span class="mf">41940.9</span><span class="p">,</span> <span class="mf">122584.9</span><span class="p">,</span> <span class="mf">150463.3</span><span class="p">,</span> <span class="mf">311075.4</span><span class="p">,</span> <span class="mf">445890.5</span><span class="p">]</span>
+<span class="n">ydqL</span> <span class="o">=</span> <span class="p">[</span>  <span class="mf">7275.</span> <span class="p">,</span>  <span class="mf">37623.</span> <span class="p">,</span>  <span class="mf">55078.8</span><span class="p">,</span> <span class="mf">158364.6</span><span class="p">,</span> <span class="mf">276714.</span> <span class="p">,</span> <span class="mf">413386.2</span><span class="p">,</span> <span class="mf">628481.4</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xL</span><span class="p">,</span> <span class="n">ydqL</span><span class="p">,</span> <span class="s1">&#39;c-.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dyna-Q, Zhang&#39;</span> <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xL</span><span class="p">,</span> <span class="n">ypsL</span><span class="p">,</span> <span class="s1">&#39;r-.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PSweep, Zhang&#39;</span> <span class="p">)</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Example 8.4 Maze</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span>\
+             <span class="s1">&#39;(Epsilon=</span><span class="si">%g</span><span class="s1">, Theta=</span><span class="si">%g</span><span class="s1">, #Runs=</span><span class="si">%i</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">EPSILON</span><span class="p">,</span> <span class="n">PRIORITY_THRESHOLD</span><span class="p">,</span> <span class="n">NUM_RUNS</span><span class="p">)</span> <span class="o">+</span>\
+             <span class="s1">&#39;(</span><span class="si">%i</span><span class="s1"> planning steps, alpha=</span><span class="si">%g</span><span class="s1">, gamma=</span><span class="si">%g</span><span class="s1">)&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">PLANNING_LOOPS</span><span class="p">,</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">GAMMA</span><span class="p">))</span>
+<span class="c1">#ax.axhline(y=0, color=&#39;k&#39;)</span>
+<span class="c1">#ax.axvline(x=0, color=&#39;k&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;# Updates to Optimum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Gridworld Size&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="c1">#plt.ylim(bottom=10)</span>
+
+<span class="c1">#plt.xscale(&#39;log&#39;)</span>
+<span class="c1">#plt.xlim(left=40, right=6050)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;example_8_4_psweep.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></body></html>

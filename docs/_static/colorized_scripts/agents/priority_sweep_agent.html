@@ -1,4 +1,4 @@
-<html><head><title>dyna_qplus_agent.py</title></head><body>
+<html><head><title>priority_sweep_agent.py</title></head><body>
 <style type="text/css">.default .hll { background-color: #ffffcc }
 .default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
 .linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
@@ -62,7 +62,7 @@
 .default .vg { color: #19177C } /* Name.Variable.Global */
 .default .vi { color: #19177C } /* Name.Variable.Instance */
 .default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
-<h2>dyna_qplus_agent.py</h2>
+<h2>priority_sweep_agent.py</h2>
 <table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
   2
   3
@@ -324,7 +324,11 @@
 259
 260
 261
-262</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+262
+263
+264
+265
+266</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: ascii -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
@@ -335,17 +339,17 @@
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">object</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
 <span class="kn">from</span> <span class="nn">introrl.utils.banner</span> <span class="kn">import</span> <span class="n">banner</span>
+<span class="kn">from</span> <span class="nn">introrl.utils.sweep_priority_queue</span> <span class="kn">import</span> <span class="n">SweepPriorityQueue</span>
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.epsilon_calc</span> <span class="kn">import</span> <span class="n">EpsilonGreedy</span>
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.alpha_calc</span> <span class="kn">import</span> <span class="n">Alpha</span>
-<span class="kn">from</span> <span class="nn">introrl.agent_supt.model_w_timestamp</span> <span class="kn">import</span> <span class="n">ModelWTimestamp</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.model</span> <span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span> <span class="nn">introrl.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.action_value_coll</span> <span class="kn">import</span> <span class="n">ActionValueColl</span>
         
-<span class="k">class</span> <span class="nc">DynaQPlusAgent</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+<span class="k">class</span> <span class="nc">PrioritySweepAgent</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    DynaQ+ Agent.</span>
+<span class="sd">    PrioritySweepAgent Agent.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">,</span>  <span class="n">learn_tracker</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="c1"># track progress of learning</span>
@@ -357,16 +361,14 @@
                   <span class="n">pcent_progress_print</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                   <span class="n">show_banner</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
                   <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+                  <span class="n">priority_threshold</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="c1"># priority must exceed this to get into SweepPriorityQueue</span>
                   <span class="n">iteration_prints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                   <span class="n">max_episode_steps</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">,</span>
                   <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="c1"># can be constant or EpsilonGreedy object</span>
-                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="c1"># can be constant or Alpha object</span>
-                  <span class="n">qplus_factor</span><span class="o">=</span><span class="mf">1.0E-4</span><span class="p">):</span> <span class="c1"># for DynaQ+ set to about reward/1000</span>
+                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span> <span class="c1"># can be constant or Alpha object</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        ... GIVEN AN ENVIRONMENT ... </span>
-<span class="sd">        Use Dyna-Q+ algorithm to solve for STATE-ACTION VALUES, Q(s,a)</span>
-<span class="sd">        </span>
-<span class="sd">        DynaQ+, PLANNING action selection uses reward + qplus_factor * sqrt( delta time )</span>
+<span class="sd">        Use basic Priority Sweep algorithm to solve for STATE-ACTION VALUES, Q(s,a)</span>
 <span class="sd">        </span>
 <span class="sd">        Each action is forced to be a DETERMINISTIC action leading to one state and reward.</span>
 <span class="sd">        (If the next state or reward changes, only the new values will be considered)</span>
@@ -379,6 +381,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">learn_tracker</span> <span class="o">=</span> <span class="n">learn_tracker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_pickle_file</span> <span class="o">=</span> <span class="n">save_pickle_file</span>
         
+        <span class="bp">self</span><span class="o">.</span><span class="n">priority_threshold</span> <span class="o">=</span> <span class="n">priority_threshold</span>
+        
         <span class="bp">self</span><span class="o">.</span><span class="n">do_summ_print</span> <span class="o">=</span> <span class="n">do_summ_print</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show_last_change</span> <span class="o">=</span> <span class="n">show_last_change</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pcent_progress_print</span> <span class="o">=</span> <span class="n">pcent_progress_print</span>
@@ -388,6 +392,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">=</span> <span class="n">max_episode_steps</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">num_episodes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_updates</span> <span class="o">=</span> <span class="mi">0</span>
         
         <span class="c1"># if input epsilon is a float, use it to create an EpsilonGreedy object</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="mf">0.1</span><span class="p">):</span>
@@ -400,11 +405,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span> <span class="o">=</span> <span class="n">Alpha</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">const_alpha</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span> <span class="o">=</span> <span class="n">alpha</span>
-        
-        <span class="c1"># initial value=1 to protect sqrt( time_stamp - 1 )</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_stamp</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># overall RL time steps. cumulative over episodes.</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">qplus_factor</span> <span class="o">=</span> <span class="n">qplus_factor</span> <span class="c1"># for DynaQ+ set to about reward/1000</span>
 
         <span class="c1"># create the action_value_coll for the environment.</span>
         <span class="k">if</span> <span class="n">initial_action_value_coll</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -418,12 +418,10 @@
         <span class="c1"># initialize the model that will build from experience</span>
         <span class="c1"># do not build full model description on Model init, states not visited</span>
         <span class="c1">#  by the RL portion will have no returns values.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ModelWTimestamp</span><span class="p">(</span> <span class="n">environment</span><span class="p">,</span>  <span class="n">build_initial_model</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="c1">#for s_hash, aD in self.action_value_coll.QsaD.items():</span>
-        <span class="c1">#    for a_desc, Q in aD.items():</span>
-        <span class="c1">#        self.model.add_action( s_hash, a_desc )</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">full_actionD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=s_hash, value=list of all possible actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span> <span class="n">environment</span><span class="p">,</span>  <span class="n">build_initial_model</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_saD</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># index=sn_hash, value=SET of previous (s_hash, a_desc)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pqueue</span> <span class="o">=</span> <span class="n">SweepPriorityQueue</span><span class="p">()</span>
     
         <span class="k">if</span> <span class="n">do_summ_print</span><span class="p">:</span>
             <span class="k">print</span><span class="p">(</span><span class="s1">&#39;================== EPSILON GREEDY DEFINED AS ========================&#39;</span><span class="p">)</span>
@@ -433,15 +431,39 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
         
         <span class="k">if</span> <span class="n">show_banner</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;Starting a Maximum of </span><span class="si">%i</span><span class="s1"> Dyna-Q Epsilon Greedy Steps/Episode&#39;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">+</span>\
+            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;Starting a Maximum of </span><span class="si">%i</span><span class="s1"> Priority Sweep Epsilon Greedy Steps/Episode&#39;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">+</span>\
                 <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">for &quot;</span><span class="si">%s</span><span class="s1">&quot; with Gamma = </span><span class="si">%g</span><span class="s1">, Alpha = </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span> <span class="n">environment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span><span class="p">()</span> <span class="p">)</span>
             <span class="n">banner</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">banner_char</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">leftMargin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">just</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_episode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_state</span><span class="p">,</span> <span class="n">Nplanning_loops</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">iter_sarsn</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">calc_abs_priority</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">):</span>
+        
+        <span class="n">Rave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_ave_reward_to_snext</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span> <span class="p">)</span>
+        
+        <span class="n">max_Qsa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">get_max_Qsa</span><span class="p">(</span> <span class="n">sn_hash</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_Qsa</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1">#print(&#39;max_Qsa of &#39;,sn_hash,&#39; is None&#39;)</span>
+            <span class="n">max_Qsa</span> <span class="o">=</span> <span class="mf">0.0</span>
+        
+        <span class="n">Qsa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">get_val</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span> <span class="p">)</span>
+        
+        <span class="n">abs_priority</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span> <span class="n">Rave</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">max_Qsa</span> <span class="o">-</span> <span class="n">Qsa</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">abs_priority</span>
+                    
+    
+    <span class="k">def</span> <span class="nf">maybe_add_previous_to_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_hash</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; for each of the previous (s,a) pairs to s_hash, perhaps add to prioity queue &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">s_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_saD</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">sp</span><span class="p">,</span><span class="n">ap</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_saD</span><span class="p">[</span> <span class="n">s_hash</span> <span class="p">]:</span>
+                <span class="n">abs_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_abs_priority</span><span class="p">(</span> <span class="n">sp</span><span class="p">,</span> <span class="n">ap</span><span class="p">,</span> <span class="n">s_hash</span> <span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">abs_p</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority_threshold</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pqueue</span><span class="o">.</span><span class="n">add_sa_pair</span><span class="p">(</span> <span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">ap</span><span class="p">),</span> <span class="n">neg_priority</span><span class="o">=-</span><span class="n">abs_p</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">run_episode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_state</span><span class="p">,</span> <span class="n">Nplanning_loops</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run a single episode of Dyna-Q algorithm</span>
-<span class="sd">        If iter_sarsn is input, use it instead of action_value_coll calculations.</span>
-<span class="sd">        (Note: the start_state should NOT be in terminal_set if iter_sarsn is input.)</span>
+<span class="sd">        Run a single episode of Priority Sweep algorithm</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="c1"># increment episode counters</span>
@@ -452,81 +474,69 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learn_tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">learn_tracker</span><span class="o">.</span><span class="n">add_new_episode</span><span class="p">()</span>
         
-        <span class="c1"># do dyna_q loops until sn_hash in terminal_set</span>
+        <span class="c1"># do Priority Sweep loops until sn_hash in terminal_set</span>
         <span class="n">s_hash</span> <span class="o">=</span> <span class="n">start_state</span>
-        
         <span class="n">n_steps_in_episode</span> <span class="o">=</span> <span class="mi">1</span>
+        
         <span class="k">while</span> <span class="n">s_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">terminal_set</span><span class="p">:</span>
         
-            <span class="k">if</span> <span class="n">iter_sarsn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="c1"># get best epsilon-greedy action </span>
-                <span class="n">a_desc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">get_best_eps_greedy_action</span><span class="p">(</span> \
-                                                <span class="n">s_hash</span><span class="p">,</span> <span class="n">epsgreedy_obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_obj</span> <span class="p">)</span>
-                <span class="c1"># check for bad action value</span>
-                <span class="k">if</span> <span class="n">a_desc</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;break for a_desc==None at s_hash=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">s_hash</span><span class="p">))</span>
-                    <span class="k">break</span>
-                
-                <span class="c1"># get next state and reward</span>
-                <span class="n">sn_hash</span><span class="p">,</span> <span class="n">reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">get_action_snext_reward</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span> <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># retracing an existing episode</span>
-                <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">sn_hash</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span> <span class="n">iter_sarsn</span> <span class="p">)</span>
+            <span class="c1"># get best epsilon-greedy action </span>
+            <span class="n">a_desc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">get_best_eps_greedy_action</span><span class="p">(</span> \
+                                            <span class="n">s_hash</span><span class="p">,</span> <span class="n">epsgreedy_obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_obj</span> <span class="p">)</span>
+            <span class="c1"># check for bad action value</span>
+            <span class="k">if</span> <span class="n">a_desc</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s1">&#39;break for a_desc==None at s_hash=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">s_hash</span><span class="p">))</span>
+                <span class="k">break</span>
+            
+            <span class="c1"># get next state and reward</span>
+            <span class="n">sn_hash</span><span class="p">,</span> <span class="n">reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">get_action_snext_reward</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span> <span class="p">)</span>
                             
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learn_tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">learn_tracker</span><span class="o">.</span><span class="n">add_sarsn_to_current_episode</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">)</span>
-            
+
             <span class="k">if</span> <span class="n">sn_hash</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;break for sn_hash==None, #steps=&#39;</span><span class="p">,</span><span class="n">n_steps_in_episode</span><span class="p">,</span>
                       <span class="s1">&#39; s_hash=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">s_hash</span><span class="p">),</span><span class="s1">&#39; a_desc=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">a_desc</span><span class="p">))</span>
                 <span class="k">break</span>
-            
-            <span class="c1"># do RL update of Q(s,a) value</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">qlearning_update</span><span class="p">(</span> <span class="n">s_hash</span><span class="o">=</span><span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="o">=</span><span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="o">=</span><span class="n">sn_hash</span><span class="p">,</span>
-                                                     <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span><span class="p">(),</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> 
-                                                     <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">)</span>
+
+            <span class="c1"># make sure previous (s,a) dictionary is up to date</span>
+            <span class="k">if</span> <span class="n">sn_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_saD</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">previous_saD</span><span class="p">[</span> <span class="n">sn_hash</span> <span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">previous_saD</span><span class="p">[</span> <span class="n">sn_hash</span> <span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="p">(</span><span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">)</span> <span class="p">)</span>
 
             <span class="c1"># give the above experience to the model</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span> <span class="p">)</span>
             
             <span class="c1"># force DETERMINISTIC next state and reward.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_deterministic_action_results</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">,</span> 
-                                                          <span class="n">reward_val</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span> 
-                                                          <span class="n">time_stamp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_stamp</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_deterministic_action_results</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">,</span> <span class="n">reward_val</span><span class="o">=</span><span class="n">reward</span><span class="p">)</span>
             
             <span class="c1"># do NOT use simple save_action_results... it allows NON-DETERMINISTIC next state.</span>
-            <span class="c1">#self.model.save_action_results( s_hash, a_desc, sn_hash, </span>
-            <span class="c1">#                                reward_val=reward, time_stamp=self.time_stamp)</span>
-
-            <span class="c1"># save a list of all possible actions so planning can consider them</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">s_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_actionD</span><span class="p">:</span>
-                <span class="n">actionL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">get_state_legal_action_list</span><span class="p">(</span> <span class="n">s_hash</span> <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">full_actionD</span><span class="p">[</span> <span class="n">s_hash</span> <span class="p">]</span> <span class="o">=</span> <span class="n">actionL</span>
+            <span class="c1">#self.model.save_action_results( s_hash, a_desc, sn_hash, reward_val=reward)</span>
             
+            <span class="n">abs_priority</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_abs_priority</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span> <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">abs_priority</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority_threshold</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pqueue</span><span class="o">.</span><span class="n">add_sa_pair</span><span class="p">(</span> <span class="p">(</span><span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">),</span> <span class="n">neg_priority</span><span class="o">=-</span><span class="n">abs_priority</span><span class="p">)</span>
+                
             <span class="c1"># --------------------------------- Planning Loop ------------------------</span>
             <span class="c1"># make Nplanning_loops calls to model</span>
             <span class="k">for</span> <span class="n">n_plan</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nplanning_loops</span><span class="p">):</span>
-                <span class="n">s_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_random_state</span><span class="p">()</span>
-                <span class="c1">#print(s_model, end=&#39; &#39;)</span>
+                <span class="c1">#self.pqueue.summ_print()</span>
                 
-                <span class="c1"># DynaQ+ allows any legal action from environment</span>
-                <span class="n">a_model</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_actionD</span><span class="p">[</span> <span class="n">s_model</span> <span class="p">]</span> <span class="p">)</span>
+                <span class="p">(</span><span class="n">s_model</span><span class="p">,</span> <span class="n">a_model</span><span class="p">),</span> <span class="n">neg_priority</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pqueue</span><span class="o">.</span><span class="n">pop_sa_pair</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">neg_priority</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">break</span> <span class="c1"># Queue is empty, so break</span>
+                    
+                                    
+                <span class="c1">#sn_model, r_model = self.environment.get_action_snext_reward( s_model, a_model )</span>
+                <span class="n">sn_model</span><span class="p">,</span> <span class="n">r_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_sample_sn_r</span><span class="p">(</span> <span class="n">s_model</span><span class="p">,</span> <span class="n">a_model</span><span class="p">)</span>
                 
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">has_sa</span><span class="p">(</span> <span class="n">s_model</span><span class="p">,</span> <span class="n">a_model</span><span class="p">):</span>
-                    <span class="n">sn_model</span><span class="p">,</span> <span class="n">r_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_sample_sn_r</span><span class="p">(</span> <span class="n">s_model</span><span class="p">,</span> <span class="n">a_model</span><span class="p">)</span>
-                    <span class="n">r_bonus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_qplus_reward_bonus</span><span class="p">(</span> <span class="n">s_model</span><span class="p">,</span> <span class="n">a_model</span><span class="p">,</span> 
-                                                                 <span class="n">qplus_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qplus_factor</span><span class="p">,</span> 
-                                                                 <span class="n">time_stamp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_stamp</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># if never visited in RL update, use special handling</span>
-                    <span class="n">sn_model</span><span class="p">,</span> <span class="n">r_model</span> <span class="o">=</span> <span class="n">s_model</span><span class="p">,</span> <span class="mf">0.0</span>
-                    <span class="n">r_bonus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qplus_factor</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_stamp</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">)</span> <span class="c1"># so tau = t-1</span>
-                
-                <span class="c1"># update for the DynaQ+  results.</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">qlearning_update</span><span class="p">(</span> <span class="n">s_hash</span><span class="o">=</span><span class="n">s_model</span><span class="p">,</span> <span class="n">a_desc</span><span class="o">=</span><span class="n">a_model</span><span class="p">,</span> <span class="n">sn_hash</span><span class="o">=</span><span class="n">sn_model</span><span class="p">,</span>
                                                          <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span><span class="p">(),</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> 
-                                                         <span class="n">reward</span><span class="o">=</span><span class="n">r_model</span><span class="o">+</span><span class="n">r_bonus</span><span class="p">)</span>
-            
+                                                         <span class="n">reward</span><span class="o">=</span><span class="n">r_model</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_updates</span> <span class="o">+=</span> <span class="mi">1</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">maybe_add_previous_to_queue</span><span class="p">(</span> <span class="n">s_model</span> <span class="p">)</span>
             
             <span class="c1"># keep a lid on the max number of episode steps.</span>
             <span class="k">if</span> <span class="n">n_steps_in_episode</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">:</span>
@@ -535,8 +545,6 @@
             <span class="c1"># get ready for next loop</span>
             <span class="n">n_steps_in_episode</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">s_hash</span> <span class="o">=</span> <span class="n">sn_hash</span>
-            
-            <span class="bp">self</span><span class="o">.</span><span class="n">time_stamp</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># overall RL time steps. cumulative over episodes.</span>
 
         <span class="c1">#print(n_steps_in_episode, end=&#39; &#39;)</span>
 
@@ -560,7 +568,7 @@
     <span class="c1">#gridworld.summ_print(long=False)</span>
     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">77</span><span class="p">)</span>    
 
-    <span class="n">agent</span> <span class="o">=</span> <span class="n">DynaQPlusAgent</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">gridworld</span><span class="p">,</span> 
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">PrioritySweepAgent</span><span class="p">(</span> <span class="n">environment</span><span class="o">=</span><span class="n">gridworld</span><span class="p">,</span> 
                         <span class="n">learn_tracker</span><span class="o">=</span><span class="n">learn_tracker</span><span class="p">,</span>
                         <span class="n">gamma</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
     

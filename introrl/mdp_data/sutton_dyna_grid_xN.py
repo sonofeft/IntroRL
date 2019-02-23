@@ -21,6 +21,10 @@ def get_gridworld(step_reward=0.0, N_mult=1, # N_mult must be an integer.
     
     width_big = width * N_mult
     height_big = height * N_mult
+    
+    gridworld.characteristic_dim = width_big + height_big*2
+    # get relaxed optimal length from Zhang.
+    gridworld.optimal_path_len = int(14 * N_mult * 1.2) + 1
         
     def get_action_snext_reward( s_hash, action):
         """returns reward and state_next_hash"""
@@ -136,7 +140,7 @@ def get_gridworld(step_reward=0.0, N_mult=1, # N_mult must be an integer.
 
 if __name__ == "__main__": # pragma: no cover
     
-    gridworld = get_gridworld( N_mult=2 )
+    gridworld = get_gridworld( N_mult=1 )
     gridworld.summ_print()
     gridworld.layout_print(vname='reward', fmt='', show_env_states=True, none_str='*')
     #gridworld.save_to_pickle_file( fname=None )

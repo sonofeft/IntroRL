@@ -5,6 +5,7 @@ include .travis.yml tox.ini
 
 graft introrl
 recursive-include introrl/examples *
+recursive-include introrl/examples/* *
 recursive-include introrl/tests *
 prune */__pycache__
 global-exclude *.py[co]

@@ -48,6 +48,8 @@ class ActionValueColl( object ):
         self.chgTracker = ChangeTracker()
         
         self.init_Qsa_to_val( init_val )
+        
+        self.init_val = init_val
 
     def get_number_of_changes(self):
         return self.chgTracker.get_number_of_changes()
@@ -129,6 +131,13 @@ class ActionValueColl( object ):
 
     def get_best_greedy_action(self, s_hash):
         return self.get_best_eps_greedy_action( s_hash )
+
+    def get_max_Qsa(self, s_hash):
+        """return the maximum Q(s,a) for state, s_hash."""
+        a_best = self.get_best_greedy_action( s_hash )
+        if a_best is None:
+            return None
+        return self.get_val( s_hash, a_best )
 
     def get_best_dbl_eps_greedy_action(self, av_coll_2, s_hash, epsgreedy_obj=None ):
         """

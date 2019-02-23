@@ -548,7 +548,16 @@
 483
 484
 485
-486</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: ascii -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
@@ -598,6 +607,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">chgTracker</span> <span class="o">=</span> <span class="n">ChangeTracker</span><span class="p">()</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">init_Qsa_to_val</span><span class="p">(</span> <span class="n">init_val</span> <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_val</span> <span class="o">=</span> <span class="n">init_val</span>
 
     <span class="k">def</span> <span class="nf">get_number_of_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chgTracker</span><span class="o">.</span><span class="n">get_number_of_changes</span><span class="p">()</span>
@@ -679,6 +690,13 @@
 
     <span class="k">def</span> <span class="nf">get_best_greedy_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_hash</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_best_eps_greedy_action</span><span class="p">(</span> <span class="n">s_hash</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_max_Qsa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_hash</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return the maximum Q(s,a) for state, s_hash.&quot;&quot;&quot;</span>
+        <span class="n">a_best</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_best_greedy_action</span><span class="p">(</span> <span class="n">s_hash</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">a_best</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_val</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_best</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_best_dbl_eps_greedy_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">av_coll_2</span><span class="p">,</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">epsgreedy_obj</span><span class="o">=</span><span class="bp">None</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

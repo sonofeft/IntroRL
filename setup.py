@@ -87,7 +87,7 @@ setup(
     packages = find_packages(exclude=['.tox', '.hg', 'docs','.mdp_pickle',
                                       '.pi_pickle', '.bbt_pickle', '.vv_pickle',
                                       '.esp_pickle', '.vs_pickle', '.vave_pickle',
-                                      'svra._pickle', '.pickle']),
+                                      '.svra_pickle', '.bbp_pickle', '.pickle']),
     #package_data = {'introrl':['examples/*.*']},
 
     # List run-time dependencies here.  These will be installed by pip when

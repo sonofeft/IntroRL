@@ -298,8 +298,7 @@
 233
 234
 235
-236
-237</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+236</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: ascii -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
@@ -359,6 +358,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span> <span class="o">=</span> <span class="n">max_episode_steps</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">num_episodes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_updates</span> <span class="o">=</span> <span class="mi">0</span>
         
         <span class="c1"># if input epsilon is a float, use it to create an EpsilonGreedy object</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="mf">0.1</span><span class="p">):</span>
@@ -446,13 +446,11 @@
                       <span class="s1">&#39; s_hash=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">s_hash</span><span class="p">),</span><span class="s1">&#39; a_desc=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">a_desc</span><span class="p">))</span>
                 <span class="k">break</span>
             
-            <span class="c1">#if s_hash in [(2,0),(4,0),&#39;Gate_L&#39;]:</span>
-            <span class="c1">#    print(&#39;%4i)&#39;%n_steps_in_episode ,&#39;  Now in&#39;,s_hash,&#39;  Action=&#39;,a_desc,&#39;  sn_hash=&#39;,sn_hash)</span>
-            
             <span class="c1"># do RL update of Q(s,a) value</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">qlearning_update</span><span class="p">(</span> <span class="n">s_hash</span><span class="o">=</span><span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="o">=</span><span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash</span><span class="o">=</span><span class="n">sn_hash</span><span class="p">,</span>
                                                      <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span><span class="p">(),</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> 
                                                      <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_updates</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="c1"># give the above experience to the model</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span> <span class="p">)</span>
             
@@ -478,7 +476,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">action_value_coll</span><span class="o">.</span><span class="n">qlearning_update</span><span class="p">(</span> <span class="n">s_hash</span><span class="o">=</span><span class="n">s_model</span><span class="p">,</span> <span class="n">a_desc</span><span class="o">=</span><span class="n">a_model</span><span class="p">,</span> <span class="n">sn_hash</span><span class="o">=</span><span class="n">sn_model</span><span class="p">,</span>
                                                          <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_obj</span><span class="p">(),</span> <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> 
                                                          <span class="n">reward</span><span class="o">=</span><span class="n">r_model</span><span class="p">)</span>
-            
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_updates</span> <span class="o">+=</span> <span class="mi">1</span>
             
             <span class="c1"># keep a lid on the max number of episode steps.</span>
             <span class="k">if</span> <span class="n">n_steps_in_episode</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_episode_steps</span><span class="p">:</span>

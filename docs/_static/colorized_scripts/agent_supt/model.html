@@ -339,7 +339,21 @@
 274
 275
 276
-277</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: ascii -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
@@ -355,7 +369,6 @@
 
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.model_state_data</span> <span class="kn">import</span> <span class="n">ModelStateData</span>
 <span class="kn">from</span> <span class="nn">introrl.utils.gen_sort_key</span> <span class="kn">import</span> <span class="n">NaturalOrStrKey</span>
-<span class="kn">from</span> <span class="nn">introrl.utils.functions</span> <span class="kn">import</span> <span class="n">argmax_vmax_list</span>
 
 <span class="k">class</span> <span class="nc">Model</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -408,6 +421,21 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
 
+    <span class="k">def</span> <span class="nf">get_ave_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="n">s_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">define_statesD</span><span class="p">:</span>
+            <span class="n">model_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">define_statesD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get_ave_reward</span><span class="p">(</span> <span class="n">a_desc</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">get_ave_reward_to_snext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash_inp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If stochastic sn_hash, this will only look at sn_hash_inp&quot;&quot;&quot;</span>        
+        <span class="k">if</span> <span class="n">s_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">define_statesD</span><span class="p">:</span>
+            <span class="n">model_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">define_statesD</span><span class="p">[</span><span class="n">s_hash</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get_ave_reward_to_snext</span><span class="p">(</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">sn_hash_inp</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
     
     <span class="k">def</span> <span class="nf">total_num_action_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add up all the calls to get_action_snext_reward.&quot;&quot;&quot;</span>

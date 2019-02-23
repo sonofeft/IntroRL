@@ -89,7 +89,7 @@ GitHub Log
     - migrating examples into IntroRL
 
 * 2019-01-29 23:29 Charlie Taylor
-    - added some defined MDP envirionments
+    - added some defined MDP environments
 
 * 2019-01-29 15:03 Charlie Taylor
     - Initial Empty Project

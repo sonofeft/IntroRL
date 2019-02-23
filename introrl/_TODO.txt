@@ -15,25 +15,15 @@ hg log -T compact
    BOMBS IN python 2.7 for things like:
    sout = s.rjust(lmaxL[j], ' ')
 
-*) need all examples subdirectories to be in PyPi install
-
-*) need script to run all __name__=="__main__" scripts.
-
 *) write routine "solve_sim_w_dp"... i.e. make model with transition probs
    and use value iteration
 
 *) in policy diagram, need special symbol for actions that don't matter.
    (e.g. in Sutton 5x5 gridworld, jumps from (4,1) to (0,1) no matte what.
 
-*) show '"string"' annotation in policy diagram
-
-*) add car rental 3D plot to docs
-
 *) Replace state_values with state_value_coll
 
 *) fix examples for move to IntroRL
-
-*) change max_steps to include sys.maxsize initial value. (2147483647)
 
 *) add a min_alpha to Alpha object (i.e. decay to min_alpha instead of 0.0)
    (Same for Epsilon)
@@ -59,5 +49,18 @@ hg log -T compact
 
 *) add state_previous data to episode_stats.
 
+========================== DONE ==============================
+
+*) need all examples subdirectories to be in PyPi install
+   
+*) need script to run all __name__=="__main__" scripts.
+
+*) add car rental 3D plot to docs
+
+*) change max_steps to include sys.maxsize initial value. (2147483647)
+
+*) show '"string"' annotation in policy diagram
+
 *) fix pickle of environment.
+
 

@@ -15,7 +15,6 @@ from math import sqrt
 
 from introrl.agent_supt.model_state_data import ModelStateData
 from introrl.utils.gen_sort_key import NaturalOrStrKey
-from introrl.utils.functions import argmax_vmax_list
 from introrl.agent_supt.model import Model
 
 class ModelWTimestamp( Model ):

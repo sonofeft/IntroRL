@@ -14,7 +14,6 @@ import random
 
 from introrl.agent_supt.model_state_data import ModelStateData
 from introrl.utils.gen_sort_key import NaturalOrStrKey
-from introrl.utils.functions import argmax_vmax_list
 
 class Model( object ):
     """
@@ -67,6 +66,21 @@ class Model( object ):
         else:
             return None, None
 
+    def get_ave_reward(self, s_hash, a_desc):
+        
+        if s_hash in self.define_statesD:
+            model_data = self.define_statesD[s_hash]
+            return model_data.get_ave_reward( a_desc )
+        else:
+            return 0
+
+    def get_ave_reward_to_snext(self, s_hash, a_desc, sn_hash_inp):
+        """If stochastic sn_hash, this will only look at sn_hash_inp"""        
+        if s_hash in self.define_statesD:
+            model_data = self.define_statesD[s_hash]
+            return model_data.get_ave_reward_to_snext( a_desc, sn_hash_inp )
+        else:
+            return 0
     
     def total_num_action_data_points(self):
         """Add up all the calls to get_action_snext_reward."""
