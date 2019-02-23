@@ -1,4 +1,4 @@
-.. commit signature, "date_str author_str sha_str"
+.. 2019-02-21 sonofeft 24a56447c92f538c8fff57a8237f35312f5b67d1
    Maintain spacing of "History" and "GitHub Log" titles
 
 History
@@ -6,6 +6,15 @@ History
 
 GitHub Log
 ----------
+
+* Feb 21, 2019
+    - (by: sonofeft) 
+        - added named_s_hash, dyna_grid_xN, priority_queue, some TODO
+* Feb 20, 2019
+    - (by: sonofeft) 
+        - single line description in setup.py required
+        - fixed pickle file inclusion in PyPI
+        - First Git Commit
 
 * 2019-02-19 23:35 Charlie Taylor
     - added more chapter 8 figures to docs
@@ -97,4 +106,3 @@ GitHub Log
 * Jan 29, 2019
     - (by: sonofeft)
         - First Created IntroRL with PyHatch
-
