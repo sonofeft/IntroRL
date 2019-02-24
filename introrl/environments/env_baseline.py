@@ -73,7 +73,8 @@ class EnvBaseline( object ):
                                      row_tickL=row_tickL, x_axis_label=x_axis_label,
                                      col_tickL=col_tickL, y_axis_label=y_axis_label,
                                      colorD=colorD, basic_color=basic_color)
-    
+        
+        self.failed_mdp_file_read = False
         if mdp_file is not None:
             if not self.read_pickle_file( mdp_file ):
                 print('WARNING...   FAILED TO OPEN MDP FILE:', mdp_file)
@@ -81,6 +82,7 @@ class EnvBaseline( object ):
                 print('='*66)
                 print('='*66)
                 #sys.exit()
+                self.failed_mdp_file_read = True
     
     def get_policy_score(self, policy=None, start_state_hash=None, step_limit=1000):
         """

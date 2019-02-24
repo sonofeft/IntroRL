@@ -18,6 +18,7 @@ from builtins import range
 from builtins import object
 
 from tkinter.ttk import Combobox, Progressbar, Separator, Treeview, Notebook
+import tkinter.messagebox
 
 from tkinter import *
 from tkinter import Button, Canvas, Checkbutton, Entry, Frame, Label, LabelFrame
@@ -32,15 +33,16 @@ from tkinter import _setit as set_command
 import sys
 import os
 
-from introrl.mdp_data.simple_grid_world import get_env as simple_grid_world_get_env
+from introrl.mdp_data.simple_grid_world import get_gridworld as simple_grid_world_get_env
 
 from introrl.black_box_sims.cliff_walking import CliffWalkingSimulation
 from introrl.black_box_sims.blocking_maze import BlockingMaze
 
+from introrl.environments.env_baseline import EnvBaseline
 from introrl.td_funcs.qlearning_epsilon_greedy import qlearning_epsilon_greedy
 from introrl.td_funcs.sarsa_epsilon_greedy import sarsa_epsilon_greedy
 from introrl.td_funcs.expected_sarsa_eps_greedy import expected_sarsa_eps_greedy
-from introrl.agents.dyna_q import DynaQ
+from introrl.agents.dyna_q_agent import DynaQAgent
 
 from introrl.dp_funcs.dp_value_iter import dp_value_iteration
 
@@ -66,7 +68,7 @@ class _tk_grid_world:
         self.make_Button_2( self.grid_frame )          #      Button: Step : at Main(1,3)
         self.make_Button_3( self.grid_frame )          #      Button: Build Model : at Main(1,4)
         self.make_Button_4( self.grid_frame )          #      Button: 1 Episode : at Main(1,2)
-        self.make_Combobox_1( self.grid_frame )        #    Combobox: Q-Learn SARSA DynaQ DynaQ+ : at Main(1,6)
+        self.make_Combobox_1( self.grid_frame )        #    Combobox: Q-Learn SARSA DynaQ DynaQ+ PrioritySweep : at Main(1,6)
         self.make_Combobox_2( self.grid_frame )        #    Combobox: Display Size : at Main(1,5)
         self.make_Entry_1( self.grid_frame )           #       Entry: Step Cost : at Main(3,1)
         self.make_Entry_2( self.grid_frame )           #       Entry: Alpha : at Main(3,2)
@@ -79,7 +81,7 @@ class _tk_grid_world:
         self.make_Label_10( self.grid_frame )          #       Label:  at Main(5,5)
         self.make_Label_11( self.grid_frame )          #       Label: Q(s,a) Initial : at Main(2,3)
         self.make_Label_12( self.grid_frame )          #       Label:  at Main(5,6)
-        self.make_Label_13( self.grid_frame )          #       Label:   : at Main(1,7)
+        self.make_Label_13( self.grid_frame )          #       Label:  at Main(1,7)
         self.make_Label_14( self.grid_frame )          #       Label:  at Main(5,7)
         self.make_Label_2( self.grid_frame )           #       Label: Alpha : at Main(2,2)
         self.make_Label_3( self.grid_frame )           #       Label: Gamma : at Main(2,4)
@@ -103,6 +105,18 @@ class _tk_grid_world:
         top_Model.add("command", label = "Cliff Walking", command=self.menu_Model_Cliff_Walking, underline=0, accelerator="Ctrl+C")
         top_Model.add("command", label = "Blocking Maze", command=self.menu_Model_Blocking_Maze, underline=0, accelerator="Ctrl+B")
         top_Model.add_separator()
+
+        top_MDP_Data_Files = Menu(self.menuBar, tearoff=0)
+
+        top_MDP_Data_Files.add("command", label = "Random_Walk_MRP", command=self.menu_MDP_Data_Files_Random_Walk_MRP, underline=0, accelerator="Ctrl+R")
+        top_MDP_Data_Files.add("command", label = "Sample_Grid_World", command=self.menu_MDP_Data_Files_Sample_Grid_World, underline=1, accelerator="Ctrl+A")
+        top_MDP_Data_Files.add("command", label = "Slipper_Cleaning_Robot", command=self.menu_MDP_Data_Files_Slipper_Cleaning_Robot, underline=1, accelerator="Ctrl+L")
+        top_MDP_Data_Files.add("command", label = "Sutton_Ex4_1_5x5_Grid_World", command=self.menu_MDP_Data_Files_Sutton_Ex4_1_5x5_Grid_World, underline=1, accelerator="Ctrl+U")
+        top_MDP_Data_Files.add("command", label = "Sutton_Ex4_1_Grid_World", command=self.menu_MDP_Data_Files_Sutton_Ex4_1_Grid_World, underline=2, accelerator="Ctrl+T")
+        top_MDP_Data_Files.add("command", label = "Sutton_Ex8_1_Dyna_Maze", command=self.menu_MDP_Data_Files_Sutton_Ex8_1_Dyna_Maze, underline=4, accelerator="Ctrl+O")
+        top_MDP_Data_Files.add("command", label = "Windy_Gridworld_Sutton_Ex6_5", command=self.menu_MDP_Data_Files_Windy_Gridworld_Sutton_Ex6_5, underline=0, accelerator="Ctrl+W")
+        top_MDP_Data_Files.add_separator()
+        top_Model.add("cascade", label="MDP Data Files", menu=top_MDP_Data_Files)
         top_Model.add("command", label = "Exit", command=self.menu_Model_Exit, underline=0, accelerator="Ctrl+E")
         self.menuBar.add("cascade", label="Model", menu=top_Model)
 
@@ -118,6 +132,20 @@ class _tk_grid_world:
         self.master.bind("<Control-c>", lambda event: self.menu_Model_Cliff_Walking())
         self.master.bind("<Control-B>", lambda event: self.menu_Model_Blocking_Maze())
         self.master.bind("<Control-b>", lambda event: self.menu_Model_Blocking_Maze())
+        self.master.bind("<Control-R>", lambda event: self.menu_MDP_Data_Files_Random_Walk_MRP())
+        self.master.bind("<Control-r>", lambda event: self.menu_MDP_Data_Files_Random_Walk_MRP())
+        self.master.bind("<Control-A>", lambda event: self.menu_MDP_Data_Files_Sample_Grid_World())
+        self.master.bind("<Control-a>", lambda event: self.menu_MDP_Data_Files_Sample_Grid_World())
+        self.master.bind("<Control-L>", lambda event: self.menu_MDP_Data_Files_Slipper_Cleaning_Robot())
+        self.master.bind("<Control-l>", lambda event: self.menu_MDP_Data_Files_Slipper_Cleaning_Robot())
+        self.master.bind("<Control-U>", lambda event: self.menu_MDP_Data_Files_Sutton_Ex4_1_5x5_Grid_World())
+        self.master.bind("<Control-u>", lambda event: self.menu_MDP_Data_Files_Sutton_Ex4_1_5x5_Grid_World())
+        self.master.bind("<Control-T>", lambda event: self.menu_MDP_Data_Files_Sutton_Ex4_1_Grid_World())
+        self.master.bind("<Control-t>", lambda event: self.menu_MDP_Data_Files_Sutton_Ex4_1_Grid_World())
+        self.master.bind("<Control-O>", lambda event: self.menu_MDP_Data_Files_Sutton_Ex8_1_Dyna_Maze())
+        self.master.bind("<Control-o>", lambda event: self.menu_MDP_Data_Files_Sutton_Ex8_1_Dyna_Maze())
+        self.master.bind("<Control-W>", lambda event: self.menu_MDP_Data_Files_Windy_Gridworld_Sutton_Ex6_5())
+        self.master.bind("<Control-w>", lambda event: self.menu_MDP_Data_Files_Windy_Gridworld_Sutton_Ex6_5())
         self.master.bind("<Control-E>", lambda event: self.menu_Model_Exit())
         self.master.bind("<Control-e>", lambda event: self.menu_Model_Exit())
         # >>>>>>insert any user code below this comment for section "top_of_init"
@@ -137,7 +165,7 @@ class _tk_grid_world:
         self.h_total = 700
         
         self.build_canvas_objects()
-        
+                
     def build_canvas_objects(self):
         """For the env_sim model, build a canvas object for each layout position."""
         
@@ -165,35 +193,100 @@ class _tk_grid_world:
                         for a_desc in self.env_sim.get_state_legal_action_list( s_hash ):
                             self.show_direction( a_desc, self.grid_canvasD[ (row,col) ] )
 
+                # mark start states
+                if s_hash == self.env_sim.start_state_hash:
+                    self.grid_canvasD[ (row,col) ].create_rectangle((3, 3, self.W, self.H), outline="green", width=2)
+                        
+                # mark terminal states
+                if s_hash in self.env_sim.terminal_set:
+                    self.grid_canvasD[ (row,col) ].create_rectangle((3, 3, self.W, self.H), outline="blue", width=2)
+
+
+        # check for multiple values of a reward
+        reward_snD = {} # index=sn_hash, value=set of reward values
+        sn_hashD = {} # index=(s_hash, a_desc), value=set of sn_hash
+        def build_sn_hashD( s_hash, a_desc ):
+            sn_hashD[ (s_hash, a_desc) ] = set()
+            
+            try:
+                # EnvBaseline objects can simply iterate possible sn_hash values.
+                for str in self.env_sim.iter_next_state_prob_reward( s_hash, a_desc, incl_zero_prob=False):
+                    (sn_hash, t_prob, reward) = str
+                    sn_hashD[ (s_hash, a_desc) ].add( sn_hash )
+                    if reward != 0.0:
+                        if sn_hash not in reward_snD:
+                            reward_snD[sn_hash] = set()
+                        reward_snD[sn_hash].add( reward )
+            except:
+                # Simulations must try a few times.
+                for _ in range( 10 ):
+                    sn_hash, reward = self.env_sim.get_action_snext_reward( s_hash, a_desc )
+                    sn_hashD[ (s_hash, a_desc) ].add( sn_hash )
+                    if sn_hash not in reward_snD:
+                        reward_snD[sn_hash] = set()
+                    reward_snD[sn_hash].add( reward )
+                    
+                if len(sn_hashD[ (s_hash, a_desc) ]) > 1:
+                    for _ in range( 100 ):
+                        sn_hash, reward = self.env_sim.get_action_snext_reward( s_hash, a_desc )
+                        sn_hashD[ (s_hash, a_desc) ].add( sn_hash )
+                        if sn_hash not in reward_snD:
+                            reward_snD[sn_hash] = set()
+                        reward_snD[sn_hash].add( reward )
+        
+            
+        for row, rowL in enumerate( self.env_sim.layout.s_hash_rowL ):
+            for col, s_hash in enumerate( rowL ):
+                if self.env_sim.is_legal_state( s_hash ):
+                    for a_desc in self.env_sim.get_state_legal_action_list( s_hash ):
+                        build_sn_hashD( s_hash, a_desc )
+
         # set background and reward labels
         for row, rowL in enumerate( self.env_sim.layout.s_hash_rowL ):
             for col, s_hash in enumerate( rowL ):
                 if self.env_sim.is_legal_state( s_hash ):
                     for a_desc in self.env_sim.get_state_legal_action_list( s_hash ):
-                        sn_hash, reward = self.env_sim.get_action_snext_reward( s_hash, a_desc )
+                        for sn_hash in sn_hashD[ (s_hash, a_desc) ]:
                         
-                        c = self.s_hash_canvasD[sn_hash]
-                        if reward > 0.0:
-                            c.config(bg='#aaffaa')
-                            self.set_center_number( c, reward, font='Helvetica 16 bold roman')
-                        elif reward < 0.0:
-                            c.config(bg='#ffaaaa')
-                            self.set_center_number( c, reward, font='Helvetica 16 bold roman')
-                    
+                            c = self.s_hash_canvasD[sn_hash]
+                            
+                            if sn_hash in reward_snD:
+                                rL = list( reward_snD[sn_hash] )
+                                del reward_snD[sn_hash]
+                                
+                                if len(rL) > 1:
+                                    rL.sort() # sort in place
+                                    rL = ["%g"%val for val in rL]
+                                    s = '\n'.join( rL )
+                                    self.set_center_text( c, s, color='black', font='Helvetica 16 normal roman')
+                                elif len(rL) == 1:
+                                    reward = rL[0]
+                                    if reward > 0.0:
+                                        c.config(bg='#aaffaa')
+                                        self.set_center_number( c, reward, font='Helvetica 16 bold roman')
+                                    elif reward < 0.0:
+                                        c.config(bg='#ffaaaa')
+                                        self.set_center_number( c, reward, font='Helvetica 16 bold roman')
+                            #c.update_idletasks()
+                            #c.update()
+                        
                     if s_hash is None:
                         c = self.s_hash_canvasD[s_hash]
                         c.config(bg='#aaaaaa')
                         self.set_center_text(c, 'Wall' )
+                        #c.update_idletasks()
+                        #c.update()
                             
                 else: # not a legal s_hash
                     c = self.grid_canvasD[ (row,col) ]
                     c.config(bg='#aaaaaa')
                     
                     self.set_center_text(c, s_hash)
-
-
-
-        
+                    #c.update_idletasks()
+                    #c.update()
+                    
+        self.master.update_idletasks()
+        #self.master.update()
 
     def set_center_text(self, c, text_str, color='black', font='Helvetica 16 normal roman'):
         s = str(text_str)
@@ -225,13 +318,13 @@ class _tk_grid_world:
             w6 = int(w / 6)
             h6 = int(h / 6)
         
-        if d == 'L':
+        if d in ['L','W']:
             pointL = [1,h/2, w6+1,h/2-h6, w6+1,h/2+h6]
-        elif d == 'R':
+        elif d in ['R','E']:
             pointL = [w,h/2, w-w6,h/2-h6, w-w6,h/2+h6]
-        elif d == 'U':
+        elif d in ['U','N']:
             pointL = [w/2,1, w/2-w6,h6+1, w/2+w6,h6+1]
-        elif d == 'D':
+        elif d in ['D','S']:
             pointL = [w/2,h, w/2-w6,h-h6, w/2+w6,h-h6]
 
         if d == amax:
@@ -240,8 +333,6 @@ class _tk_grid_world:
             color = '#d5f6e3'
 
         c.create_polygon(pointL, outline='#aaaaaa', fill=color, width=1)
-        
-
 
     # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "make_Button_1"
     def make_Button_1(self, frame):
@@ -285,8 +376,8 @@ class _tk_grid_world:
 
     # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "make_Combobox_1"
     def make_Combobox_1(self, frame):
-        """    Combobox: Q-Learn SARSA DynaQ DynaQ+ : at Main(1,6)"""
-        self.Combobox_1 = Combobox( frame , text="Combobox_1", values="Q-Learn SARSA DynaQ DynaQ+")
+        """    Combobox: Q-Learn SARSA DynaQ DynaQ+ PrioritySweep : at Main(1,6)"""
+        self.Combobox_1 = Combobox( frame , text="Combobox_1", values="Q-Learn SARSA DynaQ DynaQ+ PrioritySweep")
         self.Combobox_1.grid(row=1, column=6)
         self.Combobox_1_StringVar = StringVar()
 
@@ -434,8 +525,8 @@ class _tk_grid_world:
 
     # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "make_Label_13"
     def make_Label_13(self, frame):
-        """       Label:   : at Main(1,7)"""
-        self.Label_13 = Label( frame , text=" ", width="2")
+        """       Label:  at Main(1,7)"""
+        self.Label_13 = Label( frame , text="", width="2")
         self.Label_13.grid(row=1, column=7, sticky="ew")
 
         # >>>>>>insert any user code below this comment for section "make_Label_13"
@@ -624,7 +715,7 @@ class _tk_grid_world:
         
     # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "Combobox_1_StringVar_traceName"
     def Combobox_1_StringVar_Callback(self, varName, index, mode):
-        """    Combobox: Q-Learn SARSA DynaQ DynaQ+ : at Main(1,6)"""
+        """    Combobox: Q-Learn SARSA DynaQ DynaQ+ PrioritySweep : at Main(1,6)"""
         pass
 
         # >>>>>>insert any user code below this comment for section "Combobox_1_StringVar_traceName"
@@ -778,6 +869,132 @@ class _tk_grid_world:
         print( "called menu_Model_" )
 
 
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_Random_Walk_MRP"
+    def menu_MDP_Data_Files_Random_Walk_MRP(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_Random_Walk_MRP"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_Random_Walk_MRP" )
+
+        env_sim = EnvBaseline( mdp_file='Random_Walk_MRP' )
+        if env_sim.failed_mdp_file_read:
+            print('Failed to load MDP File: Random_Walk_MRP')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Random_Walk_MRP')
+        else:
+            self.env_sim = env_sim        
+            self.build_canvas_objects()
+            self.master.title("Random_Walk_MRP")
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_Sample_Grid_World"
+    def menu_MDP_Data_Files_Sample_Grid_World(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_Sample_Grid_World"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_Sample_Grid_World" )
+
+        env_sim = EnvBaseline( mdp_file='Sample_Grid_World' )
+        if env_sim.failed_mdp_file_read:
+            print('Failed to load MDP File: Sample_Grid_World')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sample_Grid_World')
+        else:
+            self.env_sim = env_sim        
+            self.build_canvas_objects()
+            self.master.title("Sample_Grid_World")
+
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_Slipper_Cleaning_Robot"
+    def menu_MDP_Data_Files_Slipper_Cleaning_Robot(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_Slipper_Cleaning_Robot"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_Slipper_Cleaning_Robot" )
+
+        env_sim = EnvBaseline( mdp_file='Slipper_Cleaning_Robot' )
+        if env_sim.failed_mdp_file_read:
+            print('Failed to load MDP File: Slipper_Cleaning_Robot')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Slipper_Cleaning_Robot')
+        else:
+            self.env_sim = env_sim        
+            self.build_canvas_objects()
+            self.master.title("Slipper_Cleaning_Robot")
+
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_Sutton_Ex4_1_5x5_Grid_World"
+    def menu_MDP_Data_Files_Sutton_Ex4_1_5x5_Grid_World(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_Sutton_Ex4_1_5x5_Grid_World"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_Sutton_Ex4_1_5x5_Grid_World" )
+
+        env_sim = EnvBaseline( mdp_file='Sutton_Ex4_1_5x5_Grid_World' )
+        if env_sim.failed_mdp_file_read:
+            print('Failed to load MDP File: Sutton_Ex4_1_5x5_Grid_World')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex4_1_5x5_Grid_World')
+        else:
+            self.env_sim = env_sim        
+            self.build_canvas_objects()
+            self.master.title("Sutton_Ex4_1_5x5_Grid_World")
+
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_Sutton_Ex4_1_Grid_World"
+    def menu_MDP_Data_Files_Sutton_Ex4_1_Grid_World(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_Sutton_Ex4_1_Grid_World"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_Sutton_Ex4_1_Grid_World" )
+
+        env_sim = EnvBaseline( mdp_file='Sutton_Ex4_1_Grid_World' )
+        if env_sim.failed_mdp_file_read:
+            print('Failed to load MDP File: Sutton_Ex4_1_Grid_World')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex4_1_Grid_World')
+        else:
+            self.env_sim = env_sim        
+            self.build_canvas_objects()
+            self.master.title("Sutton_Ex4_1_Grid_World")
+
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_Sutton_Ex8_1_Dyna_Maze"
+    def menu_MDP_Data_Files_Sutton_Ex8_1_Dyna_Maze(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_Sutton_Ex8_1_Dyna_Maze"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_Sutton_Ex8_1_Dyna_Maze" )
+
+
+        env_sim = EnvBaseline( mdp_file='Sutton_Ex8_1_Dyna_Maze' )
+        if env_sim.failed_mdp_file_read:
+            print('Failed to load MDP File: Sutton_Ex8_1_Dyna_Maze')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex8_1_Dyna_Maze')
+        else:
+            self.env_sim = env_sim        
+            self.build_canvas_objects()
+            self.master.title("Sutton_Ex8_1_Dyna_Maze")
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_Windy_Gridworld_Sutton_Ex6_5"
+    def menu_MDP_Data_Files_Windy_Gridworld_Sutton_Ex6_5(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_Windy_Gridworld_Sutton_Ex6_5"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_Windy_Gridworld_Sutton_Ex6_5" )
+
+        env_sim = EnvBaseline( mdp_file='Windy_Gridworld_Sutton_Ex6_5' )
+        if env_sim.failed_mdp_file_read:
+            print('Failed to load MDP File: Windy_Gridworld_Sutton_Ex6_5')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Windy_Gridworld_Sutton_Ex6_5')
+        else:
+            self.env_sim = env_sim        
+            self.build_canvas_objects()
+            self.master.title("Windy_Gridworld_Sutton_Ex6_5")
+
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_MDP_Data_Files_"
+    def menu_MDP_Data_Files_(self):
+        pass
+        # >>>>>>insert any user code below this comment for section "menu_MDP_Data_Files_"
+        # replace, delete, or comment-out the following
+        print( "called menu_MDP_Data_Files_" )
+
+
     # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "menu_Model_Exit"
     def menu_Model_Exit(self):
         pass
@@ -785,6 +1002,36 @@ class _tk_grid_world:
         # replace, delete, or comment-out the following
         print( "called menu_Model_Exit" )
         self.master.destroy()
+
+
+    # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "standard_message_dialogs"
+
+    # standard message dialogs... showinfo, showwarning, showerror
+    def ShowInfo(self, title='Title', message='your message here.'):
+        tkinter.messagebox.showinfo( title, message )
+        return
+    def ShowWarning(self, title='Title', message='your message here.'):
+        tkinter.messagebox.showwarning( title, message )
+        return
+    def ShowError(self, title='Title', message='your message here.'):
+        tkinter.messagebox.showerror( title, message )
+        return
+        
+    # standard question dialogs... askquestion, askokcancel, askyesno, or askretrycancel
+    # return True for OK, Yes, Retry, False for Cancel or No
+    def AskYesNo(self, title='Title', message='your question here.'):
+        return tkinter.messagebox.askyesno( title, message )
+    def AskOK_Cancel(self, title='Title', message='your question here.'):
+        return tkinter.messagebox.askokcancel( title, message )
+    def AskRetryCancel(self, title='Title', message='your question here.'):
+        return tkinter.messagebox.askretrycancel( title, message )
+        
+    # return "yes" for Yes, "no" for No
+    def AskQuestion(self, title='Title', message='your question here.'):
+        return tkinter.messagebox.askquestion( title, message )
+    # END of standard message dialogs
+
+    # >>>>>>insert any user code below this comment for section "standard_message_dialogs"
 
 
 # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "end"

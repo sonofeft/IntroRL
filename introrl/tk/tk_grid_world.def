@@ -1,11 +1,11 @@
 [app_attr]
 hideokbutton = no
-hasstddialmess = no
+hasstddialmess = yes
 add_menu_ctrl_keys = yes
 name = tk_grid_world
 guitype = main
 hasstdalarm = no
-menu = Model\n  Simple Grid World\n  Cliff Walking\n  Blocking Maze\n\n  Exit
+menu = Model\n  Simple Grid World\n  Cliff Walking\n  Blocking Maze\n\n  MDP Data Files\n    Random_Walk_MRP\n    Sample_Grid_World\n    Slipper_Cleaning_Robot\n    Sutton_Ex4_1_5x5_Grid_World\n    Sutton_Ex4_1_Grid_World\n    Sutton_Ex8_1_Dyna_Maze\n    Windy_Gridworld_Sutton_Ex6_5\n\n  Exit
 resizable = yes
 hasmenu = yes
 height = 228
@@ -14,8 +14,8 @@ hasstddialcolor = no
 col_weights = 7:1
 row_weights = 2:1
 hasstddialfile = no
-y = 760
-x = 1068
+y = 636
+x = 180
 hasstatusbar = no
 
 [Button_1]
@@ -84,7 +84,7 @@ rowspan =
 text = Combobox_1
 docstring = 
 width = 15
-values = Q-Learn SARSA DynaQ DynaQ+
+values = Q-Learn SARSA DynaQ DynaQ+ PrioritySweep
 columnspan = 
 
 [Combobox_2]
@@ -242,7 +242,7 @@ tab_label = Main
 row = 1
 col = 7
 rowspan = 
-text =  
+text = 
 docstring = 
 sticky = ew
 width = 2

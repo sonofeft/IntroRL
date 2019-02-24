@@ -82,7 +82,7 @@ def get_robot(step_reward=-0.04):
                 sn_hash = get_move_s_next(ar_desc, s_hash)
                 reward_val = rewardD.get( sn_hash, step_reward )
 
-                gridworld.add_transition( s_hash, a_desc, sn_hash, t_prob=0.8, reward_obj=reward_val)
+                gridworld.add_transition( s_hash, a_desc, sn_hash, t_prob=0.1, reward_obj=reward_val)
     gridworld.define_env_states_actions()
 
     # If there is a start state, define it here.
@@ -110,6 +110,6 @@ def get_robot(step_reward=-0.04):
 if __name__ == "__main__": # pragma: no cover
     
     gridworld = get_robot()
-    #gridworld.summ_print()
+    gridworld.summ_print()
     gridworld.layout_print(vname='reward', fmt='', show_env_states=True, none_str='*')
     gridworld.save_to_pickle_file( fname=None )
