@@ -9,6 +9,7 @@ from builtins import range
 from builtins import object
 
 import os
+#import sys
 import math
 import pickle
 import random
@@ -20,12 +21,16 @@ from introrl.utils.grid_funcs import print_string_rows, is_literal_str
 from introrl.utils.running_ave import RunningAve
 from introrl.reward import Reward
 from introrl.state import State
+from introrl.utils.banner import banner
 
 from introrl.environments.define_state_moves import DefineStateMoves
 
 here = os.path.abspath(os.path.dirname(__file__))
 up_one = os.path.split( here )[0] 
-mdp_path = os.path.join( up_one, 'mdp_data' )
+
+USER_HOME_DIR = os.path.dirname( os.path.expanduser('~/') )
+mdp_path = os.path.join( USER_HOME_DIR, 'IntroRL_MDP' )
+#mdp_path = os.path.join( up_one, 'mdp_data' )
 
 class EnvBaseline( object ):
 
@@ -70,7 +75,12 @@ class EnvBaseline( object ):
                                      colorD=colorD, basic_color=basic_color)
     
         if mdp_file is not None:
-            self.read_pickle_file( mdp_file )
+            if not self.read_pickle_file( mdp_file ):
+                print('WARNING...   FAILED TO OPEN MDP FILE:', mdp_file)
+                print('='*66)
+                print('='*66)
+                print('='*66)
+                #sys.exit()
     
     def get_policy_score(self, policy=None, start_state_hash=None, step_limit=1000):
         """
@@ -142,7 +152,7 @@ class EnvBaseline( object ):
             saveD['defined_limited_start_state_list'] = self.defined_limited_start_state_list
         
         fileObject = open(fname,'wb')
-        pickle.dump(saveD,fileObject)   
+        pickle.dump(saveD,fileObject, protocol=2)# protocol=2 is python 2&3 compatible.
         fileObject.close()
     
     def read_pickle_file(self, fname=None): # pragma: no cover
@@ -158,6 +168,14 @@ class EnvBaseline( object ):
             fname = os.path.join( mdp_path, fname )
         else:
             print('Pickle File NOT found:', fname)
+            print('mdp_path:',mdp_path)
+            
+            s = '''Try running: "introrl_build_mdp" to create MDP Pickle Files.
+Type: introrl_build_mdp
+at the command line.'''
+            banner(s, banner_char='', leftMargin=0, just='center')
+            
+            
             return False
         
         fileObject = open(fname,'rb')  
@@ -178,6 +196,8 @@ class EnvBaseline( object ):
         # ----------------------
         
         fileObject.close()
+        
+        return True
         
     def set_info(self, info):
         """Input string that describes Environment."""
