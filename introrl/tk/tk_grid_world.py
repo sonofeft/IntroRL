@@ -50,6 +50,10 @@ from introrl.utils.running_ave import RunningAve
 from introrl.agent_supt.learning_tracker import LearnTracker
 from introrl.policy import Policy
 
+GET_MDP_FILE_MSG = '''
+Try running: "introrl_build_mdp" to create MDP Pickle Files.
+Type: introrl_build_mdp
+at the command line.'''
 
 # TkGridGUI generated code. DO NOT EDIT THE FOLLOWING. section "top_of_init"
 class _tk_grid_world:
@@ -661,6 +665,8 @@ class _tk_grid_world:
             pass
         elif  self.learner_type == 'DynaQ+':
             pass
+        elif self.learner_type == 'PrioritySweep':
+            pass
         else:
             print('ERROR... Learner Type "%s" NOT RECOGNIZED, using Q-Learn'%self.learner_type)
 
@@ -879,7 +885,7 @@ class _tk_grid_world:
         env_sim = EnvBaseline( mdp_file='Random_Walk_MRP' )
         if env_sim.failed_mdp_file_read:
             print('Failed to load MDP File: Random_Walk_MRP')
-            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Random_Walk_MRP')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Random_Walk_MRP\n' + GET_MDP_FILE_MSG)
         else:
             self.env_sim = env_sim        
             self.build_canvas_objects()
@@ -895,7 +901,7 @@ class _tk_grid_world:
         env_sim = EnvBaseline( mdp_file='Sample_Grid_World' )
         if env_sim.failed_mdp_file_read:
             print('Failed to load MDP File: Sample_Grid_World')
-            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sample_Grid_World')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sample_Grid_World\n' + GET_MDP_FILE_MSG)
         else:
             self.env_sim = env_sim        
             self.build_canvas_objects()
@@ -912,7 +918,7 @@ class _tk_grid_world:
         env_sim = EnvBaseline( mdp_file='Slipper_Cleaning_Robot' )
         if env_sim.failed_mdp_file_read:
             print('Failed to load MDP File: Slipper_Cleaning_Robot')
-            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Slipper_Cleaning_Robot')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Slipper_Cleaning_Robot\n' + GET_MDP_FILE_MSG)
         else:
             self.env_sim = env_sim        
             self.build_canvas_objects()
@@ -929,7 +935,7 @@ class _tk_grid_world:
         env_sim = EnvBaseline( mdp_file='Sutton_Ex4_1_5x5_Grid_World' )
         if env_sim.failed_mdp_file_read:
             print('Failed to load MDP File: Sutton_Ex4_1_5x5_Grid_World')
-            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex4_1_5x5_Grid_World')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex4_1_5x5_Grid_World\n' + GET_MDP_FILE_MSG)
         else:
             self.env_sim = env_sim        
             self.build_canvas_objects()
@@ -946,7 +952,7 @@ class _tk_grid_world:
         env_sim = EnvBaseline( mdp_file='Sutton_Ex4_1_Grid_World' )
         if env_sim.failed_mdp_file_read:
             print('Failed to load MDP File: Sutton_Ex4_1_Grid_World')
-            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex4_1_Grid_World')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex4_1_Grid_World\n' + GET_MDP_FILE_MSG)
         else:
             self.env_sim = env_sim        
             self.build_canvas_objects()
@@ -964,7 +970,7 @@ class _tk_grid_world:
         env_sim = EnvBaseline( mdp_file='Sutton_Ex8_1_Dyna_Maze' )
         if env_sim.failed_mdp_file_read:
             print('Failed to load MDP File: Sutton_Ex8_1_Dyna_Maze')
-            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex8_1_Dyna_Maze')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Sutton_Ex8_1_Dyna_Maze\n' + GET_MDP_FILE_MSG)
         else:
             self.env_sim = env_sim        
             self.build_canvas_objects()
@@ -980,7 +986,7 @@ class _tk_grid_world:
         env_sim = EnvBaseline( mdp_file='Windy_Gridworld_Sutton_Ex6_5' )
         if env_sim.failed_mdp_file_read:
             print('Failed to load MDP File: Windy_Gridworld_Sutton_Ex6_5')
-            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Windy_Gridworld_Sutton_Ex6_5')
+            self.ShowWarning( title='Failed to Load', message='Failed to load MDP File: Windy_Gridworld_Sutton_Ex6_5\n' + GET_MDP_FILE_MSG)
         else:
             self.env_sim = env_sim        
             self.build_canvas_objects()

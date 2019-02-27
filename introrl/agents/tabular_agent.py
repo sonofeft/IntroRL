@@ -13,7 +13,7 @@ import copy
 from introrl.utils.banner import banner
 from introrl.agent_supt.epsilon_calc import EpsilonGreedy
 from introrl.agent_supt.alpha_calc import Alpha
-from introrl.agent_supt.model import Model
+from introrl.agent_supt.model_w_timestamp import ModelWTimestamp
 from introrl.agent_supt.learning_tracker import LearnTracker
 from introrl.policy import Policy
 from introrl.agent_supt.action_value_coll import ActionValueColl
@@ -50,7 +50,8 @@ class TabularAgent( object ):
         if planning_type is None:
             self.model = None
         else:
-            self.model = Model( environment,  build_initial_model=False)
+            # Model is parent of ModelWTimestamp
+            self.model = ModelWTimestamp( environment,  build_initial_model=False)
         
         # always build a learn_tracker... a production system might not.
         if learn_tracker is None:

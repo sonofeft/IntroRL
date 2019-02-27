@@ -3,7 +3,7 @@ from introrl.layouts.generic_layout import GenericLayout
 from introrl.environments.env_baseline import EnvBaseline
 from introrl.reward import Reward
 
-def get_gridworld():
+def get_gridworld( step_reward=0.0 ):
     gridworld = EnvBaseline( name='Simple Grid World' ) # GenericLayout set below
     gridworld.set_info( 'Simple Grid World Example.' )
 
@@ -36,7 +36,7 @@ def get_gridworld():
             elif a == 'L':
                 state_next_hash = (s[0], s[1]-1)
 
-            reward_val = rewardD.get( state_next_hash, 0.0 )
+            reward_val = rewardD.get( state_next_hash, step_reward )
             
             gridworld.add_transition( state_hash, action_desc, state_next_hash, t_prob=1.0, 
                                       reward_obj=reward_val)
