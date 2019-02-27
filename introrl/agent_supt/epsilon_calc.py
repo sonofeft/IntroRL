@@ -34,6 +34,16 @@ class EpsilonGreedy( object ):
         self.N_greedy = 0 # track number of greedy and random choices made.
         self.N_random = 0
     
+    def set_half_life_for_N_episodes(self, Nepisodes=1000, epsilon_final=0.01):
+        """
+        Set half_life for a give total number of episodes and a final epsilon value.
+        ALSO, set const_epsilon flag to False... assume user's intent.
+        """
+        half_life = Nepisodes / (self.epsilon/epsilon_final - 1.0)
+        self.half_life = half_life
+        self.decay_factor = 1.0 / float( half_life )
+        self.const_epsilon = False
+    
     def set_const_epsilon(self, epsilon_inp=0.1):
         self.epsilon = epsilon_inp
         self.const_epsilon = True

@@ -179,13 +179,14 @@ if __name__ == "__main__": # pragma: no cover
     #gridworld.summ_print(long=False)
     print('-'*77)    
     
+    NUM_EPISODES = 2000
     
-    half_life = 20000 / (0.09900990099009901/0.03333333333333356 - 1.0)
-    alpha_obj = Alpha(alpha=0.09900990099009901, const_alpha=False, half_life=half_life, N_episodes_wo_decay=0)
+    alpha_obj = Alpha(alpha=0.1)
+    alpha_obj.set_half_life_for_N_episodes( Nepisodes=NUM_EPISODES, alpha_final=0.03333333333333)
     
-    half_life = 20000 / (0.49504950495049505/0.1666666666666678 - 1.0)
-    eps_obj = EpsilonGreedy(epsilon=0.49504950495049505, const_epsilon=False, half_life=half_life,
-                            N_episodes_wo_decay=0, greedy_mode=False)
+    eps_obj = EpsilonGreedy(epsilon=0.5)
+    eps_obj.set_half_life_for_N_episodes( Nepisodes=NUM_EPISODES, epsilon_final=0.16666666666666)
+
 
     agent = SarsaSemiGradAgent( environment=gridworld, 
                                 sa_linear_function=BaselineSAFunc( gridworld ),
@@ -194,7 +195,7 @@ if __name__ == "__main__": # pragma: no cover
                                 alpha=alpha_obj,
                                 epsilon=eps_obj)
     
-    for i in range(20000):
+    for i in range(NUM_EPISODES):
         agent.run_episode( (2,0))
     print()
     

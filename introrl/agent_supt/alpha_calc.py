@@ -23,7 +23,17 @@ class Alpha( object ):
         self.decay_factor = 1.0 / float( half_life )
         self.N_episodes_wo_decay = N_episodes_wo_decay
         self.N_episodes = 0 # number of episodes (increment with call to inc_N_episodes)
-                
+    
+    def set_half_life_for_N_episodes(self, Nepisodes=1000, alpha_final=0.01):
+        """
+        Set half_life for a give total number of episodes and a final alpha value.
+        ALSO, set const_alpha flag to False... assume user's intent.
+        """
+        half_life = Nepisodes / (self.alpha/alpha_final - 1.0)
+        self.half_life = half_life
+        self.decay_factor = 1.0 / float( half_life )
+        self.const_alpha = False
+    
     def __call__(self):
         """Return current learning rate alpha with any applicable decay."""
         
