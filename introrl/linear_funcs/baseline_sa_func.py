@@ -29,6 +29,22 @@ class BaselineSAFunc( object ):
     value function)
     """
     
+    # ======================== OVERRIDE STARTING HERE ==========================
+    def init_w_vector(self):
+        """Initialize the weights vector and the number of entries, N."""
+        
+        # initialize a weights numpy array with random values.
+        N = len(self.saD)
+        self.w_vector = np.random.randn(N) / np.sqrt(N)
+        self.N = len( self.w_vector )
+                
+    def get_sa_x_vector(self, s_hash, a_desc):
+        """Return the x vector that represents the (s,a) pair."""
+        x_vector = np.zeros(self.N, dtype=np.float)
+        x_vector[ self.saD[(s_hash, a_desc)] ] = 1.0
+        return x_vector
+    # ======================== OVERRIDE ENDING HERE ==========================
+    
     def __init__(self, environment):
         
         self.environment = environment
@@ -172,6 +188,43 @@ class BaselineSAFunc( object ):
 
             delta = alpha * (target_val - Qsat)
         
+        delta_vector = delta * self.get_gradient( s_hash, a_desc )
+        self.w_vector += delta_vector
+
+        # remember max amount of change due to [s_hash][a_desc]
+        delta = np.max( np.absolute( delta_vector ) )
+        self.record_changes( s_hash, a_desc, delta )
+
+        return abs(delta) # return the absolute value of change
+
+    def qlearning_update(self, s_hash='', a_desc='', sn_hash='',
+                         alpha=0.1, gamma=1.0, reward=0.0):
+        """
+        Do a Q-Learning, Temporal-Difference-style learning rate update.
+        Use estimated Q(s,a) values by evaluating linear function approximation.
+        w = w + alpha * [R + gamma* max(QEst(s',a')) - QEst(s,a)]
+        """
+        Qsat = self.QsaEst( s_hash, a_desc )
+
+        if sn_hash in self.environment.terminal_set:
+            delta = alpha * (reward - Qsat)
+        else:
+            # find best Q(s',a')
+            an_descL = self.environment.get_state_legal_action_list( sn_hash )
+            
+            if an_descL:
+                best_a_desc, best_a_val = an_descL[0], float('-inf')
+                for a in an_descL:
+                    q = self.QsaEst( sn_hash, a )
+                    if q > best_a_val:
+                        best_a_desc, best_a_val = a, q
+            else:
+                best_a_val = 0.0
+            
+            # use best Q(s',a') to update Q(s,a)
+            target_val = reward + gamma * best_a_val
+            delta = alpha * (target_val - Qsat)
+
         delta_vector = delta * self.get_gradient( s_hash, a_desc )
         self.w_vector += delta_vector
 
@@ -337,20 +390,6 @@ class BaselineSAFunc( object ):
             for s in outL:
                 print('    ', s )
 
-    
-    # ======================== OVERRIDE STARTING HERE ==========================
-    def init_w_vector(self):
-        """Initialize the weights vector and the number of entries, N."""
-        
-        # initialize a weights numpy array with random values.
-        self.N = len(self.saD)
-        self.w_vector = np.random.randn(self.N) / np.sqrt(self.N)
-                
-    def get_sa_x_vector(self, s_hash, a_desc):
-        """Return the x vector that represents the (s,a) pair."""
-        x_vector = np.zeros(self.N, dtype=np.float)
-        x_vector[ self.saD[(s_hash, a_desc)] ] = 1.0
-        return x_vector
         
 
 if __name__ == "__main__": # pragma: no cover

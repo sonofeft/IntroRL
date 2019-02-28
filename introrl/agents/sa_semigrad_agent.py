@@ -14,13 +14,14 @@ from introrl.agent_supt.epsilon_calc import EpsilonGreedy
 from introrl.agent_supt.alpha_calc import Alpha
 from introrl.policy import Policy
         
-class SarsaSemiGradAgent( object ):
+class SA_SemiGradAgent( object ):
     """
     SARSA semi-gradient agent for linear function approximator.
     """
     
     def __init__(self, environment,  learn_tracker=None, # track progress of learning
                   sa_linear_function=None, # if input, use it.
+                  update_type='sarsa', # can be 'sarsa', 'qlearn'
                   read_pickle_file='', 
                   save_pickle_file='',
                   do_summ_print=True, show_last_change=True, 
@@ -72,6 +73,7 @@ class SarsaSemiGradAgent( object ):
 
         # create the action_value_linfunc for the environment.
         self.action_value_linfunc = sa_linear_function
+        self.update_type = update_type
         
         if read_pickle_file:
             self.action_value_linfunc.init_from_pickle_file( read_pickle_file )
@@ -133,13 +135,19 @@ class SarsaSemiGradAgent( object ):
                 break
             
             # do RL update of Q(s,a) value
-            an_desc = self.action_value_linfunc.get_best_eps_greedy_action( \
-                                            sn_hash, epsgreedy_obj=self.epsilon_obj )
-                                                     
-            self.action_value_linfunc.sarsa_update( s_hash=s_hash, a_desc=a_desc, 
-                                                    alpha=self.alpha_obj(), gamma=self.gamma, 
-                                                    sn_hash=sn_hash, an_desc=an_desc, 
-                                                    reward=reward)
+            if self.update_type == 'sarsa':
+                an_desc = self.action_value_linfunc.get_best_eps_greedy_action( \
+                                                sn_hash, epsgreedy_obj=self.epsilon_obj )
+                
+                self.action_value_linfunc.sarsa_update( s_hash=s_hash, a_desc=a_desc, 
+                                                        alpha=self.alpha_obj(), gamma=self.gamma, 
+                                                        sn_hash=sn_hash, an_desc=an_desc, 
+                                                        reward=reward)
+            elif self.update_type == 'qlearn':
+                
+                self.action_value_linfunc.qlearning_update( s_hash=s_hash, a_desc=a_desc, 
+                                                            alpha=self.alpha_obj(), gamma=self.gamma, 
+                                                            sn_hash=sn_hash, reward=reward)
                      
             self.num_updates += 1
             
@@ -158,6 +166,7 @@ class SarsaSemiGradAgent( object ):
         """Show State objects in sorted state_hash order."""
         print('___ Policy Evaluation Agent Summary ___' )
         print('    Environment        = %s'%self.environment.name )
+        print('    Update Type        = %s'%self.update_type )
         print('    Number of Episodes = %g'%self.num_episodes )
         
         print('================== EPSILON GREEDY FINAL ========================')
@@ -188,7 +197,7 @@ if __name__ == "__main__": # pragma: no cover
     eps_obj.set_half_life_for_N_episodes( Nepisodes=NUM_EPISODES, epsilon_final=0.16666666666666)
 
 
-    agent = SarsaSemiGradAgent( environment=gridworld, 
+    agent = SA_SemiGradAgent( environment=gridworld, 
                                 sa_linear_function=BaselineSAFunc( gridworld ),
                                 learn_tracker=learn_tracker,
                                 gamma=0.9,
