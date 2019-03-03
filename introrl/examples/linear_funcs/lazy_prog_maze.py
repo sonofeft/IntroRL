@@ -1,18 +1,18 @@
 import sys
 import numpy as np
 from introrl.mdp_data.simple_grid_world import get_gridworld
-from introrl.linear_funcs.baseline_sa_func import BaselineSAFunc
+from introrl.linear_funcs.baseline_q_func import Baseline_Q_Func
 from introrl.agents.sa_semigrad_agent import SA_SemiGradAgent
 from introrl.agent_supt.learning_tracker import LearnTracker
 from introrl.policy import Policy
 from introrl.agent_supt.epsilon_calc import EpsilonGreedy
 from introrl.agent_supt.alpha_calc import Alpha
 
-class LazyProgrammerMaze( BaselineSAFunc ):
+class LazyProgrammerMaze( Baseline_Q_Func ):
     
     def __init__(self, environment ):
         
-        BaselineSAFunc.__init__(self, environment )
+        Baseline_Q_Func.__init__(self, environment )
         
     def init_w_vector(self):
         """Initialize the weights vector and the number of entries, N."""

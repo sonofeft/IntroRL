@@ -16,7 +16,7 @@ from introrl.policy import Policy
         
 class SA_SemiGradAgent( object ):
     """
-    SARSA semi-gradient agent for linear function approximator.
+    SARSA or Qlearning semi-gradient agent for linear function approximator.
     """
     
     def __init__(self, environment,  learn_tracker=None, # track progress of learning
@@ -181,7 +181,7 @@ if __name__ == "__main__": # pragma: no cover
     from introrl.mdp_data.simple_grid_world import get_gridworld
     from introrl.agent_supt.learning_tracker import LearnTracker
     from introrl.policy import Policy
-    from introrl.linear_funcs.baseline_sa_func import BaselineSAFunc
+    from introrl.linear_funcs.baseline_q_func import Baseline_Q_Func
     
     learn_tracker = LearnTracker()
     gridworld = get_gridworld( step_reward=-0.1 )
@@ -198,7 +198,7 @@ if __name__ == "__main__": # pragma: no cover
 
 
     agent = SA_SemiGradAgent( environment=gridworld, 
-                                sa_linear_function=BaselineSAFunc( gridworld ),
+                                sa_linear_function=Baseline_Q_Func( gridworld ),
                                 learn_tracker=learn_tracker,
                                 gamma=0.9,
                                 alpha=alpha_obj,

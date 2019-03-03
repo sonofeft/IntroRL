@@ -17,7 +17,7 @@ from introrl.utils.grid_funcs import print_string_rows, is_literal_str
 from introrl.policy import Policy
 
 
-class BaselineSAFunc( object ):
+class Baseline_Q_Func( object ):
     """
     Create a linear function for an environment that simply one-hot encodes
     all of the state-action pairs.
@@ -176,7 +176,7 @@ class BaselineSAFunc( object ):
         """
         Do a SARSA, Temporal-Difference-style learning rate update.
         Use estimated Q(s,a) values by evaluating linear function approximation.
-        w = w + alpha * [R + gamma*QEst(s',a') - QEst(s,a)]
+        w = w + alpha * [R + gamma*QEst(s',a') - QEst(s,a)] * grad(s,a)
         """
         Qsat = self.QsaEst( s_hash, a_desc )
         
@@ -202,7 +202,7 @@ class BaselineSAFunc( object ):
         """
         Do a Q-Learning, Temporal-Difference-style learning rate update.
         Use estimated Q(s,a) values by evaluating linear function approximation.
-        w = w + alpha * [R + gamma* max(QEst(s',a')) - QEst(s,a)]
+        w = w + alpha * [R + gamma* max(QEst(s',a')) - QEst(s,a)] * grad(s,a)
         """
         Qsat = self.QsaEst( s_hash, a_desc )
 
@@ -399,7 +399,7 @@ if __name__ == "__main__": # pragma: no cover
     
     gridworld = get_gridworld()
 
-    oh = BaselineSAFunc( gridworld )
+    oh = Baseline_Q_Func( gridworld )
     
     SAVE_MODE = 0
     if SAVE_MODE:
