@@ -11,7 +11,7 @@ Given a policy, use function approximation to estimate the state-value function.
 Gradient MC Prediction
 ----------------------
 
-The pseudo code for Monte Carlo prediction is taken from page 201 of
+The pseudo code for Monte Carlo prediction is taken from page 202 of
 `Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ and is shown below.
 
 .. image:: _static/mc_gradient_pseudocode.jpg
@@ -40,3 +40,27 @@ Each of the three curves displayed on the **IntroRL** chart are created by a dif
 `Figure 9.1 MC Approximation Value <./_static/colorized_scripts/examples/chapter_9/mc_rw1000_eval.html>`_
 
 `Figure 9.1 Distribution Scale <./_static/colorized_scripts/examples/chapter_9/calc_mu_rw1000.html>`_
+
+Semi-Gradient TD(0) Prediction
+------------------------------
+
+The pseudo code for TD(0) semi-gradient prediction is taken from page 203 of
+`Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ and is shown below.
+
+.. image:: _static/td0_semigradient_pseudocode.jpg
+
+Figure 9.2 on page 208 of `Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ 
+uses the above pseudo code to approximate the aggregated Random Walk 1000 problem.
+The figure on the left is taken from `Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ 
+
+.. image:: _static/fig_9_2_a.jpg
+    :width: 49%
+
+.. image:: _static/figure_9_2_a.png
+    :width: 50%
+
+**IntroRL** was used to make the above figure on the right.
+The code to reproduce Figure 9.2 result is 
+`Figure 9.2 TD(0) Approximation Value <./_static/colorized_scripts/examples/chapter_9/td0_rw1000_eval.html>`_
+
+The TD(0) code is a minor variation of the Monte Carlo code that was used to make Figure 9.1.
