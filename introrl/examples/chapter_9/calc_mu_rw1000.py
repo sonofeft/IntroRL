@@ -22,5 +22,6 @@ SUM_VISITS = sum( list(countD.values()) )
 freqL = []
 for i in range(1,1001):
     freqL.append( countD.get(i,0) / float(SUM_VISITS) )
-    
+
+# copy and paste list into plot script
 print('freqL =', repr(freqL))

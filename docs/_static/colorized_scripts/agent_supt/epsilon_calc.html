@@ -210,7 +210,17 @@
 145
 146
 147
-148</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: ascii -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
@@ -245,6 +255,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">N_eg_choices</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># may count actions and change epsilon</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N_greedy</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># track number of greedy and random choices made.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N_random</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">def</span> <span class="nf">set_half_life_for_N_episodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nepisodes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">epsilon_final</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set half_life for a give total number of episodes and a final epsilon value.</span>
+<span class="sd">        ALSO, set const_epsilon flag to False... assume user&#39;s intent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">half_life</span> <span class="o">=</span> <span class="n">Nepisodes</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="o">/</span><span class="n">epsilon_final</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">half_life</span> <span class="o">=</span> <span class="n">half_life</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decay_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span> <span class="n">half_life</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">const_epsilon</span> <span class="o">=</span> <span class="bp">False</span>
     
     <span class="k">def</span> <span class="nf">set_const_epsilon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsilon_inp</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon_inp</span>

@@ -1,0 +1,190 @@
+<html><head><title>mc_rw1000_eval.py</title></head><body>
+<style type="text/css">.default .hll { background-color: #ffffcc }
+.default  { background: #f8f8f8; font-family: Courier New, monospace; font-size: 16px; }
+.linenos { width: 40px;  font-family: Courier New, monospace; font-size: 16px; }
+.default .c { color: #408080; font-style: italic } /* Comment */
+.default .err { border: 1px solid #FF0000 } /* Error */
+.default .k { color: #008000; font-weight: bold } /* Keyword */
+.default .o { color: #666666 } /* Operator */
+.default .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.default .cp { color: #BC7A00 } /* Comment.Preproc */
+.default .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.default .cs { color: #408080; font-style: italic } /* Comment.Special */
+.default .gd { color: #A00000 } /* Generic.Deleted */
+.default .ge { font-style: italic } /* Generic.Emph */
+.default .gr { color: #FF0000 } /* Generic.Error */
+.default .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.default .gi { color: #00A000 } /* Generic.Inserted */
+.default .go { color: #808080 } /* Generic.Output */
+.default .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.default .gs { font-weight: bold } /* Generic.Strong */
+.default .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.default .gt { color: #0040D0 } /* Generic.Traceback */
+.default .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.default .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.default .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.default .kp { color: #008000 } /* Keyword.Pseudo */
+.default .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.default .kt { color: #B00040 } /* Keyword.Type */
+.default .m { color: #666666 } /* Literal.Number */
+.default .s { color: #BA2121 } /* Literal.String */
+.default .na { color: #7D9029 } /* Name.Attribute */
+.default .nb { color: #008000 } /* Name.Builtin */
+.default .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.default .no { color: #880000 } /* Name.Constant */
+.default .nd { color: #AA22FF } /* Name.Decorator */
+.default .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.default .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.default .nf { color: #0000FF } /* Name.Function */
+.default .nl { color: #A0A000 } /* Name.Label */
+.default .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.default .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.default .nv { color: #19177C } /* Name.Variable */
+.default .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.default .w { color: #bbbbbb } /* Text.Whitespace */
+.default .mf { color: #666666 } /* Literal.Number.Float */
+.default .mh { color: #666666 } /* Literal.Number.Hex */
+.default .mi { color: #666666 } /* Literal.Number.Integer */
+.default .mo { color: #666666 } /* Literal.Number.Oct */
+.default .sb { color: #BA2121 } /* Literal.String.Backtick */
+.default .sc { color: #BA2121 } /* Literal.String.Char */
+.default .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.default .s2 { color: #BA2121 } /* Literal.String.Double */
+.default .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.default .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.default .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.default .sx { color: #008000 } /* Literal.String.Other */
+.default .sr { color: #BB6688 } /* Literal.String.Regex */
+.default .s1 { color: #BA2121 } /* Literal.String.Single */
+.default .ss { color: #19177C } /* Literal.String.Symbol */
+.default .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.default .vc { color: #19177C } /* Name.Variable.Class */
+.default .vg { color: #19177C } /* Name.Variable.Global */
+.default .vi { color: #19177C } /* Name.Variable.Instance */
+.default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<h2>mc_rw1000_eval.py</h2>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">introrl.black_box_sims.random_walk_1000</span> <span class="kn">import</span> <span class="n">RandomWalk_1000Simulation</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.episode_maker</span> <span class="kn">import</span> <span class="n">make_episode</span>
+<span class="kn">from</span> <span class="nn">introrl.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">introrl.utils.tiles_rectangles</span> <span class="kn">import</span> <span class="n">PartitionedSegment</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.alpha_calc</span> <span class="kn">import</span> <span class="n">Alpha</span>
+
+<span class="n">NUM_EPISODES</span> <span class="o">=</span> <span class="mi">100000</span>
+
+<span class="n">RW</span> <span class="o">=</span> <span class="n">RandomWalk_1000Simulation</span><span class="p">()</span>
+<span class="n">policy</span> <span class="o">=</span> <span class="n">Policy</span><span class="p">(</span><span class="n">environment</span><span class="o">=</span><span class="n">RW</span><span class="p">)</span>
+<span class="n">policy</span><span class="o">.</span><span class="n">intialize_policy_to_equiprobable</span><span class="p">(</span> <span class="n">env</span><span class="o">=</span><span class="n">RW</span> <span class="p">)</span>
+
+<span class="n">alpha_obj</span> <span class="o">=</span> <span class="n">Alpha</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">alpha_obj</span><span class="o">.</span><span class="n">set_half_life_for_N_episodes</span><span class="p">(</span> <span class="n">Nepisodes</span><span class="o">=</span><span class="n">NUM_EPISODES</span><span class="p">,</span> <span class="n">alpha_final</span><span class="o">=</span><span class="mf">2.0E-5</span><span class="p">)</span>
+
+<span class="n">pseg</span> <span class="o">=</span> <span class="n">PartitionedSegment</span><span class="p">(</span> <span class="n">lo_val</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hi_val</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">num_regions</span><span class="o">=</span><span class="mi">10</span> <span class="p">)</span>
+<span class="c1">#pseg.summ_print()</span>
+
+<span class="k">def</span> <span class="nf">get_x_vector</span><span class="p">(</span> <span class="n">state</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the x vector that represents the state.&quot;&quot;&quot;</span>
+    <span class="n">x_vector</span> <span class="o">=</span> <span class="n">pseg</span><span class="o">.</span><span class="n">get_numpy_encoding</span><span class="p">(</span> <span class="n">state</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">x_vector</span>
+
+<span class="k">def</span> <span class="nf">VsEst</span><span class="p">(</span> <span class="n">state</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the current estimate for V(s) from linear function eval.&quot;&quot;&quot;</span>
+    <span class="n">x_vector</span> <span class="o">=</span> <span class="n">get_x_vector</span><span class="p">(</span> <span class="n">state</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">w_vector</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span> <span class="n">x_vector</span> <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_gradient</span><span class="p">(</span> <span class="n">state</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the gradient of value function with respect to w_vector.</span>
+<span class="sd">    Since the function is linear in w, the gradient is = x_vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_x_vector</span><span class="p">(</span> <span class="n">state</span> <span class="p">)</span>
+
+<span class="c1"># Could initialize randomly or all zeros.</span>
+<span class="c1">#w_vector = np.zeros( pseg.num_regions )</span>
+<span class="n">w_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span> <span class="n">pseg</span><span class="o">.</span><span class="n">num_regions</span> <span class="p">)</span>
+
+<span class="k">for</span> <span class="n">Nepi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_EPISODES</span><span class="p">):</span>
+    <span class="n">episode</span> <span class="o">=</span> <span class="n">make_episode</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">RW</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+    
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_obj</span><span class="p">()</span>
+    <span class="n">alpha_obj</span><span class="o">.</span><span class="n">inc_N_episodes</span><span class="p">()</span>
+
+    <span class="c1">#episode.summ_print()</span>
+    <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">episode</span><span class="o">.</span><span class="n">get_rev_discounted_returns</span><span class="p">(</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span> <span class="p">):</span>
+        <span class="p">(</span><span class="n">s_hash</span><span class="p">,</span> <span class="n">a_desc</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">sn_hash</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span> <span class="o">=</span> <span class="n">dr</span>
+        <span class="c1">#print(s_hash, G, pseg.get_numpy_encoding( s_hash ))</span>
+        
+        <span class="n">Vs</span>    <span class="o">=</span> <span class="n">VsEst</span><span class="p">(</span> <span class="n">s_hash</span> <span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">G</span> <span class="o">-</span> <span class="n">Vs</span><span class="p">)</span>
+        
+        <span class="n">delta_vector</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">get_gradient</span><span class="p">(</span> <span class="n">s_hash</span> <span class="p">)</span>
+        <span class="n">w_vector</span> <span class="o">+=</span> <span class="n">delta_vector</span>
+
+<span class="c1"># copy and paste w_vector array into plot script</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;w_vector =&#39;</span><span class="p">,</span><span class="n">w_vector</span><span class="p">)</span>
+<span class="k">print</span><span class="p">()</span>
+<span class="n">alpha_obj</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></body></html>

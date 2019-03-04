@@ -63,10 +63,24 @@
 .default .vi { color: #19177C } /* Name.Variable.Instance */
 .default .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
 <h2>summ_print_example.py</h2>
-<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="kn">from</span> <span class="nn">introrl.environments.env_baseline</span> <span class="kn">import</span> <span class="n">EnvBaseline</span>
+<table class="defaulttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="c1">#import introrl</span>
+<span class="c1">#print(introrl.__file__)</span>
+
+<span class="kn">from</span> <span class="nn">introrl.environments.env_baseline</span> <span class="kn">import</span> <span class="n">EnvBaseline</span>
 <span class="n">grid_world</span> <span class="o">=</span> <span class="n">EnvBaseline</span><span class="p">(</span> <span class="n">mdp_file</span><span class="o">=</span><span class="s1">&#39;Simple_Grid_World&#39;</span> <span class="p">)</span>
 <span class="n">grid_world</span><span class="o">.</span><span class="n">summ_print</span><span class="p">()</span>
+
+<span class="c1">#car_rental = EnvBaseline( mdp_file=&#39;Jacks_Car_Rental_(var_rtn)&#39; )</span>
+<span class="c1">#car_rental = EnvBaseline( mdp_file=&#39;Jacks_Car_Rental_(const_rtn)&#39; )</span>
+<span class="c1">#car_rental.summ_print()</span>
 </pre></div>
 </td></tr></table></body></html>

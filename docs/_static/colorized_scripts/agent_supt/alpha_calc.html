@@ -146,7 +146,17 @@
 81
 82
 83
-84</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: ascii -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
@@ -171,7 +181,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">decay_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span> <span class="n">half_life</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes_wo_decay</span> <span class="o">=</span> <span class="n">N_episodes_wo_decay</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N_episodes</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># number of episodes (increment with call to inc_N_episodes)</span>
-                
+    
+    <span class="k">def</span> <span class="nf">set_half_life_for_N_episodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nepisodes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">alpha_final</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set half_life for a give total number of episodes and a final alpha value.</span>
+<span class="sd">        ALSO, set const_alpha flag to False... assume user&#39;s intent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">half_life</span> <span class="o">=</span> <span class="n">Nepisodes</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">/</span><span class="n">alpha_final</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">half_life</span> <span class="o">=</span> <span class="n">half_life</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decay_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span> <span class="n">half_life</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">const_alpha</span> <span class="o">=</span> <span class="bp">False</span>
+    
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return current learning rate alpha with any applicable decay.&quot;&quot;&quot;</span>
         

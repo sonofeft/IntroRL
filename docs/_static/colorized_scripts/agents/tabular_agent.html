@@ -337,7 +337,8 @@
 272
 273
 274
-275</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+275
+276</pre></div></td><td class="code"><div class="default"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: ascii -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
@@ -352,7 +353,7 @@
 <span class="kn">from</span> <span class="nn">introrl.utils.banner</span> <span class="kn">import</span> <span class="n">banner</span>
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.epsilon_calc</span> <span class="kn">import</span> <span class="n">EpsilonGreedy</span>
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.alpha_calc</span> <span class="kn">import</span> <span class="n">Alpha</span>
-<span class="kn">from</span> <span class="nn">introrl.agent_supt.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">introrl.agent_supt.model_w_timestamp</span> <span class="kn">import</span> <span class="n">ModelWTimestamp</span>
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.learning_tracker</span> <span class="kn">import</span> <span class="n">LearnTracker</span>
 <span class="kn">from</span> <span class="nn">introrl.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
 <span class="kn">from</span> <span class="nn">introrl.agent_supt.action_value_coll</span> <span class="kn">import</span> <span class="n">ActionValueColl</span>
@@ -389,7 +390,8 @@
         <span class="k">if</span> <span class="n">planning_type</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span> <span class="n">environment</span><span class="p">,</span>  <span class="n">build_initial_model</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="c1"># Model is parent of ModelWTimestamp</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ModelWTimestamp</span><span class="p">(</span> <span class="n">environment</span><span class="p">,</span>  <span class="n">build_initial_model</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         
         <span class="c1"># always build a learn_tracker... a production system might not.</span>
         <span class="k">if</span> <span class="n">learn_tracker</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>

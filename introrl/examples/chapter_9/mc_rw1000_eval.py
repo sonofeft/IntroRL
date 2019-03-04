@@ -15,13 +15,11 @@ policy.intialize_policy_to_equiprobable( env=RW )
 alpha_obj = Alpha(alpha=0.01)
 alpha_obj.set_half_life_for_N_episodes( Nepisodes=NUM_EPISODES, alpha_final=2.0E-5)
 
-alpha = 2.0E-5
-
 pseg = PartitionedSegment( lo_val=0, hi_val=1000, num_regions=10 )
 #pseg.summ_print()
 
 def get_x_vector( state ):
-    """Return the x vector that represents the (s,a) pair."""
+    """Return the x vector that represents the state."""
     x_vector = pseg.get_numpy_encoding( state )
     return x_vector
 
@@ -37,6 +35,7 @@ def get_gradient( state ):
     """
     return get_x_vector( state )
 
+# Could initialize randomly or all zeros.
 #w_vector = np.zeros( pseg.num_regions )
 w_vector = np.random.random_sample( pseg.num_regions )
 
@@ -56,7 +55,8 @@ for Nepi in range(NUM_EPISODES):
         
         delta_vector = delta * get_gradient( s_hash )
         w_vector += delta_vector
-    
+
+# copy and paste w_vector array into plot script
 print('w_vector =',w_vector)
 print()
 alpha_obj.summ_print()
