@@ -1,4 +1,4 @@
-.. 2019-02-21 sonofeft 24a56447c92f538c8fff57a8237f35312f5b67d1
+.. 2019-03-06 sonofeft f35b65ad1145ed5abf3056d7ec9a577a6f778ccb
    Maintain spacing of "History" and "GitHub Log" titles
 
 History
@@ -6,6 +6,34 @@ History
 
 GitHub Log
 ----------
+
+* Mar 06, 2019
+    - (by: sonofeft) 
+        - Added Figure 9.2 code
+* Mar 04, 2019
+    - (by: sonofeft) 
+        - Added Fig 9.2 TD(0) semi-gradient and docs
+        - Added Figure 9.1 to docs
+        - made Figure 9.1
+* Mar 03, 2019
+    - (by: sonofeft) 
+        - refactored some semi-gradient SARSA
+* Feb 28, 2019
+    - (by: sonofeft) 
+        - created SA_SemiGradAgent with sarsa and qlearning
+            Added example from LazyProgrammer Intro RL class
+* Feb 27, 2019
+    - (by: sonofeft) 
+        - added set_half_life_for_N_episodes to Alpha and EpsilonGreedy objects
+        - Built first version of linear function approximator agent
+* Feb 24, 2019
+    - (by: sonofeft) 
+        - some updates to tkinter grid world
+        - moved mdp_pickle files to User HOME directory
+* Feb 23, 2019
+    - (by: sonofeft) 
+        - Some history update
+        - Added Priority Sweep Logic
 
 * Feb 21, 2019
     - (by: sonofeft) 
