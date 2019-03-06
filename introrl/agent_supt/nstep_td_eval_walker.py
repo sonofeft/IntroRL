@@ -197,6 +197,52 @@ class NStepTDWalker( object ):
                 delta = alpha * ( G - sv_coll.get_Vs( self.S[ self.tau ] ) )                
                 sv_coll.delta_update( s_hash=self.S[ self.tau ], delta=delta )
                 #print('t=%i'%self.t, '  tau=%i'%self.tau, '  T=%g'%self.T, '  self.S[t]=%s'%str(self.S[self.t]), '  delta=%g'%delta)
+            
+    def do_td_sv_function_updates(self, sv_func, alpha=0.1, gamma=1.0,
+                                  start_state_hash=None): # only used for policy, not episode_obj
+        """
+        Given an initialized NStepTDWalker,
+        Iterate through the returns for the episode (either Episode object OR policy episode)
+        
+        Update the Baseline_V_Func, sv_func as part of the episode iteration.
+        NOTE: policy does NOT change.
+        This routine only calculates the w_vector of Baseline_V_Func FOR the given policy.
+        """
+        
+        self.initialize( start_state_hash=start_state_hash )
+        # should have t=0, T=infinity, tau=negative
+        
+        total_num_steps = 0
+        
+        while self.tau < self.T - 1:
+            total_num_steps += 1
+            if total_num_steps >= self.max_steps:
+                break
+            
+            self.t += 1
+            if self.t < self.T:
+                # Take an action according to policy (or episode_obj)
+                self.add_step()
+                if self.S[self.t+1] in self.environment.terminal_set:
+                    self.T = self.t + 1
+                    
+            self.tau = self.t - self.Nsteps + 1
+            if self.tau >= 0:
+            # ------------------------------
+                G = 0.0
+                g_pow = 1.0 # gamma**n
+                #print('       R=',self.R)
+                for i in range(self.tau+1, min(self.tau+self.Nsteps, self.T)+1 ):
+                    G += g_pow * self.R[i]
+                    g_pow *= gamma
+                    #print('             at i=%i, R[i]=%g'%(i, self.R[i]))
+                
+                if self.tau + self.Nsteps < self.T:
+                    gpow = gamma**self.Nsteps
+                    G += g_pow * sv_func.VsEst( self.S[ self.tau+self.Nsteps ] )
+                
+                sv_func.mc_update( s_hash=self.S[ self.tau ], alpha=alpha, G=G)
+                
     
 if __name__ == "__main__":  # pragma: no cover
     

@@ -51,16 +51,31 @@ The pseudo code for TD(0) semi-gradient prediction is taken from page 203 of
 
 Figure 9.2 on page 208 of `Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ 
 uses the above pseudo code to approximate the aggregated Random Walk 1000 problem.
-The figure on the left is taken from `Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ 
+The figure below is taken from `Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ 
+and shows both the limit of TD(0) with state aggregation as well as speed of convergence for
+n-step semi-gradient TD methods with aggregated linear function approximation.
 
-.. image:: _static/fig_9_2_a.jpg
-    :width: 49%
+.. image:: _static/fig_9_2_sutton.jpg
+
+
+**IntroRL** was used to recreate both of the above figures.
+The code to reproduce the aggregated TD(0) result is 
+`Figure 9.2 TD(0) Approximation Value <./_static/colorized_scripts/examples/chapter_9/td0_rw1000_eval.html>`_
+The TD(0) code is a minor variation of the Monte Carlo code that was used to make Figure 9.1.
+
+The `Figure 9.2 N-Step Semi-Gradient <./_static/colorized_scripts/examples/chapter_9/plot_9_2_b.html>`_ code
+reproduces the n-step results of figure 9.2.  Notice that the results from both **IntroRL** and
+`Shangtong Zhang <https://github.com/ShangtongZhang/reinforcement-learning-an-introduction>`_ 
+are displayed on the n-step chart.
 
 .. image:: _static/figure_9_2_a.png
-    :width: 50%
+    :width: 47%
 
-**IntroRL** was used to make the above figure on the right.
-The code to reproduce Figure 9.2 result is 
-`Figure 9.2 TD(0) Approximation Value <./_static/colorized_scripts/examples/chapter_9/td0_rw1000_eval.html>`_
+.. image:: _static/figure_9_2_random_walk_nstep.png
+    :width: 52%
 
-The TD(0) code is a minor variation of the Monte Carlo code that was used to make Figure 9.1.
+
+
+
+
+
