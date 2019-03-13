@@ -39,11 +39,21 @@ class Baseline_Q_Func( object ):
         self.N = len( self.w_vector )
                 
     def get_sa_x_vector(self, s_hash, a_desc):
-        """Return the x vector that represents the (s,a) pair."""
+        """
+        Return the x vector that represents the (s,a) pair.
+        
+        NOTE: the index into x_vector for (s,a) = self.saD[ (s_hash, a_desc) ]
+        """
         x_vector = np.zeros(self.N, dtype=np.float)
         x_vector[ self.saD[(s_hash, a_desc)] ] = 1.0
         return x_vector
     # ======================== OVERRIDE ENDING HERE ==========================
+
+    def QsaEst(self, s_hash, a_desc):
+        """Return the current estimate for Q(s,a) from linear function eval."""
+        
+        x_vector = self.get_sa_x_vector( s_hash, a_desc )
+        return self.w_vector.dot( x_vector )
     
     def __init__(self, environment):
         
@@ -151,18 +161,11 @@ class Baseline_Q_Func( object ):
         return d_max
 
     def get_policy(self):
-    
         policy = Policy( environment=self.environment )
         for s_hash in self.environment.iter_all_action_states():
             a_desc = self.get_best_greedy_action( s_hash )
             policy.set_sole_action( s_hash, a_desc)
         return policy
-
-    def QsaEst(self, s_hash, a_desc):
-        """Return the current estimate for Q(s,a) from linear function eval."""
-        
-        x_vector = self.get_sa_x_vector( s_hash, a_desc )
-        return self.w_vector.dot( x_vector )
     
     def get_gradient(self, s_hash, a_desc):
         """

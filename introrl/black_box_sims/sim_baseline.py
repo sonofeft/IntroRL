@@ -11,8 +11,6 @@ from builtins import object
 import random
 from introrl.layouts.generic_layout import GenericLayout
 
-s_hash_rowL = ( (0,1,2,3,4), )
-
 class Simulation( object ):
     
     def __init__(self, name='Basic Sim', s_hash_rowL=None, 
@@ -226,13 +224,16 @@ if __name__ == "__main__": # pragma: no cover
     import os, sys
     from introrl.dp_funcs.dp_value_iter import dp_value_iteration
     from introrl.environments.env_baseline import EnvBaseline
-    from introrl.black_boxes.collect_sim_data import CollectSimData
+    #from introrl.black_boxes.collect_sim_data import CollectSimData
+    from introrl.agent_supt.model import Model
     
     start_time = time.time()
-    
+
+    s_hash_rowL = ( (0,1,2,3,4), )
     CR = Simulation( s_hash_rowL=s_hash_rowL )
     
-    get_sim = CollectSimData( CR )
+    #get_sim = CollectSimData( CR )
+    get_sim = Model( CR, build_initial_model=True )
     
     # if there's a pickle file, read it
     fname = os.path.split( __file__ )[-1].split('.')[0] # use file prefix for pickle file

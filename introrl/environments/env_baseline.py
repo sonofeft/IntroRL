@@ -43,6 +43,8 @@ class EnvBaseline( object ):
         """
         A Basic Environment from which all others derive.
         If "s_hash_rowL" is input, it will be used to calc state layout
+        
+        colorD and basic_color affect the GenericLayout when saved as an image.
         """
         
         self.name = name

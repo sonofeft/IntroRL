@@ -15,18 +15,17 @@ import pickle
 from introrl.agent_supt.change_tracker import ChangeTracker
 from introrl.utils.grid_funcs import print_string_rows, is_literal_str
 from introrl.policy import Policy
+from introrl.utils.tiles_infinite import Tile
 
-
-class Baseline_V_Func( object ):
+class Continuous_V_Func( object ):
     """
-    Create a linear function for an environment that simply one-hot encodes
+    Create a linear function for an environment that has continuous values for
     all of the states.
     
-    OVERRIDE THIS for more interesting linear functions.
+    This baseline object is the most simple linear scheme with each state variable
+    directly as a basis function along with a bias term of 1.0
     
-    This is only interesting for debugging linear function solution routines.
-    (i.e. each term in the one-hot encoding should move to near the actual 
-    value function)
+    OVERRIDE THIS for more interesting linear functions.
     """
     
     # ======================== OVERRIDE STARTING HERE ==========================
@@ -34,28 +33,44 @@ class Baseline_V_Func( object ):
         """Initialize the weights vector and the number of entries, N."""
         
         # initialize a weights numpy array with random values.
-        N = len(self.sD)
-        self.w_vector = np.random.randn(N) / np.sqrt(N)
-        self.N = len( self.w_vector )
+        self.N = self.n_state_vars
+        #self.w_vector = np.random.randn(self.N) / np.sqrt(self.N)
+        self.w_vector = np.zeros(self.N)
                 
-    def get_x_vector(self, s_hash ):
+    def get_x_vector(self, s_vector ): # s_vector is a value list/vector
         """
-        Return the x vector that represents the state, s_hash.
-        NOTE: the index into x_vector for s_hash = self.sD[ s_hash ]
+        Return the x vector that represents the state vector, s_vector.
+        NOTE: for this simple implementation, x_vector is just the continuous variable list
+        e.g. s_vector = [1.1, 3.149, 73.0]
         """
-        x_vector = np.zeros(self.N, dtype=np.float)
-        x_vector[ self.sD[ s_hash ] ] = 1.0
+        x_vector = np.array( s_vector , dtype=np.float)
         return x_vector
     # ======================== OVERRIDE ENDING HERE ==========================
 
-    def VsEst(self, s_hash):
+    def VsEst(self, s_vector):
         """Return the current estimate for V(s) from linear function eval."""
-        x_vector = self.get_x_vector( s_hash )
+        x_vector = self.get_x_vector( s_vector )
         return self.w_vector.dot( x_vector )
     
-    def __init__(self, environment):
+    def __init__(self, environment, n_state_vars=2, 
+                 lo_valL=None, hi_valL=None, num_regionsL=None):
         
         self.environment = environment
+        self.n_state_vars = n_state_vars
+        
+        if lo_valL is None:
+            lo_valL = [0.0] * n_state_vars
+        if hi_valL is None:
+            hi_valL = [1.0] * n_state_vars
+        if num_regionsL is None:
+            num_regionsL = [5] * n_state_vars
+            
+        self.lo_valL = lo_valL
+        self.hi_valL = hi_valL
+        self.num_regionsL = num_regionsL
+        
+        self.tile = Tile( lo_valL=lo_valL, hi_valL=hi_valL, num_regionsL=num_regionsL)
+        
         
         self.chgTracker = ChangeTracker()
         self.init_tracking()
@@ -71,9 +86,9 @@ class Baseline_V_Func( object ):
         self.last_delta_VsD = {}  # index=s_hash value=last change to s_hash
         
         # initialize to init_val for all states, terminal = 0.0
-        for s_hash in self.environment.iter_all_states():
-            # set dict value to index of numpy array
-            self.sD[ s_hash ] = len(self.sD)
+        for s_hash in range(self.tile.num_states):
+            s_vector = self.tile.get_nominal_s_vector(s_hash)
+            self.sD[ s_hash ] = s_vector
             self.last_delta_VsD[s_hash] = 0.0
                 
     def get_number_of_changes(self):
@@ -82,9 +97,10 @@ class Baseline_V_Func( object ):
     def num_Vs(self):
         return len( self.sD )
 
-    def record_changes(self, s_hash, delta ):
+    def record_changes(self, s_vector, delta ):
         """Keep track of changes made to V(s) values"""
         
+        s_hash = self.tile.get_state_index( s_vector )
         delta = abs(delta) # make sure that only absolute values are saved.
         
         # remove any record of last change to [s_hash]
@@ -109,49 +125,49 @@ class Baseline_V_Func( object ):
                 d_max = max(d_max, abs(val))
         return d_max
     
-    def get_gradient(self, s_hash):
+    def get_gradient(self, s_vector):
         """
         Return the gradient of value function with respect to w_vector.
         Since the function is linear in w, the gradient is = x_vector.
         """
-        return self.get_x_vector( s_hash )
+        return self.get_x_vector( s_vector )
 
-    def mc_update(self, s_hash='', alpha=0.1, G=0.0):
+    def mc_update(self, s_vector=(0,0), alpha=0.1, G=0.0):
         """
         Do a Monte-Carlo-style learning rate update.
         w = w + alpha * [Gt - Vhat(st)] * grad(st)
         """
-        Vs    = self.VsEst( s_hash )
+        Vs    = self.VsEst( s_vector )
         delta = alpha * (G - Vs)
         
-        delta_vector = delta * self.get_gradient( s_hash )
+        delta_vector = delta * self.get_gradient( s_vector )
         self.w_vector += delta_vector
         
         delta = np.max( np.absolute( delta_vector ) )
-        self.record_changes( s_hash, delta )
+        self.record_changes( s_vector, delta )
         
         return abs(delta) # return the absolute value of change
 
-    def td0_update(self, s_hash='', alpha=0.1, gamma=1.0, sn_hash='', reward=0.0):
+    def td0_update(self, s_vector=(0,0), alpha=0.1, gamma=1.0, sn_vector='', reward=0.0):
         """
         Do a TD(0), Temporal-Difference-style learning rate update.
         w = w + alpha * [R + gamma*VEst(s',w) - V(s,w)] * grad(s)
         """
-        Vs    = self.VsEst( s_hash )
+        Vs    = self.VsEst( s_vector )
         
-        if sn_hash in self.environment.terminal_set:
+        if sn_vector in self.environment.terminal_set:
             target_val = reward
         else:
-            Vstp1 = self.VsEst( sn_hash )
+            Vstp1 = self.VsEst( sn_vector )
             target_val = reward + gamma*Vstp1
             
         delta = alpha * (target_val - Vs)
         
-        delta_vector = delta * self.get_gradient( s_hash )
+        delta_vector = delta * self.get_gradient( s_vector )
         self.w_vector += delta_vector
         
         delta = np.max( np.absolute( delta_vector ) )
-        self.record_changes( s_hash, delta )
+        self.record_changes( s_vector, delta )
         
         return abs(delta) # return the absolute value of change
         
@@ -251,7 +267,9 @@ class Baseline_V_Func( object ):
                             ld_outL.append( none_str )
                     else:
                         outL.append( fmt_V%self.VsEst( s_hash ) )
-                        delta = self.last_delta_VsD.get(s_hash, None)
+                        
+                        i_state = self.tile.get_state_index( s_hash )
+                        delta = self.last_delta_VsD.get(i_state, None)
                         if delta is None:
                             ld_outL.append( 'None' )
                         else:
@@ -305,7 +323,8 @@ if __name__ == "__main__": # pragma: no cover
     
     gridworld = get_gridworld()
 
-    oh = Baseline_V_Func( gridworld )
+    oh = Continuous_V_Func( gridworld, n_state_vars=2, 
+                            lo_valL=[.5,.5], hi_valL=[2.5,1.5], num_regionsL=[4,3] )
     
     SAVE_MODE = 1
     if SAVE_MODE:
@@ -318,25 +337,25 @@ if __name__ == "__main__": # pragma: no cover
     old_w_vector = oh.w_vector.copy()
     
     
-    oh.td0_update( s_hash=(0,0),  alpha=0.1, gamma=1.0,
-                   sn_hash=(0,1), reward=-1.0)
+    oh.td0_update( s_vector=(0,0),  alpha=0.1, gamma=1.0,
+                   sn_vector=(0,1), reward=-1.0)
     
-    oh.td0_update( s_hash=(0,2),  alpha=0.1, gamma=1.0,
-                   sn_hash=(0,3), reward=1.0)
+    oh.td0_update( s_vector=(0,2),  alpha=0.1, gamma=1.0,
+                   sn_vector=(0,3), reward=1.0)
     
-    oh.mc_update(s_hash=(0,2), alpha=0.1, G=1.0)
+    oh.mc_update(s_vector=(0,2), alpha=0.1, G=1.0)
     
     #oh.environment.layout = None
     oh.summ_print()
     #sys.exit()
                      
     print('w_vector')
-    for s_hash in gridworld.iter_all_states():
-        i = oh.sD[ s_hash ]
+    for i in range( oh.N ):
+        s_vector = oh.tile.state_indexD[i]
         if old_w_vector[i] == oh.w_vector[i]:
-            print(s_hash, '%.5f'%old_w_vector[i], '---> Both Equal')
+            print(s_vector, '%.5f'%old_w_vector[i], '---> Both Equal')
         else:
-            print(s_hash, '%.5f'%old_w_vector[i], '%.5f'%oh.w_vector[i])
+            print(s_vector, '%.5f'%old_w_vector[i], '%.5f'%oh.w_vector[i])
     
     if SAVE_MODE:
         oh.save_to_pickle_file( fname='testing_lf_save')

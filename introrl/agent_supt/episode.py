@@ -18,7 +18,10 @@ class Episode( object ):
         
         self.is_done_flag = False
         self.episodeL = [] # list of (state, action, reward, state_next) tuples
-            
+    
+    def add_delta_to_last_reward(self, delta):
+        self.episodeL[-1][2] += delta
+    
     def terminal_state(self):
         # only considered terminal_state if done flag was set
         if self.is_done_flag and self.episodeL:

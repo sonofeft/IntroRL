@@ -34,7 +34,7 @@ class SA_SemiGradAgent( object ):
                   alpha=0.1): # can be constant or Alpha object
         """
         ... GIVEN AN ENVIRONMENT ... 
-        Use basic SARSA algorithm to solve for linear approximation of
+        Use basic SARSA or Qlearning algorithm to solve for linear approximation of
         STATE-ACTION VALUES, Q(s,a)
         
         Each action is forced to be a DETERMINISTIC action leading to one state and reward.
@@ -86,13 +86,13 @@ class SA_SemiGradAgent( object ):
             self.alpha_obj.summ_print()
         
         if show_banner:
-            s = 'Starting a Maximum of %i SARSA Semi-Gradient Epsilon Greedy Steps/Episode'%self.max_episode_steps +\
+            s = 'Starting a Maximum of %i %s Semi-Gradient Epsilon Greedy Steps/Episode'%(self.max_episode_steps, update_type.upper()) +\
                 '\nfor "%s" with Gamma = %g, Alpha = %g'%( environment.name, self.gamma, self.alpha_obj() )
             banner(s, banner_char='', leftMargin=0, just='center')
 
     def run_episode(self, start_state, iter_sarsn=None):
         """
-        Run a single episode of SARSA Semi-Gradient algorithm
+        Run a single episode of SARSA or Qlearning Semi-Gradient algorithm
         If iter_sarsn is input, use it instead of action_value_linfunc calculations.
         (Note: the start_state should NOT be in terminal_set if iter_sarsn is input.)
         """
@@ -105,7 +105,7 @@ class SA_SemiGradAgent( object ):
         if self.learn_tracker is not None:
             self.learn_tracker.add_new_episode()
         
-        # do SARSA Semi-Gradient loops until sn_hash in terminal_set
+        # do SARSA or Qlearning Semi-Gradient loops until sn_hash in terminal_set
         s_hash = start_state
         
         n_steps_in_episode = 1

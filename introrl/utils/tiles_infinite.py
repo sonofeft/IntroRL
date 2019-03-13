@@ -10,6 +10,7 @@ from builtins import object
 
 from math import floor, log10, ceil
 import numpy as np
+from itertools import product
 
 """
 Build tilings for RL application.
@@ -45,6 +46,18 @@ class Dimension( object ):
         i = self.get_region( val )
         encoding[i ] = 1
         return encoding
+        
+    def get_nominal_value(self, irange):
+        """Return the nominal float value for region number"""
+        return self.lo_val - self.step/2.0 + irange*self.step
+    
+    def summ_print(self):
+        print('=============== PartitionedSegment Summary ===============')
+        print('    lo_val      =', self.lo_val)
+        print('    hi_val      =', self.hi_val)
+        print('    num_regions =', self.num_regions)
+        print('    step        =', self.step)
+        print('    edgeL       =', self.edgeL)
 
 class Tile( object ):
     """
@@ -62,11 +75,17 @@ class Tile( object ):
         self.num_dim = len( lo_valL )
         self.dimL = []
         self.np_dim = 0 # track dimension of numpy array for encoding
+        self.num_states = 1 # number of possible state positions
         
         for lo_val, hi_val, num_regions in zip(lo_valL, hi_valL, num_regionsL):
             self.dimL.append( Dimension( lo_val=lo_val, hi_val=hi_val, num_regions=num_regions) )
             
             self.np_dim += num_regions
+            self.num_states *= num_regions # number of possible state positions
+        
+        self.state_indexD = {} # index=i_state, value=(i_s1, i_s2, i_s3, ..., i_sn)
+        self.rev_state_indexD = {} # index=(i_s1, i_s2, i_s3, ..., i_sn), value=i_state
+        self.init_state_index()
         
     def get_regions(self, valL):
         """region 0 is < lo_val, region num_regions-1 is >= hi_val."""
@@ -86,6 +105,20 @@ class Tile( object ):
             encoding[i + iL[id]] = 1
             i += d.num_regions
         return encoding
+        
+    def get_state_index(self, valL):
+        """Get index for position on Tile"""
+        return self.rev_state_indexD[ tuple(self.get_regions(valL)) ]
+        
+    def init_state_index(self):
+        rangeL = [range(d.num_regions) for d in self.dimL ]
+        for i,tup in enumerate(product(*rangeL)):
+            self.state_indexD[i] = tup
+            self.rev_state_indexD[tup] = i
+
+    def get_nominal_s_vector(self, i_state):
+        """Return the nominal s_vector for the i_state."""
+        return [d.get_nominal_value(irange) for d,irange in zip(self.dimL, self.state_indexD[i_state])]
 
 # Calc Log base 2 
 def Log2(x): 
@@ -181,6 +214,11 @@ class Tilings( object ):
                 encoding[i + iL[id]] = 1
                 i += d.num_regions
         return encoding
+        
+    def get_state_index(self, valL):
+        """Get index for position on Tilings"""
+        i_stateT = tuple( [tile.get_state_index(valL) for tile in self.tileL] )
+        return i_stateT
 
             
 def plot_tile(ax, tile, color='r', linestyle='-', n=0 ):
@@ -213,6 +251,7 @@ if __name__=="__main__":
     print('-'*66)
     
     t = Tile(lo_valL=[0,0], hi_valL=[1,10], num_regionsL=[4,5])
+    print('t.state_indexD =',t.state_indexD)
     if 1:
         for valL in [(-99,-99), (-1,11),(0,0), (.1,2), (.9,9), (99,99)]:
             print('%s %s'%(valL, t.get_regions(valL)), end=' ')

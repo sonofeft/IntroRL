@@ -8,6 +8,12 @@ from introrl.policy import Policy
 from introrl.agent_supt.epsilon_calc import EpsilonGreedy
 from introrl.agent_supt.alpha_calc import Alpha
 
+"""
+This example recreates results from Udemy Intro RL class
+# https://deeplearningcourses.com/c/artificial-intelligence-reinforcement-learning-in-python
+# https://www.udemy.com/artificial-intelligence-reinforcement-learning-in-python
+"""
+
 class LazyProgrammerMaze( Baseline_Q_Func ):
     
     def __init__(self, environment ):
@@ -63,7 +69,7 @@ class LazyProgrammerMaze( Baseline_Q_Func ):
 learn_tracker = LearnTracker()
 gridworld = get_gridworld( step_reward=-0.1 )
 
-NUM_EPISODES = 2000
+NUM_EPISODES = 20000
 
 alpha_obj = Alpha(alpha=0.1)
 alpha_obj.set_half_life_for_N_episodes( Nepisodes=NUM_EPISODES, alpha_final=0.03333333333333)

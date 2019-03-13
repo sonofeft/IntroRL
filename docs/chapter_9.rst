@@ -74,8 +74,9 @@ are displayed on the n-step chart.
 .. image:: _static/figure_9_2_random_walk_nstep.png
     :width: 52%
 
+The above n-step code is based on the pseudo code from page 209 of
+`Sutton & Barto <http://incompleteideas.net/book/the-book-2nd.html>`_ 
 
-
-
+.. image:: _static/nstep_semigradient_sutton.jpg
 
 
