@@ -459,7 +459,7 @@ at the command line.'''
         
         # initialize all rewards to zero for all states.
         for S in self.SC.iter_states():
-            est_rD[ S.hash ] = RunningAve( S.hash )
+            est_rD[ S.hash ] = RunningAve( str(S.hash) )
         
         for s_hash, a_desc, T in self.TC.iter_all_transitions():
             for sn_hash, t_prob, reward in T.iter_sn_hash_prob_reward():

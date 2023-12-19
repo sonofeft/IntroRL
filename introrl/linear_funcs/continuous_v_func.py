@@ -43,7 +43,7 @@ class Continuous_V_Func( object ):
         NOTE: for this simple implementation, x_vector is just the continuous variable list
         e.g. s_vector = [1.1, 3.149, 73.0]
         """
-        x_vector = np.array( s_vector , dtype=np.float)
+        x_vector = np.array( s_vector , dtype=float)
         return x_vector
     # ======================== OVERRIDE ENDING HERE ==========================
 

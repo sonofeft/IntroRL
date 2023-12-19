@@ -102,6 +102,7 @@ class FFPolynomial( FeatureFunction ):
         """return array of n_output_features."""
         x_vector = np.zeros( self.num_w_per_action )
         for i,pow in enumerate(self.powers):
+            #print('self.powers=',self.powers,'   pow=',pow,'   s_vector=',s_vector)
             x_vector[i] = np.prod( np.power( s_vector, pow ) )
         return x_vector
     

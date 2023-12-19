@@ -49,7 +49,7 @@ class PartitionedSegment( object ):
     def get_numpy_encoding(self, val):
         """Return a numpy array with 1 in detected regions, 0 elsewhere."""
         encoding = np.zeros( self.num_regions )
-        i = self.get_region( val )
+        i = int(self.get_region( val ))
         if i>=0:
             encoding[i ] = 1
         return encoding

@@ -40,6 +40,13 @@ class ContinuousParameter( object ):
     def at_max_limit(self):
         return self.value >= self.max_value
 
+    def get_range_list(self, N=50):
+        ansL = [ self.min_value ]
+        delta = (self.max_value - self.min_value) / float(N)
+        for _ in range(N):
+            ansL.append( delta + ansL[-1] )
+        return ansL
+
     def summ_print(self, pad=''):
         
         limit_str = ''

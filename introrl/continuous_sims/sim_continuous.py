@@ -29,6 +29,8 @@ class ContinuousSimulation( object ):
         self.paramD = {} # index=param name, value=ContinuousParameter object 
         for p in self.paramL:
             self.paramD[p.name] = p
+            
+        self.num_params = len( self.paramL )
     
     # =============== OVERRIDE STARTING HERE =========================
     def init_param_list(self):
@@ -39,6 +41,11 @@ class ContinuousSimulation( object ):
                                           min_value=-0.07, max_value=0.07)
                                      
         self.paramL = [self.pos_cp, self.vel_cp] # list of state ContinuousParameter objects
+        #self.paramL = [self.vel_cp, self.pos_cp] # list of state ContinuousParameter objects
+
+    def calc_dependent_states(self, s_vector):
+        """Some models may have dependent state values"""
+        return s_vector
 
     def get_action_snext_reward(self, a_desc, s_vector=None):
         """
@@ -48,17 +55,19 @@ class ContinuousSimulation( object ):
             x,xdot = self.get_s_tuple()
         else:
             x,xdot = s_vector
-            
+            self.pos_cp.set_bounded_val( x )
+            self.vel_cp.set_bounded_val( xdot )
+        
         self.vel_cp.add_bounded_delta( 0.001*a_desc - 0.0025*np.cos(3*x) )
         
         self.pos_cp.add_bounded_delta( self.vel_cp.value )
         if self.pos_cp.at_min_limit():
             self.vel_cp.set_bounded_val( 0.0 )
 
-        if self.pos_cp.at_max_limit():
-            reward = 10.0
-        else:
-            reward = self.step_reward
+        #if self.pos_cp.at_max_limit():
+        #    reward = 10.0
+        #else:
+        reward = self.step_reward
 
 
         return self.get_s_vector(), reward

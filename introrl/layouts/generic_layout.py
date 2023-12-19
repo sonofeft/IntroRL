@@ -158,7 +158,7 @@ class GenericLayout( object ):
                                        col_tickL=self.col_tickL,
                                        header=self.environment.name, 
                                        y_axis_label=self.y_axis_label,
-                                       x_axis_label='State-Hash')
+                                       x_axis_label=self.x_axis_label)
             return lmaxL # return the number of characters in each row.
         else:
             return []

@@ -33,6 +33,7 @@ class Model( object ):
             # NOTE: Assume terminal states show up as sn_hash references.
             for s_hash in self.env_interface.iter_all_action_states():
                 aL = self.env_interface.get_state_legal_action_list( s_hash )
+                
                 for a_desc in aL:
                     self.add_action( s_hash, a_desc )
                     
@@ -279,7 +280,12 @@ if __name__ == "__main__": # pragma: no cover
     get_sim.summ_print( long=True )
     
     print('_'*55)
-    env = EnvBaseline()
+    layout = gridworld.layout
+    env = EnvBaseline( s_hash_rowL=layout.s_hash_rowL, 
+                       row_tickL=layout.row_tickL, col_tickL=layout.col_tickL,
+                       x_axis_label=layout.x_axis_label, y_axis_label=layout.y_axis_label )
+    
+    
     get_sim.add_all_data_to_an_environment( env )
     
     if 0:

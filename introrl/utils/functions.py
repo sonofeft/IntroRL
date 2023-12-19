@@ -125,7 +125,7 @@ def argmax_vmax_dict(d, pick_random_best=True):
 def multi_argmax_vmax_dict( d, err_delta=0.0001 ):
     """
     returns a list of argmax (key) and max (value) from a dictionary    
-    All keys within err_delta will be included in list.
+    All keys within err_delta of max value will be included in list.
     """
     try:
         vkL = sorted( [(v,k) for k,v in d.items()] )
@@ -225,7 +225,7 @@ if __name__ == "__main__": # pragma: no cover
 
     print('---------- argmax_vmax_list vs argmax_vmax_list_v2 ----------')
 
-    argmax_vmax_list_v2
+    #argmax_vmax_list_v2
 
     #print('argmax_vmax_list_v2 timeit results:', timeit.timeit('choice, val = argmax_vmax_list_v2(iwL)', 
     #                                       setup="from __main__ import argmax_vmax_list_v2, iwL") )

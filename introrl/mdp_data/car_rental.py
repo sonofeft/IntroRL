@@ -71,9 +71,9 @@ def get_prob_reward( s1, s2, a_desc):
 total_probD = {} # index=(s1, s2, a_desc, sn_hash): value=t_prob total 
 sum_prob_x_rewardD = {} # index=(s1, s2, a_desc, sn_hash): value=sum of t_prob * reward
 
-def add_results( s1, s2, a_desc, prob_rented, reward, sn1, sn2 ):
-    #print('s1=%2i, s2=%2i, a_desc=%2i, prob_rented%8.6f, reward%5.1f, sn1=%2i, sn2=%2i'%\
-    #     (s1, s2, a_desc, prob_rented, reward, sn1, sn2))
+def add_results( s1, s2, a_desc, prob_net, reward, sn1, sn2 ):
+    #print('s1=%2i, s2=%2i, a_desc=%2i, prob_net%8.6f, reward%5.1f, sn1=%2i, sn2=%2i'%\
+    #     (s1, s2, a_desc, prob_net, reward, sn1, sn2))
          
     sn_hash = (sn1, sn2)
     key = (s1, s2, a_desc, sn_hash)
@@ -82,8 +82,8 @@ def add_results( s1, s2, a_desc, prob_rented, reward, sn1, sn2 ):
         total_probD[key] = 0.0
         sum_prob_x_rewardD[key] = 0.0
         
-    total_probD[key] += prob_rented # index=(s1, s2, a_desc, sn_hash): value=t_prob total 
-    sum_prob_x_rewardD[key] += prob_rented * reward # index=(s1, s2, a_desc, sn_hash): value=sum of t_prob * reward
+    total_probD[key] += prob_net # index=(s1, s2, a_desc, sn_hash): value=t_prob total 
+    sum_prob_x_rewardD[key] += prob_net * reward # index=(s1, s2, a_desc, sn_hash): value=sum of t_prob * reward
     
 
 def get_env():

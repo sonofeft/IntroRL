@@ -35,7 +35,7 @@ def plot_policy( updater, Ngrid=100, title='', do_show=True,
     dx = (x_param.max_value - x_param.min_value) / float(Ngrid)
     dy = (y_param.max_value - y_param.min_value) / float(Ngrid)
     
-    s_vector = np.zeros(2)
+    s_vector = np.zeros( updater.sim.num_params )
     
     for i in range(Ngrid+1):
         x = x_param.min_value + i*dx
@@ -43,6 +43,7 @@ def plot_policy( updater, Ngrid=100, title='', do_show=True,
         for j in range(Ngrid+1):
             y = y_param.min_value + j*dy
             s_vector[1] = y
+            s_vector = updater.sim.calc_dependent_states( s_vector )
             
             a_best, Qsa = updater.get_max_Qsa( s_vector )
             if a_best is not None:
@@ -91,7 +92,7 @@ def plot_cost_to_go( updater, Ngrid=100, do_show=True ):
     
     dx = (x_param.max_value - x_param.min_value) / float(Ngrid)
     dy = (y_param.max_value - y_param.min_value) / float(Ngrid)
-    s_vector = np.zeros(2)
+    s_vector = np.zeros( updater.sim.num_params )
     
 
     
@@ -107,6 +108,7 @@ def plot_cost_to_go( updater, Ngrid=100, do_show=True ):
         for x in X:
             s_vector[0] = x
             s_vector[1] = y
+            s_vector = updater.sim.calc_dependent_states( s_vector )
             a_best, Qsa = updater.get_max_Qsa( s_vector )
             if not Qsa is None:
                 rowL.append( -Qsa )
@@ -137,17 +139,17 @@ def plot_cost_to_go( updater, Ngrid=100, do_show=True ):
     
 if __name__ == "__main__":  # pragma: no cover
     
-    from introrl.continuous_sims.sim_continuous import ContinuousSimulation
+    from introrl.continuous_sims.mountain_car import MountainCar
     from introrl.continuous_sims.feature_func import FeatureFunction
     from introrl.continuous_sims.feature_func_polynomial import FFPolynomial
     from introrl.continuous_sims.feat_func_tiles import FeatFuncTiles
     from introrl.continuous_sims.update_w_vector import UpdateWVector
         
-    sim = ContinuousSimulation(name='Mountain Car', step_reward=-1.0)
+    sim = MountainCar(name='Mountain Car', step_reward=-1.0)
         
     #ff = FeatureFunction( sim, name='Proportional', init_w_val=0.0)
     #ff = FFPolynomial(sim, name='Polynomial', init_w_val=0.0, n_degree=2, interaction_only=False)
-    ff = FeatFuncTiles(sim, name='TilingsInf', init_w_val=None, num_tiles=8, recenter=True, num_regionsL=[8,8])
+    ff = FeatFuncTiles(sim, name='TilingsInf', init_w_val=None, num_tiles=8, recenter=True, num_regionsL=[8,8,8])
     
     ff.init_from_pickle_file( 'mcar_' + ff.desc() )
         

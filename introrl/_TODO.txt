@@ -11,6 +11,8 @@ show commit messages for all commits.
 hg log -T compact
 -------------------------------------
 
+*) make tk version of mountain car.
+
 *) finish continuous_v_func.py, polynomial_v_func.py
 
 *) from __future__ import unicode_literals

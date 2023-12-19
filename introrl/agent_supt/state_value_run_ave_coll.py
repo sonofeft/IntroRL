@@ -51,7 +51,7 @@ class StateValueRunAveColl( object ):
     def init_Vs_to_zero(self):
         # initialize to 0.0 for all states, terminal and non-terminal.
         for s_hash in self.environment.iter_all_states():
-            self.Vs_RaveD[ s_hash ] = RunningAve( name=s_hash )
+            self.Vs_RaveD[ s_hash ] = RunningAve( name=str(s_hash) )
         
     def add_val(self, s_hash, val):
         """add a value to list of returns(G) to calc average  V(s) """

@@ -50,6 +50,17 @@ class Dimension( object ):
     def get_nominal_value(self, irange):
         """Return the nominal float value for region number"""
         return self.lo_val - self.step/2.0 + irange*self.step
+        
+    def get_region_range(self, irange):
+        """Return the range for region number"""
+        if irange==0:
+            return -float('inf'), self.lo_val
+        elif irange>= self.max_region:
+            return self.hi_val, float('inf')
+        else:
+            lo = self.lo_val + (irange-1)*self.step
+            hi = lo + self.step
+            return lo, hi
     
     def summ_print(self):
         print('=============== PartitionedSegment Summary ===============')

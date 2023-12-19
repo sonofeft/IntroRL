@@ -73,7 +73,9 @@ class FeatureFunction( object ):
     
     def get_x_terms_for_an_action(self, s_vector):
         """For Proportional, x_terms_for_an_action == s_vector."""
-        return s_vector
+        L = [v for v in s_vector]
+        L.append(1.0)
+        return np.array( L )
     
     def get_x_vector(self, a_desc, s_vector=None ):
         """
@@ -86,14 +88,20 @@ class FeatureFunction( object ):
         
         x_vector = np.zeros( self.N )
         #x_vector[-1] = 1.0 # set bias term
+        #print('x_vector:', x_vector, type(x_vector), '  shape:',x_vector.shape)
         
         x_terms_for_an_action = self.get_x_terms_for_an_action( s_vector )
+        #print('x_terms_for_an_action:',x_terms_for_an_action, 
+        #      type(x_terms_for_an_action), '  shape:',x_terms_for_an_action.shape)
         i = self.actionD[a_desc]*self.num_w_per_action
+        #print('self.actionD', self.actionD)
+        #print('i:',i)
         
         # for Proportional assumption, each x value is equal to each s value
         # (note a copy of s_vector for each possible action... self.Nactions)
-        x_vector[i:i+self.num_w_per_action-1] = x_terms_for_an_action
+        x_vector[i:i+self.num_w_per_action] = x_terms_for_an_action
         x_vector[-1] = 1.0 # set bias term
+        #print('From get_x_vector:', x_vector)
         return x_vector
     # ======================== OVERRIDE ENDING HERE ==========================
 
@@ -101,11 +109,13 @@ class FeatureFunction( object ):
         """Return the current estimate for Q(s,a) from linear function eval."""
         
         x_vector = self.get_x_vector( a_desc, s_vector=s_vector )
+        #print('w_vector:',self.w_vector)
+        #print('x_vector:',x_vector)
         return self.w_vector.dot( x_vector )
 
-    def get_QsaEst_from_x_vector(self, x_vector):
-        """Return the current estimate for Q(s,a) from linear function eval."""
-        return self.w_vector.dot( x_vector )
+    #def get_QsaEst_from_x_vector(self, x_vector):
+    #    """Return the current estimate for Q(s,a) from linear function eval."""
+    #    return self.w_vector.dot( x_vector )
     
     def get_gradient(self, a_desc, s_vector=None):
         """

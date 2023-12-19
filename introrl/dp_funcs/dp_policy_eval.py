@@ -96,3 +96,9 @@ if __name__ == "__main__": # pragma: no cover
     
     dp_policy_evaluation( pi, sv, max_iter=1000, err_delta=0.001, gamma=0.9)
     
+    print()
+    print( pi.make_dict_of_policy() )
+    pi.save_diagram( gridworld, inp_colorD=None, pad=0.1, save_name='', 
+                     show_arrows=True, do_show=True, scale=1.0, h_over_w=1.0,
+                     show_terminal_labels=True)
+    

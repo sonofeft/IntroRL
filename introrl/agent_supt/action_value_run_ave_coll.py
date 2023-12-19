@@ -14,6 +14,7 @@ import pickle
 from introrl.utils.grid_funcs import print_string_rows, is_literal_str
 from introrl.utils.running_ave import RunningAve
 from introrl.agent_supt.state_value_run_ave_coll import StateValueRunAveColl
+from introrl.utils.banner import banner
 
 class ActionValueRunAveColl( object ):
     
@@ -112,32 +113,54 @@ class ActionValueRunAveColl( object ):
         return fname
     
     def save_to_pickle_file(self, fname=None): # pragma: no cover
-        """Saves data to pickle file."""
+        """
+        Saves data to pickle file.
+        Allow it to fail with simply an output warning.
+        """
         # build name for pickle
         fname = self.make_pickle_filename( fname )
         
         saveD = {}
         saveD['Qsa_RaveD'] = self.Qsa_RaveD
         
-        fileObject = open(fname,'wb')
-        pickle.dump(saveD,fileObject, protocol=2)# protocol=2 is python 2&3 compatible.
-        fileObject.close()
-        print('Saved ActionValueRunAveColl to file:',fname)
+        with open(fname,'wb') as fileObject:
+            try:
+                pickle.dump(saveD,fileObject, protocol=2)# protocol=2 is python 2&3 compatible.
+                print('Saved ActionValueRunAveColl to file:',fname)
+            except:
+                s = 'ERROR... Saving ActionValueRunAveColl to file:' + fname
+                banner(s, banner_char='', leftMargin=0, just='center')
+        
+        #fileObject = open(fname,'wb')
+        #pickle.dump(saveD,fileObject, protocol=2)# protocol=2 is python 2&3 compatible.
+        #fileObject.close()
+        #print('Saved ActionValueRunAveColl to file:',fname)
     
     def read_pickle_file(self, fname=None): # pragma: no cover
-        """Reads data from pickle file."""
+        """
+        Reads data from pickle file.
+        Allow it to fail with simply an output warning.
+        """
         
         fname = self.make_pickle_filename( fname )
         if not os.path.isfile( fname ):
             print('Pickle File NOT found:', fname)
             return False
         
-        fileObject = open(fname,'rb')  
-        readD = pickle.load(fileObject)  
+        with open(fname,'rb') as fileObject:
+            try:
+                readD = pickle.load(fileObject)
+                Qsa_RaveD = readD['Qsa_RaveD']
+            except:
+                s = 'ERROR... reading pickle file:' + fname
+                banner(s, banner_char='', leftMargin=0, just='center')
+                return False
+                
+        #fileObject = open(fname,'rb')
+        #readD = pickle.load(fileObject)  
+        #Qsa_RaveD = readD['Qsa_RaveD']
+        #fileObject.close()
         
-        Qsa_RaveD = readD['Qsa_RaveD']
-        
-        fileObject.close()
         print('Read ActionValueRunAveColl from file:',fname)
         
         return Qsa_RaveD
